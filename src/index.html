@@ -1,0 +1,1468 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOORWIKI Tools Dev</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-body-font-family: 'Inter', sans-serif;
+            --cell-size: 50px;
+            --icon-bg: #f8f9fa;
+            --icon-border: #dee2e6;
+            --canvas-bg: #ffffff;
+            --canvas-grid-border: #e9ecef;
+            --drop-highlight: #d1e7dd;
+            --sidebar-width: 320px;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .app-header {
+            background-color: #1a1d20;
+            color: white;
+            padding: 0.75rem 1rem;
+            z-index: 1050;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .kai-sign {
+            background-color: transparent;
+            border: 2px solid #ffffff;
+            padding: 8px 75px 8px 15px;
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 2px;
+            margin-left: 5px;
+            user-select: none;
+        }
+
+        .kai-sign::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 80 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 60 L 80 20 L 80 30 L 20 60 Z' fill='%23ffffff'/%3E%3Cpath d='M 35 60 L 80 37.5 L 80 42.5 L 45 60 Z' fill='%23ffffff'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        .kai-sign-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .kai-sign-elev {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin: 4px 0 0 0;
+            line-height: 1;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 576px) {
+            .kai-sign-title {
+                font-size: 1.05rem;
+            }
+
+            .kai-sign {
+                padding: 6px 65px 6px 12px;
+            }
+
+            .kai-sign::after {
+                width: 65px;
+                height: 50px;
+            }
+        }
+
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, margin-left 0.3s ease;
+            z-index: 1040;
+        }
+
+        .sidebar.collapsed {
+            margin-left: calc(var(--sidebar-width) * -1);
+        }
+
+        .search-box {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .accordion-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        .accordion-button::after {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f078";
+            background-image: none !important;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .accordion-button:not(.collapsed)::after {
+            background-image: none !important;
+            transform: rotate(-180deg);
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 6px;
+            padding: 8px;
+        }
+
+        .icon-item {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: var(--icon-bg);
+            border: 1px solid var(--icon-border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #495057;
+            cursor: grab;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
+            transition: all 0.2s ease;
+            text-align: center;
+            word-break: break-word;
+            padding: 4px;
+            overflow: hidden;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .icon-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            /* Mencegah bug saat dragging */
+        }
+
+        .icon-item:hover {
+            background-color: #e2e3e5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            border-color: #adb5bd;
+        }
+
+        .icon-item:active {
+            cursor: grabbing;
+        }
+
+        .icon-hover-tooltip {
+            position: fixed;
+            z-index: 99999;
+            pointer-events: none;
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -100%) translateY(-6px);
+            transition: opacity 0.12s ease, transform 0.12s ease;
+            white-space: nowrap;
+        }
+
+        .icon-hover-tooltip.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -100%) translateY(-10px);
+        }
+
+        .icon-hover-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px 5px 0;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+            display: block;
+            width: 0;
+        }
+
+        .panel-canvas {
+            flex-grow: 1;
+            background-color: #e9ecef;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .canvas-toolbar {
+            background-color: white;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-size,
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
+        }
+
+        .toolbar-actions {
+            gap: 8px;
+        }
+
+        .toolbar-input {
+            width: 60px;
+        }
+
+        .toolbar-times {
+            margin: 0 6px;
+            color: #6c757d;
+        }
+
+        .toolbar-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 575.98px) {
+            .canvas-toolbar {
+                padding: 8px 10px;
+            }
+
+            .toolbar-input {
+                width: 52px;
+            }
+
+            .toolbar-times {
+                margin: 0 4px;
+            }
+
+            .toolbar-actions {
+                gap: 6px;
+            }
+
+            .toolbar-btn {
+                padding: 0.3rem 0.55rem;
+                font-size: 0.8rem;
+                gap: 5px;
+            }
+        }
+
+        .canvas-wrapper {
+            flex-grow: 1;
+            overflow: auto;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .route-canvas {
+            background-color: var(--canvas-bg);
+            border: 2px solid #adb5bd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: grid;
+            grid-auto-rows: var(--cell-size);
+        }
+
+        .canvas-cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            border-right: 1px dashed var(--canvas-grid-border);
+            border-bottom: 1px dashed var(--canvas-grid-border);
+            position: relative;
+            background-color: transparent;
+            transition: background-color 0.1s ease;
+        }
+
+        .canvas-cell.drag-over {
+            background-color: var(--drop-highlight);
+            border-color: #198754;
+        }
+
+        .dropped-icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #212529;
+            background-color: transparent;
+            pointer-events: none;
+            box-sizing: border-box;
+            word-break: break-word;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .dropped-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .mobile-hint {
+            flex-shrink: 0;
+            margin: 8px 12px;
+            padding: 8px 10px;
+            background-color: #e7f1ff;
+            border: 1px solid #b6d4fe;
+            border-radius: 8px;
+            color: #084298;
+            font-size: 0.72rem;
+            line-height: 1.35;
+        }
+
+        .mobile-hint-icon {
+            margin-top: 2px;
+            color: #0d6efd;
+        }
+
+        .mobile-hint-btn {
+            margin-top: 6px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #0d6efd;
+            background-color: #ffffff;
+            border: 1px solid #0d6efd;
+            border-radius: 6px;
+        }
+
+        .mobile-hint-btn:hover,
+        .mobile-hint-btn:active {
+            color: #ffffff;
+            background-color: #0d6efd;
+        }
+
+        @media (max-width: 767.98px) {
+            .sidebar {
+                position: absolute;
+                height: 100%;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+                margin-left: 0;
+            }
+        }
+
+        .prefix-selector {
+            padding: 8px 12px 10px 12px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .prefix-btn {
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 5px 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            color: #495057;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .prefix-btn:hover {
+            background-color: #f1f3f5;
+            border-color: #adb5bd;
+            color: #212529;
+        }
+
+        .prefix-btn.active {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 4px rgba(13, 110, 253, 0.25);
+            font-weight: 600;
+        }
+
+        .prefix-btn.active i,
+        .prefix-btn.active .prefix-tag {
+            color: #ffffff !important;
+        }
+
+        .prefix-tag {
+            font-size: 0.65rem;
+            font-family: monospace;
+            padding: 1px 5px;
+            border-radius: 3px;
+            background-color: rgba(0, 0, 0, 0.06);
+            color: #6c757d;
+        }
+
+        .prefix-btn.active .prefix-tag {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!--
+    ██████╗ ██████╗  █████╗ ██╗   ██╗███████╗
+    ██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝
+    ██████╔╝██████╔╝███████║██║   ██║█████╗  
+    ██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██╔══╝  
+    ██████╔╝██║  ██║██║  ██║ ╚████╔╝ ███████╗
+    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝
+
+    ██████╗ ██╗ ██████╗ ██╗   ██╗███████╗
+    ██╔══██╗██║██╔═══██╗██║   ██║██╔════╝
+    ██████╔╝██║██║   ██║██║   ██║███████╗
+    ██╔══██╗██║██║   ██║██║   ██║╚════██║
+    ██║  ██║██║╚██████╔╝╚██████╔╝███████║
+    ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
+    -->
+
+    <header class="app-header d-flex justify-content-start align-items-center">
+        <button class="btn btn-dark btn-sm me-2 border-secondary" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="kai-sign">
+            <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
+            <p class="kai-sign-elev">v 2.0+</p>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <div class="sidebar" id="sidebar">
+            <div class="search-box pb-2">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Cari ikon (cth: STR, BHF)..."
+                        onkeyup="searchIcons()">
+                </div>
+            </div>
+
+            <div class="prefix-selector">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-semibold text-secondary"
+                        style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        Tipe Jalur:
+                    </span>
+                    <span class="badge bg-primary" id="activePrefixBadge" style="font-size: 0.65rem;">Standar
+                        (std)</span>
+                </div>
+                <div class="row g-1" id="prefixBtnGroup">
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn active" data-prefix="" onclick="setPrefix('')"
+                            title="Jalur Biasa / Standar (tanpa prefix)">
+                            <span>Standar</span>
+                            <span class="prefix-tag">std</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn" data-prefix="u" onclick="setPrefix('u')"
+                            title="Jalur Tram / LRT / MRT (prefix u)">
+                            <span>Tram</span>
+                            <span class="prefix-tag">u</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn" data-prefix="t" onclick="setPrefix('t')"
+                            title="Jalur Terowongan / Bawah Tanah (prefix t)">
+                            <span>Kolong</span>
+                            <span class="prefix-tag">t</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn" data-prefix="ex" onclick="setPrefix('ex')"
+                            title="Jalur Nonaktif / Bekas (prefix ex)">
+                            <span>Nonaktif</span>
+                            <span class="prefix-tag">ex</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mobile-hint d-md-none" id="mobileHint" role="note">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa-solid fa-circle-info mobile-hint-icon"></i>
+                    <span class="mobile-hint-text">Sebagian gambar mungkin membutuhkan waktu yang lebih lama untuk
+                        ditampilkan.</span>
+                </div>
+                <button type="button" class="btn btn-sm mobile-hint-btn" onclick="dismissMobileHint()">
+                    Ya, saya mengerti
+                </button>
+            </div>
+
+            <div class="accordion-wrapper">
+                <div class="accordion accordion-flush" id="categoryAccordion">
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-canvas">
+            <div class="p-2 bg-white border-bottom text-center text-muted" style="font-size: 0.75rem;">
+                <strong>Tips:</strong> Klik dua kali pada sel untuk menghapus. Seret beberapa ikon ke sel
+                yang sama untuk menumpuk overlay (!~).
+            </div>
+
+            <div class="canvas-toolbar">
+                <div class="toolbar-size">
+                    <span class="fw-semibold me-2 d-none d-md-inline"><i class="fa-solid fa-border-all"></i>
+                        Ukuran:</span>
+                    <input type="number" id="gridCols" class="form-control form-control-sm text-center toolbar-input"
+                        value="7" min="1" max="50" onchange="resizeCanvas()" title="Jumlah Kolom"
+                        aria-label="Jumlah Kolom">
+                    <span class="toolbar-times">×</span>
+                    <input type="number" id="gridRows" class="form-control form-control-sm text-center toolbar-input"
+                        value="10" min="1" max="100" onchange="resizeCanvas()" title="Jumlah Baris"
+                        aria-label="Jumlah Baris">
+                </div>
+                <div class="toolbar-actions">
+                    <button class="btn btn-sm btn-outline-danger toolbar-btn" onclick="clearCanvas()">
+                        <i class="fa-solid fa-trash-can"></i><span>Kosongkan</span>
+                    </button>
+                    <button class="btn btn-sm btn-dark toolbar-btn" onclick="exportData()">
+                        <i class="fa-solid fa-code"></i><span>Ekspor</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper" id="canvas-scroll-area">
+                <div class="route-canvas" id="route-canvas">
+                </div>
+            </div>
+
+            <div class="p-2 bg-white border-top text-center text-muted" style="font-size: 0.75rem;">
+                Dev by Braverious | <a href="https://id.wikipedia.org/wiki/Pembicaraan_Pengguna:Braverious"
+                    target="_blank" rel="noopener noreferrer"
+                    class="text-secondary text-decoration-underline">Bicara</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exportModalLabel"><i class="fa-solid fa-code"></i> Hasil Ekspor Wikitext
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">Salin kode di bawah ini dan tempelkan ke artikel Wikipedia Anda.
+                    </p>
+                    <textarea id="exportTextarea" class="form-control font-monospace" rows="15" readonly
+                        style="font-size: 0.85rem; background-color: #f8f9fa;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="copyBtn" onclick="copyExport()">
+                        <i class="fa-solid fa-copy"></i> Salin ke Papan Klip
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="resizeConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Peringatan
+                        Pengecilan</h5>
+                </div>
+                <div class="modal-body">
+                    Memperkecil kanvas dapat menghapus ikon yang berada di luar batas rute saat ini. Lanjutkan?
+                    <div class="mt-2 text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-info-circle"></i>
+                        Peringatan ini hanya akan ditampilkan satu kali.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cancelResize()">Batal</button>
+                    <button type="button" class="btn btn-warning" onclick="confirmResize()">Lanjutkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="clearConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger"><i class="fa-solid fa-trash-can"></i> Kosongkan Kanvas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus semua rute di kanvas? Tindakan ini tidak dapat dibatalkan.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" onclick="executeClearCanvas()">Ya, Kosongkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+
+    <script>
+        console.log(`%c
+██████╗ ██████╗  █████╗ ██╗   ██╗███████╗
+██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝
+██████╔╝██████╔╝███████║██║   ██║█████╗  
+██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██╔══╝  
+██████╔╝██║  ██║██║  ██║ ╚████╔╝ ███████╗
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝
+
+██████╗ ██╗ ██████╗ ██╗   ██╗███████╗
+██╔══██╗██║██╔═══██╗██║   ██║██╔════╝
+██████╔╝██║██║   ██║██║   ██║███████╗
+██╔══██╗██║██║   ██║██║   ██║╚════██║
+██║  ██║██║╚██████╔╝╚██████╔╝███████║
+╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
+`, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
+        console.log('%c🚀 SPOORWIKI Tools v2.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
+
+        const iconDatabase = {
+            "sepur-lurus": {
+                title: "Sepur Lurus",
+                icons: [
+                    'STR', 'STRq', 'STR2+4', 'STR3+1',
+                    'STRg', 'STRf', 'CONTge', 'CONTfa',
+                    'CONTg@G', 'CONTf@F', 'CONTg', 'CONTf',
+                    'ENDE@G', 'ENDE@F', 'ENDEa', 'ENDEe',
+                    'ENDE2@F', 'ENDE3@F', 'ENDE2', 'ENDE3',
+                    'ENDE1@G', 'ENDE4@G', 'ENDE1', 'ENDE4',
+                    'ENDE2@G', 'ENDE3@G', 'ENDE2+4xe', 'ENDE3+1xe',
+                    'ENDE1@F', 'ENDE4@F', 'ENDE3+1xe', 'ENDE2+4xe',
+                    'CONT2+4', 'CONT3+1', 'CONT4', 'CONT1',
+                    'CONT1+3', 'CONT4+2', 'CONT3', 'CONT2',
+                    'tSTR2+4a@f', 'tSTR3+1a@f', 'tSTR2+4a', 'tSTR3+1a',
+                    'tSTR3+1e@g', 'tSTR2+4e@g', 'tSTR3+1e', 'tSTR2+4e',
+                    'STRb', 'STRbl', 'STRbr', 'STRbm',
+                    'BUE', 'SKRZ-G1', 'SKRZ-G1BUE', 'SKRZ-G2BUE',
+                    'hSTRae', 'STRo', 'BRÜCKE2', 'eLFT',
+                    'hSTRaeq', 'STRoq', 'BRÜCKE2q', 'LFTq',
+                    'hSTR2+4ae', 'hSTR3+1ae', 'TUNNEL2+4', 'TUNNEL3+1',
+                    'SBRÜCKE', 'SBRÜCKEm', 'SKRZ-G2u', 'SKRZ-G4u',
+                    'htSTRaa', 'htSTRee', 'TUNNEL1', 'TUNNEL1-m',
+                    'hSTRae(l)', 'hSTRae(r)', 'STRo(l)', 'STRo(r)',
+                    'hSTRe@f', 'hSTRa@g', 'hSTR(r)', 'hSTR(l)',
+                    'SKRZ-G2o', 'SKRZ-G4o', 'WBRÜCKE2', 'hKRZWae',
+                ]
+            },
+            "sepur-belok": {
+                title: "Sepur Belok",
+                icons: [
+                    'STR2', 'STR3', 'STR2+r', 'STR3+l',
+                    'STR+1', 'STR+4', 'STRr+1', 'STRl+4',
+                    'CONT2+g', 'CONT3+g', 'CONT2+r', 'CONT3+l',
+                    'CONT1+f', 'CONT4+f', 'CONT1+r', 'CONT4+l',
+                    'tSTR2a', 'tSTR3a', 'tSTR2e', 'tSTR3e',
+                    'tSTR+1e', 'tSTR+4e', 'tSTR+1a', 'tSTR+4a',
+                    'tSTR2a@f', 'tSTR3a@f', 'tSTR2e@f', 'tSTR3e@f',
+                    'tSTR+1e@g', 'tSTR+4e@g', 'tSTR+1a@g', 'tSTR+4a@g',
+                    'tSTR2+re', 'tSTR3+le', 'tSTR2+ra', 'tSTR3+la',
+                    'tSTRr+1a', 'tSTRl+4a', 'tSTRr+1e', 'tSTRl+4e',
+                    'SHI1+r', 'SHI1+l', 'SHI1r', 'SHI1l',
+                    'STR2~RG', 'STR3~LG', 'STR2+4h', 'STR3+1h',
+                    'STR+1~RF', 'STR+4~LF', 'STR3h+1', 'STR2h+4',
+                    'STR2+1', 'STR3+4', 'STR1+4', 'STR2+3',
+                    '', '', '', '',
+                ]
+            },
+            "wesel": {
+                title: "Wesel",
+                icons: [
+                    'STRc2', 'STRc3', 'ABZg2', 'ABZg3',
+                    'STRc1', 'STRc4', 'ABZg+1', 'ABZg+4',
+                    'eABZg2', 'eABZg3', 'xABZg2', 'xABZg3',
+                    'eABZg+1', 'eABZg+4', 'xABZg+1', 'xABZg+4',
+                    'ABZ4+2f', 'ABZ1+3f', 'ABZ2+4r', 'ABZ3+1l',
+                    'ABZ3+1g', 'ABZ2+4g', 'ABZ1+3r', 'ABZ4+2l',
+                    'eABZ4+2f', 'eABZ1+3f', 'eABZ2+4r', 'eABZ3+1l',
+                    'eABZ3+1g', 'eABZ2+4g', 'eABZ1+3r', 'eABZ4+2l',
+                    'ABZ4+2xf', 'ABZ1+3xf', 'ABZ2+4xr', 'ABZ3+1xl',
+                    'ABZ3+1xg', 'ABZ2+4xg', 'ABZ1+3xr', 'ABZ4+2xl',
+                    'ABZ4+fx2', 'ABZ1+fx3', 'ABZ2+rx4', 'ABZ3+lx1',
+                    'ABZ3+gx1', 'ABZ2+gx4', 'ABZ1+rx3', 'ABZ4+lx2',
+                    'ABZq2', 'ABZq+3', 'ABZ2+gr', 'ABZ3+gl',
+                    'ABZq1', 'ABZq+4', 'ABZ1+fr', 'ABZ4+fl',
+                    'ABZ2l', 'ABZ3r', 'ABZr+2f', 'ABZl+3f',
+                    'ABZ+1l', 'ABZ+4r', 'ABZr+1g', 'ABZl+4g',
+                    'ABZ23', 'ABZ+14', 'ABZr+12', 'ABZl+34',
+                    'ABZ1+fr', 'ABZ2+gr', 'ABZ3+gl', 'ABZ4+fl',
+                    'WYE23', 'WYE+14', 'WYEr+12', 'WYEl+34',
+                    'SPLa', 'SPLa.F', 'vSHI2gl-', 'v-SHI2gr',
+                    'SPLe', 'SPLe.G', 'vSHI2g+l-', 'v-SHI2g+r',
+                    'vSTR-ABZg+1', 'vSTR-ABZg2', 'vABZg+4-STR', 'vABZg3-STR',
+                    'vABZg2-', 'v-ABZg3', 'v-ABZg2', 'vABZg3-',
+                    'vABZg+1-', 'v-ABZg+4', 'v-ABZg+1', 'vABZg+4-',
+                    'SPLg+2', 'SPLg+3', 'SPLr+2', 'SPLl+3',
+                    'SPL+1', 'SPL+4', 'SPLr+1', 'SPLl+4',
+                    'KRZ', 'KRX', 'ABZgl', 'ABZgr',
+                ]
+            },
+            "stasiun": {
+                title: "Bangunan & Stasiun",
+                icons: [
+                    'BHF', 'HST', 'KBHFa', 'KBHFe',
+                    'PLT', 'BUILDING', 'KKBHF', 'lELC',
+                    'PSTR', 'PSTR(L)', 'PSTR(R)', 'PLTr', 'PLTl',
+                    'PENDEa', 'PENDEe', 'PENDE@G', 'PENDE@F'
+                ]
+            },
+            "paralel": {
+                title: "Sepur Paralel",
+                icons: [
+                    'vSTR', 'vSTRfg', 'vSTR-', 'v-STR',
+                    'vBUE', 'vSKRZ-G2h', 'vBUE-', 'v-BUE',
+                    'vSTRo', 'hvSTRa', 'hvSTR', 'hvSTR',
+                    'vENDEa', 'vENDEe', 'vENDExa', 'vENDExe',
+                    'v-ENDEa', 'vENDEa-', 'vENDEe-', 'v-ENDEe',
+                    'vENDEa-SHI1+r', 'vENDEe-SHI1r', 'vSHI1+l-ENDEa', 'vSHI1l-ENDEe',
+                    'vCONTg', 'vCONTg@G', 'vCONTf', 'vCONTf@F',
+                    'vCONTf-', 'v-CONTf', 'vCONTgfa', 'vCONTgfe',
+                    'vBHF', 'vKRZ', 'vSTR-BHF'
+                ]
+            },
+            "fasilitas": {
+                title: "Lainnya",
+                icons: [
+                    'lENDE', 'BOOT', 'FLUG', 'WASSER',
+                    'lDRH', 'PARKING', 'GRZ', 'GRZq',
+                    'TRAIN2', 'BAHN', 'HS Train-CHN', 'SUBWAY-CHN',
+                ]
+            },
+            "sudut": {
+                title: "Sudut",
+                icons: [
+                    'STRc2', 'STRc3', 'ÜWu2', 'ÜWu3',
+                    'STRc1', 'STRc4', 'ÜWu1', 'ÜWu4',
+                    'STRc12', 'STRc34', 'STRc14', 'STRc23',
+                    'STRc13', 'STRc24', 'STRc1234', '',
+                ]
+            }
+        };
+
+        let currentPrefix = '';
+        // Cache untuk menyimpan nama ikon yang gagal dimuat dari Wikimedia Commons (tidak tersedia)
+        // Ikon dalam cache ini tidak akan dimunculkan ke antarmuka pengguna
+        const missingIconsCache = new Set();
+
+        /**
+         * Handler jika gambar ikon BSicon gagal dimuat dari Wikimedia Commons (404 / tidak tersedia).
+         * Ikon yang tidak memiliki gambar tidak akan dimunculkan (dihapus dari DOM)
+         * dan dicatat ke dalam cache agar tidak dirender ulang.
+         * @param {HTMLImageElement} imgEl - Elemen gambar yang gagal muat
+         * @param {string} iconName - Nama ikon hasil rakitan prefix
+         */
+        function handleIconError(imgEl, iconName) {
+            if (!imgEl) return;
+            missingIconsCache.add(iconName);
+            const item = imgEl.closest('.icon-item');
+            if (item) {
+                item.remove();
+            }
+        }
+
+        function handleDroppedIconError(imgEl, iconName) {
+            if (!imgEl) return;
+            missingIconsCache.add(iconName);
+            const dropped = imgEl.closest('.dropped-icon');
+            if (dropped) {
+                dropped.remove();
+            }
+        }
+
+        /**
+         * FUNGSI REKURSIF: Merakit prefix (ex, t, u, h) pada piktogram BSicon
+         * 
+         * Mekanisme Rekursif:
+         * 1. Basis Kasus:
+         *    - Jika baseIcon kosong, kembalikan ''.
+         *    - Jika prefix kosong ('', null, undefined, 'none', 'std'), kembalikan baseIcon.
+         *    - Jika array prefix telah kosong (semua prefix selesai dirakit), kembalikan baseIcon.
+         * 
+         * 2. Langkah Rekursif:
+         *    - Jika prefix berupa array [head, ...tail], gabungkan prefix terdepan (head)
+         *      dengan hasil pemanggilan rekursif assembleBSicon(baseIcon, tail).
+         *      Contoh: assembleBSicon('STR', ['ex', 't'])
+         *              => 'ex' + assembleBSicon('STR', ['t'])
+         *              => 'ex' + ('t' + assembleBSicon('STR', []))
+         *              => 'ex' + ('t' + 'STR')
+         *              => 'extSTR'
+         *    - Jika prefix berupa string tunggal atau rantai berpemisah (misal 'ex,u' atau 'ex u'),
+         *      diuraikan menjadi array dan diproses secara rekursif.
+         * 
+         * @param {string} baseIcon - Nama dasar ikon BSicon (contoh: 'STR', 'hSTR', 'BHF', 'STRc1')
+         * @param {string|string[]} prefix - Prefix yang diterapkan ('', 'u', 't', 'ex', 'h', atau array kombinasi)
+         * @returns {string} Nama BSicon lengkap hasil rakitan prefix
+         */
+        function assembleBSicon(baseIcon, prefix) {
+            if (!baseIcon) return '';
+
+            if (!prefix || prefix === '' || prefix === 'none' || prefix === 'std') {
+                return baseIcon;
+            }
+
+            if (Array.isArray(prefix)) {
+                if (prefix.length === 0) {
+                    return baseIcon;
+                }
+
+                const current = prefix[0];
+                const remaining = prefix.slice(1);
+
+                return current + assembleBSicon(baseIcon, remaining);
+            }
+
+            if (typeof prefix === 'string') {
+                const prefixList = prefix.trim().split(/[\s,+]+/).filter(Boolean);
+                return assembleBSicon(baseIcon, prefixList);
+            }
+
+            return baseIcon;
+        }
+
+        /**
+         * FUNGSI REKURSIF PEMBANTU: Merakit prefix ke seluruh elemen dalam array ikon
+         * @param {string[]} iconList - Daftar ikon sumber
+         * @param {string|string[]} prefix - Prefix yang akan dirakit
+         * @param {number} idx - Penunjuk indeks rekursi
+         * @returns {string[]} Array nama ikon yang telah dirakit
+         */
+        function assembleIconList(iconList, prefix, idx = 0) {
+            if (!iconList || idx >= iconList.length) return [];
+            return [
+                assembleBSicon(iconList[idx], prefix),
+                ...assembleIconList(iconList, prefix, idx + 1)
+            ];
+        }
+
+        /**
+         * Fungsi untuk memilih prefix aktif melalui tombol UI
+         * Memastikan hanya satu prefix yang aktif pada satu waktu.
+         * Berlaku dinamis untuk semua ikon yang ada di iconDatabase.
+         * @param {string} prefix - Prefix baru ('', 'u', 't', 'ex', atau 'h')
+         */
+        function setPrefix(prefix) {
+            currentPrefix = prefix;
+
+            const buttons = document.querySelectorAll('.prefix-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.prefix === prefix) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const badge = document.getElementById('activePrefixBadge');
+            if (badge) {
+                const labels = {
+                    '': 'Biasa (std)',
+                    'u': 'Tram (u)',
+                    't': 'Terowongan (t)',
+                    'ex': 'Nonaktif (ex)',
+                    'h': 'Melayang (h)'
+                };
+                badge.textContent = labels[prefix] || (prefix ? prefix.toUpperCase() : 'Biasa');
+            }
+
+            renderSidebar();
+        }
+
+        let currentCols = 7;
+        let currentRows = 10;
+        let pendingCols = 7;
+        let pendingRows = 10;
+        let hasSeenResizeWarning = false;
+
+        function getBSiconUrl(iconName) {
+            const fileName = `BSicon_${iconName}.svg`;
+
+            // MediaWiki menghitung hash dari nama fail secara spesifik (case sensitive)
+            const hash = md5(fileName);
+
+            // Ambil direktori berdasarkan hash (1 digit pertama, dan 2 digit pertama)
+            const dir1 = hash.substring(0, 1);
+            const dir2 = hash.substring(0, 2);
+
+            // Encode karakter khusus seperti '+' menjadi '%2B' untuk validasi URL
+            const encodedFileName = encodeURIComponent(fileName);
+
+            return `https://upload.wikimedia.org/wikipedia/commons/${dir1}/${dir2}/${encodedFileName}`;
+        }
+
+        function renderSidebar() {
+            const accordion = document.getElementById('categoryAccordion');
+
+            const existingCollapses = accordion.querySelectorAll('.accordion-collapse');
+            const openCollapseIds = new Set(
+                Array.from(existingCollapses)
+                    .filter(el => el.classList.contains('show'))
+                    .map(el => el.id)
+            );
+            const hasExistingState = existingCollapses.length > 0;
+
+            accordion.innerHTML = '';
+
+            let isFirst = true;
+
+            for (const [key, data] of Object.entries(iconDatabase)) {
+                const collapseId = `collapse-${key}`;
+                const isOpen = hasExistingState ? openCollapseIds.has(collapseId) : false;
+                const showClass = isOpen ? 'show' : '';
+                const collapsedClass = isOpen ? '' : 'collapsed';
+
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+
+                item.innerHTML = `
+                    <h2 class="accordion-header" id="heading-${key}">
+                        <button class="accordion-button py-2 ${collapsedClass}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}" aria-controls="${collapseId}">
+                            <strong>${data.title}</strong>
+                        </button>
+                    </h2>
+                    <div id="${collapseId}" class="accordion-collapse collapse ${showClass}" aria-labelledby="heading-${key}">
+                        <div class="accordion-body p-0">
+                            <div class="icon-grid" id="grid-${key}">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                accordion.appendChild(item);
+
+                const grid = document.getElementById(`grid-${key}`);
+                data.icons.forEach(baseIconName => {
+                    const assembledIconName = assembleBSicon(baseIconName, currentPrefix);
+
+                    if (missingIconsCache.has(assembledIconName)) {
+                        return;
+                    }
+
+                    const el = document.createElement('div');
+                    el.className = 'icon-item';
+                    // Di layar sentuh, drag native HTML5 mengambil alih long-press dan membatalkan
+                    // event touch, sehingga dimatikan dan diganti attachTouchDrag().
+                    el.draggable = !window.matchMedia('(pointer: coarse)').matches;
+                    el.dataset.baseIcon = baseIconName;
+                    el.dataset.iconName = assembledIconName.toLowerCase();
+
+                    const imgUrl = getBSiconUrl(assembledIconName);
+                    el.innerHTML = `<img src="${imgUrl}" alt="${baseIconName}" loading="lazy" 
+                                    onerror="handleIconError(this, '${assembledIconName}')">`;
+
+                    el.addEventListener('dragstart', (e) => {
+                        hideIconTooltip();
+                        const activeAssembled = assembleBSicon(baseIconName, currentPrefix);
+                        e.dataTransfer.setData('text/plain', activeAssembled);
+                        e.dataTransfer.effectAllowed = 'copy';
+                        setTimeout(() => el.style.opacity = '0.5', 0);
+                    });
+
+                    el.addEventListener('dragend', () => {
+                        el.style.opacity = '1';
+                    });
+
+                    attachTouchDrag(el, baseIconName);
+
+                    grid.appendChild(el);
+                });
+
+                isFirst = false;
+            }
+
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && searchInput.value.trim().length > 0) {
+                searchIcons();
+            }
+        }
+
+        /**
+         * Drag & drop versi sentuh (HTML5 DnD tidak berjalan di layar sentuh).
+         * Tekan-tahan ikon sebentar, lalu geser ke sel kanvas dan lepaskan.
+         * Geser cepat sebelum tahan tetap berfungsi sebagai scroll biasa.
+         */
+        function attachTouchDrag(el, baseIconName) {
+            const HOLD_MS = 200;
+            const MOVE_TOLERANCE = 10;
+            let timer = null;
+            let dragging = false;
+            let startX = 0, startY = 0;
+            let ghost = null;
+            let hoverCell = null;
+
+            const cellAt = (x, y) => {
+                const target = document.elementFromPoint(x, y);
+                return target ? target.closest('.canvas-cell') : null;
+            };
+
+            const cleanup = () => {
+                clearTimeout(timer);
+                timer = null;
+                dragging = false;
+                el.style.opacity = '1';
+                if (ghost) { ghost.remove(); ghost = null; }
+                if (hoverCell) { hoverCell.classList.remove('drag-over'); hoverCell = null; }
+            };
+
+            el.addEventListener('touchstart', (e) => {
+                if (e.touches.length !== 1) return;
+                const t = e.touches[0];
+                startX = t.clientX;
+                startY = t.clientY;
+                timer = setTimeout(() => {
+                    dragging = true;
+                    hideIconTooltip();
+                    el.style.opacity = '0.5';
+                    // Di mobile sidebar menutupi canvas: tutup agar sel canvas terlihat & dapat dijangkau.
+                    // Elemen tetap di DOM sehingga event touch yang sedang berjalan tidak terputus.
+                    if (window.innerWidth < 768) {
+                        const sb = document.getElementById('sidebar');
+                        if (sb) sb.classList.add('collapsed');
+                    }
+                    const img = el.querySelector('img');
+                    ghost = document.createElement('div');
+                    ghost.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;width:56px;height:56px;' +
+                        'transform:translate(-50%,-50%);opacity:0.85;background:#fff;border:1px solid #0d6efd;border-radius:6px;';
+                    if (img) {
+                        const clone = img.cloneNode();
+                        clone.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+                        ghost.appendChild(clone);
+                    }
+                    ghost.style.left = startX + 'px';
+                    ghost.style.top = startY + 'px';
+                    document.body.appendChild(ghost);
+                    if (navigator.vibrate) navigator.vibrate(15);
+                }, HOLD_MS);
+            }, { passive: true });
+
+            el.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                if (!dragging) {
+                    if (Math.abs(t.clientX - startX) > MOVE_TOLERANCE || Math.abs(t.clientY - startY) > MOVE_TOLERANCE) {
+                        clearTimeout(timer);
+                    }
+                    return;
+                }
+                e.preventDefault();
+                ghost.style.left = t.clientX + 'px';
+                ghost.style.top = t.clientY + 'px';
+                const cell = cellAt(t.clientX, t.clientY);
+                if (cell !== hoverCell) {
+                    if (hoverCell) hoverCell.classList.remove('drag-over');
+                    if (cell) cell.classList.add('drag-over');
+                    hoverCell = cell;
+                }
+            }, { passive: false });
+
+            el.addEventListener('touchend', (e) => {
+                if (dragging) {
+                    e.preventDefault();
+                    const t = e.changedTouches[0];
+                    const cell = cellAt(t.clientX, t.clientY);
+                    if (cell) {
+                        addIconToCell(cell, assembleBSicon(baseIconName, currentPrefix));
+                    }
+                }
+                cleanup();
+            });
+
+            el.addEventListener('touchcancel', cleanup);
+            el.addEventListener('contextmenu', (e) => e.preventDefault());
+        }
+
+        function dismissMobileHint() {
+            const hint = document.getElementById('mobileHint');
+            if (hint) hint.remove();
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        function searchIcons() {
+            const input = document.getElementById('searchInput').value.trim().toLowerCase();
+            const allIcons = document.querySelectorAll('.icon-item');
+            const accordions = document.querySelectorAll('.accordion-collapse');
+
+            if (input.length > 0) {
+                accordions.forEach(acc => acc.classList.add('show'));
+            }
+
+            allIcons.forEach(icon => {
+                const assembledName = icon.dataset.iconName || '';
+                const baseName = (icon.dataset.baseIcon || '').toLowerCase();
+                if (assembledName.includes(input) || baseName.includes(input)) {
+                    icon.style.display = 'flex';
+                } else {
+                    icon.style.display = 'none';
+                }
+            });
+        }
+
+        function resizeCanvas() {
+            pendingCols = parseInt(document.getElementById('gridCols').value) || 1;
+            pendingRows = parseInt(document.getElementById('gridRows').value) || 1;
+
+            if ((pendingCols < currentCols || pendingRows < currentRows) && !hasSeenResizeWarning) {
+                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('resizeConfirmModal'));
+                modal.show();
+            } else {
+                applyResize();
+            }
+        }
+
+        function confirmResize() {
+            hasSeenResizeWarning = true;
+            const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
+            if (modal) modal.hide();
+            applyResize();
+        }
+
+        function cancelResize() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
+            if (modal) modal.hide();
+
+            document.getElementById('gridCols').value = currentCols;
+            document.getElementById('gridRows').value = currentRows;
+        }
+
+        function applyResize() {
+            const savedState = [];
+            for (let r = 0; r < currentRows; r++) {
+                for (let c = 0; c < currentCols; c++) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+                    if (cell) {
+                        const icons = Array.from(cell.querySelectorAll('.dropped-icon')).map(el => el.dataset.iconName);
+                        if (icons.length > 0) {
+                            savedState.push({ r, c, icons });
+                        }
+                    }
+                }
+            }
+
+            currentCols = pendingCols;
+            currentRows = pendingRows;
+
+            renderCanvas();
+
+            savedState.forEach(item => {
+                if (item.r < currentRows && item.c < currentCols) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${item.r}"][data-col="${item.c}"]`);
+                    if (cell) {
+                        item.icons.forEach(iconName => addIconToCell(cell, iconName));
+                    }
+                }
+            });
+        }
+
+        function renderCanvas() {
+            const canvas = document.getElementById('route-canvas');
+            canvas.innerHTML = '';
+
+            canvas.style.gridTemplateColumns = `repeat(${currentCols}, var(--cell-size))`;
+
+            const totalCells = currentCols * currentRows;
+
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'canvas-cell';
+
+                const r = Math.floor(i / currentCols);
+                const c = i % currentCols;
+
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+
+                if (c === currentCols - 1) cell.style.borderRight = 'none';
+                if (r === currentRows - 1) cell.style.borderBottom = 'none';
+
+                cell.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'copy';
+                    cell.classList.add('drag-over');
+                });
+
+                cell.addEventListener('dragenter', (e) => {
+                    e.preventDefault();
+                    cell.classList.add('drag-over');
+                });
+
+                cell.addEventListener('dragleave', () => {
+                    cell.classList.remove('drag-over');
+                });
+
+                cell.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    cell.classList.remove('drag-over');
+                    const iconName = e.dataTransfer.getData('text/plain');
+                    if (iconName) {
+                        addIconToCell(cell, iconName);
+                    }
+                });
+
+                cell.addEventListener('dblclick', () => {
+                    cell.innerHTML = '';
+                });
+
+                canvas.appendChild(cell);
+            }
+        }
+
+        function addIconToCell(cell, iconName) {
+            if (missingIconsCache.has(iconName)) {
+                return;
+            }
+
+            const droppedEl = document.createElement('div');
+            droppedEl.className = 'dropped-icon';
+            droppedEl.dataset.iconName = iconName;
+
+            const imgUrl = getBSiconUrl(iconName);
+            droppedEl.innerHTML = `<img src="${imgUrl}" alt="${iconName}" 
+                                   onerror="handleDroppedIconError(this, '${iconName}')">`;
+
+            // Logika tumpukan transparan (!~). 
+            // Elemen baru selalu ditumpuk di atas elemen sebelumnya berkat position: absolute dan bg: transparent.
+            cell.appendChild(droppedEl);
+        }
+
+        function clearCanvas() {
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('clearConfirmModal'));
+            modal.show();
+        }
+
+        function executeClearCanvas() {
+            const cells = document.querySelectorAll('.canvas-cell');
+            cells.forEach(cell => cell.innerHTML = '');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('clearConfirmModal'));
+            if (modal) modal.hide();
+        }
+
+        function exportData() {
+            let wikitext = "{{routemap\n|title=Isi Nama Stasiun di sini\n|map=\n";
+
+            for (let r = 0; r < currentRows; r++) {
+                let rowIcons = [];
+                for (let c = 0; c < currentCols; c++) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+                    const droppedIcons = cell.querySelectorAll('.dropped-icon');
+
+                    if (droppedIcons.length === 0) {
+                        rowIcons.push("");
+                    } else {
+                        // Gabungkan semua ikon dalam sel yang sama menggunakan !~
+                        const icons = Array.from(droppedIcons).map(el => el.dataset.iconName);
+                        rowIcons.push(icons.join("!~"));
+                    }
+                }
+                // Gabungkan sel dalam satu baris dengan backslash '\'
+                wikitext += rowIcons.join("\\") + "\n";
+            }
+
+            wikitext += "}}";
+
+            document.getElementById('exportTextarea').value = wikitext;
+
+            const exportModal = new bootstrap.Modal(document.getElementById('exportModal'));
+            exportModal.show();
+        }
+
+        function copyExport() {
+            const textarea = document.getElementById('exportTextarea');
+            textarea.select();
+            document.execCommand('copy');
+
+            const copyBtn = document.getElementById('copyBtn');
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin!';
+            copyBtn.classList.replace('btn-primary', 'btn-success');
+
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.classList.replace('btn-success', 'btn-primary');
+            }, 2000);
+        }
+
+        let iconTooltipTimeout = null;
+
+        function showIconTooltip(element) {
+            const baseIcon = element.dataset.baseIcon;
+            if (!baseIcon) return;
+
+            const tooltip = document.getElementById('iconHoverTooltip');
+            if (!tooltip) return;
+
+            if (iconTooltipTimeout) {
+                clearTimeout(iconTooltipTimeout);
+                iconTooltipTimeout = null;
+            }
+
+            tooltip.textContent = baseIcon;
+            const rect = element.getBoundingClientRect();
+            const left = rect.left + (rect.width / 2);
+            let top = rect.top;
+
+            if (top < 50) {
+                top = rect.bottom + 10;
+                tooltip.style.transform = 'translate(-50%, 0)';
+            } else {
+                tooltip.style.transform = '';
+            }
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+            tooltip.classList.add('active');
+        }
+
+        function hideIconTooltip() {
+            if (iconTooltipTimeout) {
+                clearTimeout(iconTooltipTimeout);
+                iconTooltipTimeout = null;
+            }
+            const tooltip = document.getElementById('iconHoverTooltip');
+            if (tooltip) {
+                tooltip.classList.remove('active');
+            }
+        }
+
+        function initIconTooltipListeners() {
+            const wrapper = document.querySelector('.accordion-wrapper');
+            if (!wrapper) return;
+
+            wrapper.addEventListener('mouseover', (e) => {
+                const item = e.target.closest('.icon-item');
+                if (item) {
+                    showIconTooltip(item);
+                }
+            });
+
+            wrapper.addEventListener('mouseout', (e) => {
+                const item = e.target.closest('.icon-item');
+                if (item && !item.contains(e.relatedTarget)) {
+                    hideIconTooltip();
+                }
+            });
+
+            wrapper.addEventListener('click', (e) => {
+                const item = e.target.closest('.icon-item');
+                if (item) {
+                    showIconTooltip(item);
+                    iconTooltipTimeout = setTimeout(() => {
+                        hideIconTooltip();
+                    }, 2500);
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.icon-item')) {
+                    hideIconTooltip();
+                }
+            });
+
+            wrapper.addEventListener('scroll', () => {
+                hideIconTooltip();
+            });
+        }
+
+        window.onload = function () {
+            renderSidebar();
+            renderCanvas();
+            initIconTooltipListeners();
+
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+            }
+        };
+
+        window.addEventListener('resize', () => {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('collapsed');
+            } else {
+                sidebar.classList.add('collapsed');
+            }
+        });
+    </script>
+
+    <div id="iconHoverTooltip" class="icon-hover-tooltip"></div>
+</body>
+
+</html>
