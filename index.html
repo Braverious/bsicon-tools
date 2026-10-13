@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPOORWIKI Tools - ID</title>
+    <title>SPOORWIKI Tools Dev</title>
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -255,6 +255,60 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 8px;
+        }
+
+        .toolbar-size,
+        .toolbar-actions {
+            display: flex;
+            align-items: center;
+            flex-wrap: nowrap;
+            flex-shrink: 0;
+        }
+
+        .toolbar-actions {
+            gap: 8px;
+        }
+
+        .toolbar-input {
+            width: 60px;
+        }
+
+        .toolbar-times {
+            margin: 0 6px;
+            color: #6c757d;
+        }
+
+        .toolbar-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 575.98px) {
+            .canvas-toolbar {
+                padding: 8px 10px;
+            }
+
+            .toolbar-input {
+                width: 52px;
+            }
+
+            .toolbar-times {
+                margin: 0 4px;
+            }
+
+            .toolbar-actions {
+                gap: 6px;
+            }
+
+            .toolbar-btn {
+                padding: 0.3rem 0.55rem;
+                font-size: 0.8rem;
+                gap: 5px;
+            }
         }
 
         .canvas-wrapper {
@@ -302,7 +356,6 @@
             font-weight: 700;
             color: #212529;
             background-color: transparent;
-            /* Ubah ke transparan agar !~ berfungsi */
             pointer-events: none;
             box-sizing: border-box;
             word-break: break-word;
@@ -444,7 +497,7 @@
         </button>
         <div class="kai-sign">
             <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
-            <p class="kai-sign-elev">v 2.0</p>
+            <p class="kai-sign-elev">v 2.0+</p>
         </div>
     </header>
 
@@ -524,22 +577,23 @@
             </div>
 
             <div class="canvas-toolbar">
-                <div>
+                <div class="toolbar-size">
                     <span class="fw-semibold me-2 d-none d-md-inline"><i class="fa-solid fa-border-all"></i>
                         Ukuran:</span>
-                    <input type="number" id="gridCols" class="form-control form-control-sm d-inline-block text-center"
-                        style="width: 60px;" value="7" min="1" max="50" onchange="resizeCanvas()" title="Jumlah Kolom">
-                    <span class="mx-1">×</span>
-                    <input type="number" id="gridRows" class="form-control form-control-sm d-inline-block text-center"
-                        style="width: 60px;" value="10" min="1" max="100" onchange="resizeCanvas()"
-                        title="Jumlah Baris">
+                    <input type="number" id="gridCols" class="form-control form-control-sm text-center toolbar-input"
+                        value="7" min="1" max="50" onchange="resizeCanvas()" title="Jumlah Kolom"
+                        aria-label="Jumlah Kolom">
+                    <span class="toolbar-times">×</span>
+                    <input type="number" id="gridRows" class="form-control form-control-sm text-center toolbar-input"
+                        value="10" min="1" max="100" onchange="resizeCanvas()" title="Jumlah Baris"
+                        aria-label="Jumlah Baris">
                 </div>
-                <div>
-                    <button class="btn btn-sm btn-outline-danger me-2" onclick="clearCanvas()">
-                        <i class="fa-solid fa-trash-can"></i> Kosongkan
+                <div class="toolbar-actions">
+                    <button class="btn btn-sm btn-outline-danger toolbar-btn" onclick="clearCanvas()">
+                        <i class="fa-solid fa-trash-can"></i><span>Kosongkan</span>
                     </button>
-                    <button class="btn btn-sm btn-dark" onclick="exportData()">
-                        <i class="fa-solid fa-code"></i> Ekspor
+                    <button class="btn btn-sm btn-dark toolbar-btn" onclick="exportData()">
+                        <i class="fa-solid fa-code"></i><span>Ekspor</span>
                     </button>
                 </div>
             </div>
@@ -550,7 +604,7 @@
             </div>
 
             <div class="p-2 bg-white border-top text-center text-muted" style="font-size: 0.75rem;">
-                Made by Braverious | <a href="https://id.wikipedia.org/wiki/Pembicaraan_Pengguna:Braverious"
+                Dev by Braverious | <a href="https://id.wikipedia.org/wiki/Pembicaraan_Pengguna:Braverious"
                     target="_blank" rel="noopener noreferrer"
                     class="text-secondary text-decoration-underline">Bicara</a>
             </div>
@@ -652,7 +706,7 @@
                     'ENDE@G', 'ENDE@F', 'ENDEa', 'ENDEe',
                     'ENDE2@F', 'ENDE3@F', 'ENDE2', 'ENDE3',
                     'ENDE1@G', 'ENDE4@G', 'ENDE1', 'ENDE4',
-                    'ENDE4@F', 'ENDE1@F', 'ENDE2+4xe', 'ENDE3+1xe',
+                    'ENDE2@G', 'ENDE3@G', 'ENDE2+4xe', 'ENDE3+1xe',
                     'ENDE1@F', 'ENDE4@F', 'ENDE3+1xe', 'ENDE2+4xe',
                     'CONT2+4', 'CONT3+1', 'CONT4', 'CONT1',
                     'CONT1+3', 'CONT4+2', 'CONT3', 'CONT2',
@@ -668,10 +722,6 @@
                     'hSTRae(l)', 'hSTRae(r)', 'STRo(l)', 'STRo(r)',
                     'hSTRe@f', 'hSTRa@g', 'hSTR(r)', 'hSTR(l)',
                     'SKRZ-G2o', 'SKRZ-G4o', 'WBRÜCKE2', 'hKRZWae',
-                    '', '', '', '',
-                    '', '', '', '',
-                    '', '', '', '',
-                    '', '', '', '',
                 ]
             },
             "sepur-belok": {
@@ -691,7 +741,7 @@
                     'STR2~RG', 'STR3~LG', 'STR2+4h', 'STR3+1h',
                     'STR+1~RF', 'STR+4~LF', 'STR3h+1', 'STR2h+4',
                     'STR2+1', 'STR3+4', 'STR1+4', 'STR2+3',
-
+                    '', '', '', '',
                 ]
             },
             "wesel": {
@@ -1267,7 +1317,7 @@
         }
 
         function exportData() {
-            let wikitext = "{{routemap\n|title=Rute Saya\n|map=\n";
+            let wikitext = "{{routemap\n|title=Isi Nama Stasiun di sini\n|map=\n";
 
             for (let r = 0; r < currentRows; r++) {
                 let rowIcons = [];
