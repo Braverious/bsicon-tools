@@ -472,7 +472,7 @@
                     </div>
                     <div class="col-6">
                         <button type="button" class="btn w-100 prefix-btn" data-prefix="u" onclick="setPrefix('u')"
-                            title="Jalur Tram / LRT (prefix u)">
+                            title="Jalur Tram / LRT / MRT (prefix u)">
                             <span>Tram</span>
                             <span class="prefix-tag">u</span>
                         </button>
@@ -725,7 +725,7 @@
                     'BHF', 'HST', 'KBHFa', 'KBHFe',
                     'PLT', 'BUILDING', 'KKBHF', 'lELC',
                     'PSTR', 'PSTR(L)', 'PSTR(R)', 'PLTr', 'PLTl',
-                    'PENDEa', 'PENDEe', 'PENDEa(LR)', 'PENDE@F'
+                    'PENDEa', 'PENDEe', 'PENDE@G', 'PENDE@F'
                 ]
             },
             "paralel": {
@@ -944,9 +944,9 @@
             let isFirst = true;
 
             for (const [key, data] of Object.entries(iconDatabase)) {
-                // Tentukan apakah accordion ini terbuka
+                // Tentukan apakah accordion ini terbuka (default tertutup semua saat pertama kali load)
                 const collapseId = `collapse-${key}`;
-                const isOpen = hasExistingState ? openCollapseIds.has(collapseId) : isFirst;
+                const isOpen = hasExistingState ? openCollapseIds.has(collapseId) : false;
                 const showClass = isOpen ? 'show' : '';
                 const collapsedClass = isOpen ? '' : 'collapsed';
 
@@ -1006,6 +1006,9 @@
                         el.style.opacity = '1';
                     });
 
+                    // Dukungan drag & drop untuk layar sentuh (mobile)
+                    attachTouchDrag(el, baseIconName);
+
                     grid.appendChild(el);
                 });
 
@@ -1017,6 +1020,95 @@
             if (searchInput && searchInput.value.trim().length > 0) {
                 searchIcons();
             }
+        }
+
+        /**
+         * Drag & drop versi sentuh (HTML5 DnD tidak berjalan di layar sentuh).
+         * Tekan-tahan ikon sebentar, lalu geser ke sel kanvas dan lepaskan.
+         * Geser cepat sebelum tahan tetap berfungsi sebagai scroll biasa.
+         */
+        function attachTouchDrag(el, baseIconName) {
+            const HOLD_MS = 200;
+            const MOVE_TOLERANCE = 10;
+            let timer = null;
+            let dragging = false;
+            let startX = 0, startY = 0;
+            let ghost = null;
+            let hoverCell = null;
+
+            const cellAt = (x, y) => {
+                const target = document.elementFromPoint(x, y);
+                return target ? target.closest('.canvas-cell') : null;
+            };
+
+            const cleanup = () => {
+                clearTimeout(timer);
+                timer = null;
+                dragging = false;
+                el.style.opacity = '1';
+                if (ghost) { ghost.remove(); ghost = null; }
+                if (hoverCell) { hoverCell.classList.remove('drag-over'); hoverCell = null; }
+            };
+
+            el.addEventListener('touchstart', (e) => {
+                if (e.touches.length !== 1) return;
+                const t = e.touches[0];
+                startX = t.clientX;
+                startY = t.clientY;
+                timer = setTimeout(() => {
+                    dragging = true;
+                    hideIconTooltip();
+                    el.style.opacity = '0.5';
+                    const img = el.querySelector('img');
+                    ghost = document.createElement('div');
+                    ghost.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;width:56px;height:56px;' +
+                        'transform:translate(-50%,-50%);opacity:0.85;background:#fff;border:1px solid #0d6efd;border-radius:6px;';
+                    if (img) {
+                        const clone = img.cloneNode();
+                        clone.style.cssText = 'width:100%;height:100%;object-fit:contain;';
+                        ghost.appendChild(clone);
+                    }
+                    ghost.style.left = startX + 'px';
+                    ghost.style.top = startY + 'px';
+                    document.body.appendChild(ghost);
+                    if (navigator.vibrate) navigator.vibrate(15);
+                }, HOLD_MS);
+            }, { passive: true });
+
+            el.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                if (!dragging) {
+                    // Jika jari bergeser sebelum tahan selesai, anggap sebagai scroll
+                    if (Math.abs(t.clientX - startX) > MOVE_TOLERANCE || Math.abs(t.clientY - startY) > MOVE_TOLERANCE) {
+                        clearTimeout(timer);
+                    }
+                    return;
+                }
+                e.preventDefault(); // Cegah scroll saat drag
+                ghost.style.left = t.clientX + 'px';
+                ghost.style.top = t.clientY + 'px';
+                const cell = cellAt(t.clientX, t.clientY);
+                if (cell !== hoverCell) {
+                    if (hoverCell) hoverCell.classList.remove('drag-over');
+                    if (cell) cell.classList.add('drag-over');
+                    hoverCell = cell;
+                }
+            }, { passive: false });
+
+            el.addEventListener('touchend', (e) => {
+                if (dragging) {
+                    e.preventDefault();
+                    const t = e.changedTouches[0];
+                    const cell = cellAt(t.clientX, t.clientY);
+                    if (cell) {
+                        addIconToCell(cell, assembleBSicon(baseIconName, currentPrefix));
+                    }
+                }
+                cleanup();
+            });
+
+            el.addEventListener('touchcancel', cleanup);
+            el.addEventListener('contextmenu', (e) => e.preventDefault());
         }
 
         // Fungsi Toggle Sidebar
