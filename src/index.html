@@ -343,6 +343,64 @@
             border-color: #198754;
         }
 
+        /* Danger Zone saat pemotongan dimensi kanvas (Opsi 2) */
+        .canvas-cell.danger-crop-empty {
+            background-color: rgba(220, 53, 69, 0.08) !important;
+            outline: 2px dashed rgba(220, 53, 69, 0.5) !important;
+            outline-offset: -2px;
+            position: relative;
+        }
+
+        .canvas-cell.danger-crop-empty::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(-45deg,
+                    rgba(220, 53, 69, 0.07),
+                    rgba(220, 53, 69, 0.07) 6px,
+                    transparent 6px,
+                    transparent 12px);
+            pointer-events: none;
+        }
+
+        .canvas-cell.danger-crop-active {
+            background-color: rgba(220, 53, 69, 0.25) !important;
+            outline: 2px solid #dc3545 !important;
+            outline-offset: -2px;
+            animation: dangerCellPulse 1.5s ease-in-out infinite;
+            z-index: 5;
+        }
+
+        .canvas-cell.danger-crop-active::after {
+            content: '\f00d';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            top: 2px;
+            right: 4px;
+            font-size: 0.7rem;
+            color: #dc3545;
+            text-shadow: 0 0 2px #fff;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        @keyframes dangerCellPulse {
+
+            0%,
+            100% {
+                background-color: rgba(220, 53, 69, 0.2);
+            }
+
+            50% {
+                background-color: rgba(220, 53, 69, 0.42);
+            }
+        }
+
+        #resizeConfirmModal.show~.modal-backdrop {
+            opacity: 0.35;
+        }
+
         .dropped-icon {
             position: absolute;
             top: 0;
@@ -581,11 +639,15 @@
                     <span class="fw-semibold me-2 d-none d-md-inline"><i class="fa-solid fa-border-all"></i>
                         Ukuran:</span>
                     <input type="number" id="gridCols" class="form-control form-control-sm text-center toolbar-input"
-                        value="7" min="1" max="50" onchange="resizeCanvas()" title="Jumlah Kolom"
+                        value="7" min="1" max="50" onchange="resizeCanvas()"
+                        onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" title="Jumlah Kolom"
                         aria-label="Jumlah Kolom">
                     <span class="toolbar-times">×</span>
                     <input type="number" id="gridRows" class="form-control form-control-sm text-center toolbar-input"
-                        value="10" min="1" max="100" onchange="resizeCanvas()" title="Jumlah Baris"
+                        value="10" min="1" max="100" onchange="resizeCanvas()"
+                        onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" title="Jumlah Baris"
                         aria-label="Jumlah Baris">
                 </div>
                 <div class="toolbar-actions">
@@ -638,19 +700,19 @@
     <div class="modal fade" id="resizeConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content shadow">
                 <div class="modal-header">
-                    <h5 class="modal-title text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Peringatan
-                        Pengecilan</h5>
+                    <h5 class="modal-title text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Perhatian!
+                    </h5>
+                    <button type="button" class="btn-close" onclick="cancelResize()" aria-label="Batal"></button>
                 </div>
-                <div class="modal-body">
-                    Memperkecil kanvas dapat menghapus ikon yang berada di luar batas rute saat ini. Lanjutkan?
-                    <div class="mt-2 text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-info-circle"></i>
-                        Peringatan ini hanya akan ditampilkan satu kali.</div>
+                <div class="modal-body" id="resizeModalBody">
+                    Memperkecil kanvas akan memotong area rute di kanvas.
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" onclick="cancelResize()">Batal</button>
-                    <button type="button" class="btn btn-warning" onclick="confirmResize()">Lanjutkan</button>
+                    <button type="button" class="btn btn-danger" onclick="confirmResize()"><i
+                            class="fa-solid fa-scissors me-1"></i> Terapkan & Potong</button>
                 </div>
             </div>
         </div>
@@ -1017,9 +1079,7 @@
 
                     const el = document.createElement('div');
                     el.className = 'icon-item';
-                    // Di layar sentuh, drag native HTML5 mengambil alih long-press dan membatalkan
-                    // event touch, sehingga dimatikan dan diganti attachTouchDrag().
-                    el.draggable = !window.matchMedia('(pointer: coarse)').matches;
+                    el.draggable = true;
                     el.dataset.baseIcon = baseIconName;
                     el.dataset.iconName = assembledIconName.toLowerCase();
 
@@ -1177,31 +1237,104 @@
             });
         }
 
+        function highlightCropArea(newCols, newRows) {
+            clearResizeHighlights();
+            let affectedIcons = 0;
+            const cells = document.querySelectorAll('.canvas-cell');
+            cells.forEach(cell => {
+                const r = parseInt(cell.dataset.row);
+                const c = parseInt(cell.dataset.col);
+                if (r >= newRows || c >= newCols) {
+                    const iconCount = cell.querySelectorAll('.dropped-icon').length;
+                    if (iconCount > 0) {
+                        cell.classList.add('danger-crop-active');
+                        affectedIcons += iconCount;
+                    } else {
+                        cell.classList.add('danger-crop-empty');
+                    }
+                }
+            });
+            return affectedIcons;
+        }
+
+        function clearResizeHighlights() {
+            document.querySelectorAll('.canvas-cell.danger-crop-active, .canvas-cell.danger-crop-empty').forEach(cell => {
+                cell.classList.remove('danger-crop-active', 'danger-crop-empty');
+            });
+        }
+
         function resizeCanvas() {
             pendingCols = parseInt(document.getElementById('gridCols').value) || 1;
             pendingRows = parseInt(document.getElementById('gridRows').value) || 1;
 
-            if ((pendingCols < currentCols || pendingRows < currentRows) && !hasSeenResizeWarning) {
-                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('resizeConfirmModal'));
-                modal.show();
-            } else {
-                applyResize();
+            if (pendingCols < 1) pendingCols = 1;
+            if (pendingRows < 1) pendingRows = 1;
+            if (pendingCols > 50) pendingCols = 50;
+            if (pendingRows > 100) pendingRows = 100;
+            document.getElementById('gridCols').value = pendingCols;
+            document.getElementById('gridRows').value = pendingRows;
+
+            if (pendingCols === currentCols && pendingRows === currentRows) {
+                clearResizeHighlights();
+                return;
             }
+
+            if (pendingCols >= currentCols && pendingRows >= currentRows) {
+                clearResizeHighlights();
+                applyResize();
+                return;
+            }
+
+            const affectedIcons = highlightCropArea(pendingCols, pendingRows);
+
+            const cutCols = Math.max(0, currentCols - pendingCols);
+            const cutRows = Math.max(0, currentRows - pendingRows);
+
+            let cutDesc = [];
+            if (cutCols > 0) cutDesc.push(`<strong>${cutCols} kolom paling kanan</strong>`);
+            if (cutRows > 0) cutDesc.push(`<strong>${cutRows} baris paling bawah</strong>`);
+
+            const modalBody = document.getElementById('resizeModalBody');
+            if (modalBody) {
+                modalBody.innerHTML = `
+                    <p class="mb-2">Ukuran kanvas akan diubah dari <strong>${currentCols}×${currentRows}</strong> menjadi <strong>${pendingCols}×${pendingRows}</strong>.</p>
+                    <p class="mb-2 text-secondary" style="font-size: 0.85rem;">Area yang dipotong: ${cutDesc.join(' dan ')}.</p>
+                    ${affectedIcons > 0
+                        ? `<div class="alert alert-danger py-2 px-3 my-2 d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation fs-5"></i>
+                            <div><strong>Perhatian:</strong> Ada <strong>${affectedIcons} ikon</strong> di area merah yang akan ikut terhapus!</div>
+                           </div>`
+                        : `<div class="alert alert-info py-2 px-3 my-2 d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-circle-info fs-5"></i>
+                            <div>Area yang disorot merah adalah sel kosong. Tidak ada ikon yang terhapus.</div>
+                           </div>`
+                    }
+                    <div class="text-muted small mt-2">
+                     Periksa sel berwarna merah pada kanvas di belakang untuk melihat area yang terdampak.
+                    </div>
+                `;
+            }
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('resizeConfirmModal'));
+            modal.show();
         }
 
         function confirmResize() {
-            hasSeenResizeWarning = true;
+            clearResizeHighlights();
             const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
             if (modal) modal.hide();
             applyResize();
         }
 
         function cancelResize() {
+            clearResizeHighlights();
             const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
             if (modal) modal.hide();
 
             document.getElementById('gridCols').value = currentCols;
             document.getElementById('gridRows').value = currentRows;
+            pendingCols = currentCols;
+            pendingRows = currentRows;
         }
 
         function applyResize() {
@@ -1299,8 +1432,8 @@
             droppedEl.innerHTML = `<img src="${imgUrl}" alt="${iconName}" 
                                    onerror="handleDroppedIconError(this, '${iconName}')">`;
 
-            // Logika tumpukan transparan (!~). 
-            // Elemen baru selalu ditumpuk di atas elemen sebelumnya berkat position: absolute dan bg: transparent.
+            /* Logika tumpukan transparan (!~). 
+            /* Elemen baru selalu ditumpuk di atas elemen sebelumnya berkat position: absolute dan bg: transparent. */
             cell.appendChild(droppedEl);
         }
 
@@ -1442,10 +1575,43 @@
             });
         }
 
+        function initDimensionInputs() {
+            ['gridCols', 'gridRows'].forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+
+                el.addEventListener('keydown', (e) => {
+                    if (['-', '+', 'e', 'E'].includes(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+
+                el.addEventListener('input', () => {
+                    el.value = el.value.replace(/[^0-9]/g, '');
+                });
+
+                el.addEventListener('blur', () => {
+                    const val = parseInt(el.value);
+                    if (isNaN(val) || val < 1) {
+                        el.value = 1;
+                        resizeCanvas();
+                    }
+                });
+            });
+        }
+
         window.onload = function () {
             renderSidebar();
             renderCanvas();
             initIconTooltipListeners();
+            initDimensionInputs();
+
+            const resizeModalEl = document.getElementById('resizeConfirmModal');
+            if (resizeModalEl) {
+                resizeModalEl.addEventListener('hidden.bs.modal', () => {
+                    clearResizeHighlights();
+                });
+            }
 
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('collapsed');
