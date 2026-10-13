@@ -634,9 +634,7 @@
 `, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
         console.log('%c🚀 SPOORWIKI Tools v2.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
 
-        // Data Kategori dan Ikon Dasar (Base Icons)
         // Varian prefix (ex, u, t) dirakit secara dinamis melalui fungsi rekursif assembleBSicon.
-        // hSTR dipertahankan di sini karena merupakan ikon khusus horizontal.
         const iconDatabase = {
             "sepur-lurus": {
                 title: "Sepur Lurus",
@@ -651,26 +649,67 @@
                     'ENDE1@F', 'ENDE4@F', 'ENDE3+1xe', 'ENDE2+4xe',
                     'CONT2+4', 'CONT3+1', 'CONT4', 'CONT1',
                     'CONT1+3', 'CONT4+2', 'CONT3', 'CONT2',
-                    'CONT2+g', 'CONT3+g', 'CONT2+r', 'CONT3+l',
-                    'CONT1+f', 'CONT4+f', 'CONT1+r', 'CONT4+l',
                     'tSTR2+4a@f', 'tSTR3+1a@f', 'tSTR2+4a', 'tSTR3+1a',
                     'tSTR3+1e@g', 'tSTR2+4e@g', 'tSTR3+1e', 'tSTR2+4e',
                     'STRb', 'STRbl', 'STRbr', 'STRbm',
                     'BUE', 'SKRZ-G1', 'SKRZ-G1BUE', 'SKRZ-G2BUE',
+                    'hSTRae', 'STRo', 'BRÜCKE2', 'eLFT',
+                    'hSTRaeq', 'STRoq', 'BRÜCKE2q', 'LFTq',
+                    'hSTR2+4ae', 'hSTR3+1ae', 'TUNNEL2+4', 'TUNNEL3+1',
+                    'SBRÜCKE', 'SBRÜCKEm', 'SKRZ-G2u', 'SKRZ-G4u',
+                    'htSTRaa', 'htSTRee', 'TUNNEL1', 'TUNNEL1-m',
+                    'hSTRae(l)', 'hSTRae(r)', 'STRo(l)', 'STRo(r)',
+                    'hSTRe@f', 'hSTRa@g', 'hSTR(r)', 'hSTR(l)',
+                    'SKRZ-G2o', 'SKRZ-G4o', 'WBRÜCKE2', 'hKRZWae',
+                    '', '', '', '',
+                    '', '', '', '',
+                    '', '', '', '',
+                    '', '', '', '',
                 ]
             },
             "sepur-belok": {
                 title: "Sepur Belok",
                 icons: [
-                    'STR2', , 'STR3', 'STR+1', 'STR+4',
+                    'STR2', 'STR3', 'STR2+r', 'STR3+l',
+                    'STR+1', 'STR+4', 'STRr+1', 'STRl+4',
+                    'CONT2+g', 'CONT3+g', 'CONT2+r', 'CONT3+l',
+                    'CONT1+f', 'CONT4+f', 'CONT1+r', 'CONT4+l',
+                    'tSTR2a', 'tSTR3a', 'tSTR2e', 'tSTR3e',
+                    'tSTR+1e', 'tSTR+4e', 'tSTR+1a', 'tSTR+4a',
+                    'tSTR2a@f', 'tSTR3a@f', 'tSTR2e@f', 'tSTR3e@f',
+                    'tSTR+1e@g', 'tSTR+4e@g', 'tSTR+1a@g', 'tSTR+4a@g',
+                    'tSTR2+re', 'tSTR3+le', 'tSTR2+ra', 'tSTR3+la',
+                    'tSTRr+1a', 'tSTRl+4a', 'tSTRr+1e', 'tSTRl+4e',
+                    'SHI1+r', 'SHI1+l', 'SHI1r', 'SHI1l',
+                    'STR2~RG', 'STR3~LG', 'STR2+4h', 'STR3+1h',
+                    'STR+1~RF', 'STR+4~LF', 'STR3h+1', 'STR2h+4',
+                    'STR2+1', 'STR3+4', 'STR1+4', 'STR2+3',
+
                 ]
             },
             "wesel": {
-                title: "Wesel & Persilangan",
+                title: "Wesel",
                 icons: [
                     'STRc2', 'STRc3', 'ABZg2', 'ABZg3',
                     'STRc1', 'STRc4', 'ABZg+1', 'ABZg+4',
-                    'KRZ', 'KRZu', 'ABZgl', 'ABZgr'
+                    'eABZg2', 'eABZg3', 'xABZg2', 'xABZg3',
+                    'eABZg+1', 'eABZg+4', 'xABZg+1', 'xABZg+4',
+                    'ABZ4+2f', 'ABZ1+3f', 'ABZ2+4r', 'ABZ3+1l',
+                    'ABZ3+1g', 'ABZ2+4g', 'ABZ1+3r', 'ABZ4+2l',
+                    'eABZ4+2f', 'eABZ1+3f', 'eABZ2+4r', 'eABZ3+1l',
+                    'eABZ3+1g', 'eABZ2+4g', 'eABZ1+3r', 'eABZ4+2l',
+                    'ABZ4+2xf', 'ABZ1+3xf', 'ABZ2+4xr', 'ABZ3+1xl',
+                    'ABZ3+1xg', 'ABZ2+4xg', 'ABZ1+3xr', 'ABZ4+2xl',
+                    'ABZ4+fx2', 'ABZ1+fx3', 'ABZ2+rx4', 'ABZ3+lx1',
+                    'ABZ3+gx1', 'ABZ2+gx4', 'ABZ1+rx3', 'ABZ4+lx2',
+                    'ABZq2', 'ABZq+3', 'ABZ2+gr', 'ABZ3+gl',
+                    'ABZq1', 'ABZq+4', 'ABZ1+fr', 'ABZ4+fl',
+                    'ABZ2l', 'ABZ3r', 'ABZr+2f', 'ABZl+3f',
+                    'ABZ+1l', 'ABZ+4r', 'ABZr+1g', 'ABZl+4g',
+                    'ABZ23', 'ABZ+14', 'ABZr+12', 'ABZl+34',
+                    'ABZ1+fr', 'ABZ2+gr', 'ABZ3+gl', 'ABZ4+fl',
+                    'WYE23', 'WYE+14', 'WYEr+12', 'WYEl+34',
+                    'KRZ', 'KRZu', 'ABZgl', 'ABZgr',
                 ]
             },
             "stasiun": {
@@ -684,6 +723,15 @@
             "fasilitas": {
                 title: "Fasilitas & Lainnya",
                 icons: ['lENDE', 'BOOT', 'FLUG', 'WASSER', 'BRIDGE']
+            },
+            "sudut": {
+                title: "Sudut",
+                icons: [
+                    'STRc2', 'STRc3', 'ÜWu2', 'ÜWu3',
+                    'STRc1', 'STRc4', 'ÜWu1', 'ÜWu4',
+                    'STRc12', 'STRc34', 'STRc14', 'STRc23',
+                    'STRc13', 'STRc24', 'STRc1234', '',
+                ]
             }
         };
 
