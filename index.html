@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOORWIKI Tools - ID</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome untuk Ikon UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- Google Fonts -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bs-body-font-family: 'Inter', sans-serif;
+            --cell-size: 50px;
+            --icon-bg: #f8f9fa;
+            --icon-border: #dee2e6;
+            --canvas-bg: #ffffff;
+            --canvas-grid-border: #e9ecef;
+            --drop-highlight: #d1e7dd;
+            --sidebar-width: 320px;
+        }
+
+        body {
+            background-color: #f4f6f8;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Navbar & Header */
+        .app-header {
+            background-color: #1a1d20;
+            color: white;
+            padding: 0.75rem 1rem;
+            z-index: 1050;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* KAI Sign Styles */
+        .kai-sign {
+            background-color: transparent;
+            border: 2px solid #ffffff;
+            padding: 8px 75px 8px 15px;
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 2px;
+            margin-left: 5px;
+            user-select: none;
+        }
+
+        /* SVG untuk lis diagonal ganda sejajar di pojok kanan bawah */
+        .kai-sign::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 80 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 60 L 80 20 L 80 30 L 20 60 Z' fill='%23ffffff'/%3E%3Cpath d='M 35 60 L 80 37.5 L 80 42.5 L 45 60 Z' fill='%23ffffff'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-size: cover;
+            pointer-events: none;
+        }
+
+        .kai-sign-title {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #ffffff;
+            font-size: 1.25rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            line-height: 1;
+            margin: 0;
+            letter-spacing: -0.2px;
+        }
+
+        .kai-sign-elev {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #ffffff;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin: 4px 0 0 0;
+            line-height: 1;
+            letter-spacing: 0.5px;
+        }
+
+        @media (max-width: 576px) {
+            .kai-sign-title {
+                font-size: 1.05rem;
+            }
+
+            .kai-sign {
+                padding: 6px 65px 6px 12px;
+            }
+
+            .kai-sign::after {
+                width: 65px;
+                height: 50px;
+            }
+        }
+
+        .main-container {
+            display: flex;
+            flex-grow: 1;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: white;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, margin-left 0.3s ease;
+            z-index: 1040;
+        }
+
+        /* Sidebar Toggle Logic */
+        .sidebar.collapsed {
+            margin-left: calc(var(--sidebar-width) * -1);
+        }
+
+        .search-box {
+            padding: 15px;
+            border-bottom: 1px solid #dee2e6;
+            background-color: #f8f9fa;
+        }
+
+        .accordion-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+
+        /* Custom Accordion Chevron */
+        .accordion-button::after {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            content: "\f078";
+            /* Chevron Down */
+            background-image: none !important;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .accordion-button:not(.collapsed)::after {
+            background-image: none !important;
+            transform: rotate(-180deg);
+        }
+
+        /* Icon Grid in Sidebar */
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            gap: 6px;
+            padding: 8px;
+        }
+
+        /* Tampilan Desktop & Tablet: Tepat 4 kolom per baris */
+        @media (min-width: 768px) {
+            .icon-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 6px;
+                padding: 8px;
+            }
+        }
+
+        .icon-item {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            background-color: var(--icon-bg);
+            border: 1px solid var(--icon-border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: #495057;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.2s ease;
+            text-align: center;
+            word-break: break-word;
+            padding: 4px;
+            overflow: hidden;
+            /* Mencegah gambar tumpah */
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .icon-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            pointer-events: none;
+            /* Mencegah bug saat dragging */
+        }
+
+        .icon-item:hover {
+            background-color: #e2e3e5;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            border-color: #adb5bd;
+        }
+
+        .icon-item:active {
+            cursor: grabbing;
+        }
+
+        /* Floating Tooltip untuk Kode Ikon (Hover & Click) */
+        .icon-hover-tooltip {
+            position: fixed;
+            z-index: 99999;
+            pointer-events: none;
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -100%) translateY(-6px);
+            transition: opacity 0.12s ease, transform 0.12s ease;
+            white-space: nowrap;
+        }
+
+        .icon-hover-tooltip.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -100%) translateY(-10px);
+        }
+
+        .icon-hover-tooltip::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 5px 5px 0;
+            border-style: solid;
+            border-color: #1e293b transparent transparent transparent;
+            display: block;
+            width: 0;
+        }
+
+        /* Canvas Area Styles */
+        .panel-canvas {
+            flex-grow: 1;
+            background-color: #e9ecef;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .canvas-toolbar {
+            background-color: white;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .canvas-wrapper {
+            flex-grow: 1;
+            overflow: auto;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Grid Setup for the actual Route Map */
+        .route-canvas {
+            background-color: var(--canvas-bg);
+            border: 2px solid #adb5bd;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            display: grid;
+            /* grid-template-columns kini akan diatur secara dinamis oleh JavaScript */
+            grid-auto-rows: var(--cell-size);
+        }
+
+        .canvas-cell {
+            width: var(--cell-size);
+            height: var(--cell-size);
+            border-right: 1px dashed var(--canvas-grid-border);
+            border-bottom: 1px dashed var(--canvas-grid-border);
+            position: relative;
+            background-color: transparent;
+            transition: background-color 0.1s ease;
+        }
+
+        .canvas-cell.drag-over {
+            background-color: var(--drop-highlight);
+            border-color: #198754;
+        }
+
+        .dropped-icon {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.55rem;
+            font-weight: 700;
+            color: #212529;
+            background-color: transparent;
+            /* Ubah ke transparan agar !~ berfungsi */
+            pointer-events: none;
+            box-sizing: border-box;
+            word-break: break-word;
+            text-align: center;
+            z-index: 10;
+        }
+
+        .dropped-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Mobile specific adjustments */
+        @media (max-width: 767.98px) {
+            .sidebar {
+                position: absolute;
+                height: 100%;
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .sidebar.collapsed {
+                transform: translateX(-100%);
+                margin-left: 0;
+            }
+        }
+
+        /* Prefix Selector Styles */
+        .prefix-selector {
+            padding: 8px 12px 10px 12px;
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .prefix-btn {
+            font-size: 0.72rem;
+            font-weight: 500;
+            padding: 5px 6px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #ffffff;
+            border: 1px solid #ced4da;
+            color: #495057;
+            transition: all 0.15s ease-in-out;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .prefix-btn:hover {
+            background-color: #f1f3f5;
+            border-color: #adb5bd;
+            color: #212529;
+        }
+
+        .prefix-btn.active {
+            background-color: #0d6efd !important;
+            border-color: #0d6efd !important;
+            color: #ffffff !important;
+            box-shadow: 0 2px 4px rgba(13, 110, 253, 0.25);
+            font-weight: 600;
+        }
+
+        .prefix-btn.active i,
+        .prefix-btn.active .prefix-tag {
+            color: #ffffff !important;
+        }
+
+        .prefix-tag {
+            font-size: 0.65rem;
+            font-family: monospace;
+            padding: 1px 5px;
+            border-radius: 3px;
+            background-color: rgba(0, 0, 0, 0.06);
+            color: #6c757d;
+        }
+
+        .prefix-btn.active .prefix-tag {
+            background-color: rgba(255, 255, 255, 0.25);
+            color: #ffffff;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="app-header d-flex justify-content-start align-items-center">
+        <button class="btn btn-dark btn-sm me-2 border-secondary" onclick="toggleSidebar()">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="kai-sign">
+            <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
+            <p class="kai-sign-elev">v 2.0</p>
+        </div>
+    </header>
+
+    <div class="main-container">
+
+        <!-- PANEL KIRI: Koleksi Ikon (Sidebar) -->
+        <div class="sidebar" id="sidebar">
+            <div class="search-box pb-2">
+                <div class="input-group input-group-sm">
+                    <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" class="form-control" id="searchInput" placeholder="Cari ikon (cth: STR, BHF)..."
+                        onkeyup="searchIcons()">
+                </div>
+            </div>
+
+            <!-- Pemilih Tipe Jalur (Prefix Selector - Hanya 1 yang aktif) -->
+            <div class="prefix-selector">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-semibold text-secondary"
+                        style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                        <!-- <i class="fa-solid fa-route me-1"></i> -->Tipe Jalur:
+                    </span>
+                    <span class="badge bg-primary" id="activePrefixBadge" style="font-size: 0.65rem;">Standar
+                        (std)</span>
+                </div>
+                <div class="row g-1" id="prefixBtnGroup">
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn active" data-prefix="" onclick="setPrefix('')"
+                            title="Jalur Biasa / Standar (tanpa prefix)">
+                            <span><i class="fa-solid fa-train text-primary me-1"></i> Standar</span>
+                            <span class="prefix-tag">std</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn" data-prefix="u" onclick="setPrefix('u')"
+                            title="Jalur Tram / LRT (prefix u)">
+                            <span><i class="fa-solid fa-train-tram text-info me-1"></i> Tram</span>
+                            <span class="prefix-tag">u</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn" data-prefix="t" onclick="setPrefix('t')"
+                            title="Jalur Terowongan / Bawah Tanah (prefix t)">
+                            <span><i class="fa-solid fa-archway text-warning me-1"></i> Kolong </span>
+                            <span class="prefix-tag">t</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn w-100 prefix-btn" data-prefix="ex" onclick="setPrefix('ex')"
+                            title="Jalur Nonaktif / Bekas (prefix ex)">
+                            <span><i class="fa-solid fa-ban text-danger me-1"></i> Nonaktif</span>
+                            <span class="prefix-tag">ex</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accordion untuk Kategori -->
+            <div class="accordion-wrapper">
+                <div class="accordion accordion-flush" id="categoryAccordion">
+                    <!-- Akordeon akan diisi secara dinamis melalui JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- PANEL KANAN: Kanvas Rute -->
+        <div class="panel-canvas">
+            <div class="p-2 bg-white border-bottom text-center text-muted" style="font-size: 0.75rem;">
+                <strong>Tips:</strong> Klik dua kali pada sel untuk menghapus. Seret beberapa ikon ke sel
+                yang sama untuk menumpuk overlay (!~).
+            </div>
+
+            <div class="canvas-toolbar">
+                <div>
+                    <span class="fw-semibold me-2 d-none d-md-inline"><i class="fa-solid fa-border-all"></i>
+                        Ukuran:</span>
+                    <input type="number" id="gridCols" class="form-control form-control-sm d-inline-block text-center"
+                        style="width: 60px;" value="7" min="1" max="50" onchange="resizeCanvas()" title="Jumlah Kolom">
+                    <span class="mx-1">×</span>
+                    <input type="number" id="gridRows" class="form-control form-control-sm d-inline-block text-center"
+                        style="width: 60px;" value="10" min="1" max="100" onchange="resizeCanvas()"
+                        title="Jumlah Baris">
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-outline-danger me-2" onclick="clearCanvas()">
+                        <i class="fa-solid fa-trash-can"></i> Kosongkan
+                    </button>
+                    <button class="btn btn-sm btn-dark" onclick="exportData()">
+                        <i class="fa-solid fa-code"></i> Ekspor
+                    </button>
+                </div>
+            </div>
+
+            <div class="canvas-wrapper" id="canvas-scroll-area">
+                <div class="route-canvas" id="route-canvas">
+                    <!-- Sel kanvas dirender via JS -->
+                </div>
+            </div>
+
+            <div class="p-2 bg-white border-top text-center text-muted" style="font-size: 0.75rem;">
+                Made by Braverious | <a href="https://id.wikipedia.org/wiki/Pembicaraan_Pengguna:Braverious"
+                    target="_blank" rel="noopener noreferrer"
+                    class="text-secondary text-decoration-underline">Bicara</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Ekspor Wikitext -->
+    <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exportModalLabel"><i class="fa-solid fa-code"></i> Hasil Ekspor Wikitext
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">Salin kode di bawah ini dan tempelkan ke artikel Wikipedia Anda.
+                    </p>
+                    <textarea id="exportTextarea" class="form-control font-monospace" rows="15" readonly
+                        style="font-size: 0.85rem; background-color: #f8f9fa;"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                    <button type="button" class="btn btn-primary" id="copyBtn" onclick="copyExport()">
+                        <i class="fa-solid fa-copy"></i> Salin ke Papan Klip
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Pengecilan Kanvas -->
+    <div class="modal fade" id="resizeConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Peringatan
+                        Pengecilan</h5>
+                </div>
+                <div class="modal-body">
+                    Memperkecil kanvas dapat menghapus ikon yang berada di luar batas rute saat ini. Lanjutkan?
+                    <div class="mt-2 text-muted" style="font-size: 0.8rem;"><i class="fa-solid fa-info-circle"></i>
+                        Peringatan ini hanya akan ditampilkan satu kali.</div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="cancelResize()">Batal</button>
+                    <button type="button" class="btn btn-warning" onclick="confirmResize()">Lanjutkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Kosongkan Kanvas -->
+    <div class="modal fade" id="clearConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger"><i class="fa-solid fa-trash-can"></i> Kosongkan Kanvas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus semua rute di kanvas? Tindakan ini tidak dapat dibatalkan.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" onclick="executeClearCanvas()">Ya, Kosongkan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle (Includes Popper for accordions) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Library MD5 ringan untuk generate URL MediaWiki -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
+
+    <script>
+        // Data Kategori dan Ikon Dasar (Base Icons)
+        // Varian prefix (ex, u, t) dirakit secara dinamis melalui fungsi rekursif assembleBSicon.
+        // hSTR dipertahankan di sini karena merupakan ikon khusus horizontal.
+        const iconDatabase = {
+            "sepur-lurus": {
+                title: "Sepur Lurus",
+                icons: [
+                    'STR', 'hSTR', 'SKRZ-G1BUE', 'SKRZ-G2BUE', 'STRa', 'STRe', 'CONTg', 'CONTf',
+                    'STR2+4', 'STR3+1',
+                    'tSTR2+4a@f', 'tSTR2+4a', 'tSTR2+4e@g',
+                    'tSTR3+1a@f', 'tSTR3+1a', 'tSTR2+4e',
+                    'tSTR3+1e@g', 'tSTR3+1e',
+                    'ENDEa', 'ENDE@G', 'ENDEe', 'ENDE@F'
+                ]
+            },
+            "sepur-belok": {
+                title: "Sepur Belok (Tikungan)",
+                icons: ['STRc1', 'STRc2', 'STRc3', 'STRc4', 'STR+1', 'STR+2', 'STR+3', 'STR+4']
+            },
+            "wesel": {
+                title: "Wesel & Persilangan",
+                icons: ['ABZg+1', 'ABZg2', 'ABZg3', 'ABZg+4', 'KRZ', 'KRZu', 'ABZgl', 'ABZgr']
+            },
+            "stasiun": {
+                title: "Bangunan & Stasiun",
+                icons: ['BHF', 'HST', 'PLT', 'BUILDING', 'KKBHF', 'KBHFa', 'KBHFe']
+            },
+            "paralel": {
+                title: "Sepur Paralel",
+                icons: ['vSTR', 'vBHF', 'vKRZ', 'vSTR-BHF']
+            },
+            "fasilitas": {
+                title: "Fasilitas & Lainnya",
+                icons: ['lENDE', 'BOOT', 'FLUG', 'WASSER', 'BRIDGE']
+            }
+        };
+
+        // State Prefix yang sedang aktif (default: '' = jalur biasa tanpa prefix)
+        let currentPrefix = '';
+        // Cache untuk menyimpan nama ikon yang gagal dimuat dari Wikimedia Commons (tidak tersedia)
+        // Ikon dalam cache ini tidak akan dimunculkan ke antarmuka pengguna
+        const missingIconsCache = new Set();
+
+        /**
+         * Handler jika gambar ikon BSicon gagal dimuat dari Wikimedia Commons (404 / tidak tersedia).
+         * Ikon yang tidak memiliki gambar tidak akan dimunculkan (dihapus dari DOM)
+         * dan dicatat ke dalam cache agar tidak dirender ulang.
+         * @param {HTMLImageElement} imgEl - Elemen gambar yang gagal muat
+         * @param {string} iconName - Nama ikon hasil rakitan prefix
+         */
+        function handleIconError(imgEl, iconName) {
+            if (!imgEl) return;
+            missingIconsCache.add(iconName);
+            const item = imgEl.closest('.icon-item');
+            if (item) {
+                item.remove();
+            }
+        }
+
+        /**
+         * Handler jika gambar pada sel canvas gagal dimuat
+         */
+        function handleDroppedIconError(imgEl, iconName) {
+            if (!imgEl) return;
+            missingIconsCache.add(iconName);
+            const dropped = imgEl.closest('.dropped-icon');
+            if (dropped) {
+                dropped.remove();
+            }
+        }
+
+        /**
+         * FUNGSI REKURSIF: Merakit prefix (ex, t, u, h) pada piktogram BSicon
+         * 
+         * Mekanisme Rekursif:
+         * 1. Basis Kasus:
+         *    - Jika baseIcon kosong, kembalikan ''.
+         *    - Jika prefix kosong ('', null, undefined, 'none', 'std'), kembalikan baseIcon.
+         *    - Jika array prefix telah kosong (semua prefix selesai dirakit), kembalikan baseIcon.
+         * 
+         * 2. Langkah Rekursif:
+         *    - Jika prefix berupa array [head, ...tail], gabungkan prefix terdepan (head)
+         *      dengan hasil pemanggilan rekursif assembleBSicon(baseIcon, tail).
+         *      Contoh: assembleBSicon('STR', ['ex', 't'])
+         *              => 'ex' + assembleBSicon('STR', ['t'])
+         *              => 'ex' + ('t' + assembleBSicon('STR', []))
+         *              => 'ex' + ('t' + 'STR')
+         *              => 'extSTR'
+         *    - Jika prefix berupa string tunggal atau rantai berpemisah (misal 'ex,u' atau 'ex u'),
+         *      diuraikan menjadi array dan diproses secara rekursif.
+         * 
+         * @param {string} baseIcon - Nama dasar ikon BSicon (contoh: 'STR', 'hSTR', 'BHF', 'STRc1')
+         * @param {string|string[]} prefix - Prefix yang diterapkan ('', 'u', 't', 'ex', 'h', atau array kombinasi)
+         * @returns {string} Nama BSicon lengkap hasil rakitan prefix
+         */
+        function assembleBSicon(baseIcon, prefix) {
+            // Basis kasus 1: Dasar ikon kosong
+            if (!baseIcon) return '';
+
+            // Basis kasus 2: Tanpa prefix (jalur biasa/standar)
+            if (!prefix || prefix === '' || prefix === 'none' || prefix === 'std') {
+                return baseIcon;
+            }
+
+            // Jika prefix diberikan sebagai array
+            if (Array.isArray(prefix)) {
+                // Basis kasus 3: Array prefix telah habis diproses
+                if (prefix.length === 0) {
+                    return baseIcon;
+                }
+
+                const current = prefix[0];
+                const remaining = prefix.slice(1);
+
+                // Langkah rekursif
+                return current + assembleBSicon(baseIcon, remaining);
+            }
+
+            // Jika prefix diberikan berupa string
+            if (typeof prefix === 'string') {
+                const prefixList = prefix.trim().split(/[\s,+]+/).filter(Boolean);
+                return assembleBSicon(baseIcon, prefixList);
+            }
+
+            return baseIcon;
+        }
+
+        /**
+         * FUNGSI REKURSIF PEMBANTU: Merakit prefix ke seluruh elemen dalam array ikon
+         * @param {string[]} iconList - Daftar ikon sumber
+         * @param {string|string[]} prefix - Prefix yang akan dirakit
+         * @param {number} idx - Penunjuk indeks rekursi
+         * @returns {string[]} Array nama ikon yang telah dirakit
+         */
+        function assembleIconList(iconList, prefix, idx = 0) {
+            if (!iconList || idx >= iconList.length) return [];
+            return [
+                assembleBSicon(iconList[idx], prefix),
+                ...assembleIconList(iconList, prefix, idx + 1)
+            ];
+        }
+
+        /**
+         * Fungsi untuk memilih prefix aktif melalui tombol UI
+         * Memastikan hanya satu prefix yang aktif pada satu waktu.
+         * Berlaku dinamis untuk semua ikon yang ada di iconDatabase.
+         * @param {string} prefix - Prefix baru ('', 'u', 't', 'ex', atau 'h')
+         */
+        function setPrefix(prefix) {
+            currentPrefix = prefix;
+
+            // Perbarui tombol aktif di UI
+            const buttons = document.querySelectorAll('.prefix-btn');
+            buttons.forEach(btn => {
+                if (btn.dataset.prefix === prefix) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Perbarui label badge tipe jalur
+            const badge = document.getElementById('activePrefixBadge');
+            if (badge) {
+                const labels = {
+                    '': 'Biasa (std)',
+                    'u': 'Tram (u)',
+                    't': 'Terowongan (t)',
+                    'ex': 'Nonaktif (ex)',
+                    'h': 'Melayang (h)'
+                };
+                badge.textContent = labels[prefix] || (prefix ? prefix.toUpperCase() : 'Biasa');
+            }
+
+            // Render ulang sidebar untuk memperbarui tampilan thumbnail dan data drag
+            renderSidebar();
+        }
+
+        let currentCols = 7;
+        let currentRows = 10;
+        let pendingCols = 7;
+        let pendingRows = 10;
+        let hasSeenResizeWarning = false; // Flag peringatan resize
+
+        // Fungsi Generate URL Gambar Commons dengan algoritma MD5 MediaWiki
+        function getBSiconUrl(iconName) {
+            // Nama fail di Wikipedia Commons
+            const fileName = `BSicon_${iconName}.svg`;
+
+            // MediaWiki menghitung hash dari nama fail secara spesifik (case sensitive)
+            const hash = md5(fileName);
+
+            // Ambil direktori berdasarkan hash (1 digit pertama, dan 2 digit pertama)
+            const dir1 = hash.substring(0, 1);
+            const dir2 = hash.substring(0, 2);
+
+            // Encode karakter khusus seperti '+' menjadi '%2B' untuk validasi URL
+            const encodedFileName = encodeURIComponent(fileName);
+
+            return `https://upload.wikimedia.org/wikipedia/commons/${dir1}/${dir2}/${encodedFileName}`;
+        }
+
+        // Fungsi untuk merender akordeon kategori di Sidebar
+        function renderSidebar() {
+            const accordion = document.getElementById('categoryAccordion');
+
+            // Simpan status accordion mana saja yang sedang terbuka sebelum re-render
+            const existingCollapses = accordion.querySelectorAll('.accordion-collapse');
+            const openCollapseIds = new Set(
+                Array.from(existingCollapses)
+                    .filter(el => el.classList.contains('show'))
+                    .map(el => el.id)
+            );
+            const hasExistingState = existingCollapses.length > 0;
+
+            accordion.innerHTML = ''; // Kosongkan
+
+            let isFirst = true;
+
+            for (const [key, data] of Object.entries(iconDatabase)) {
+                // Tentukan apakah accordion ini terbuka
+                const collapseId = `collapse-${key}`;
+                const isOpen = hasExistingState ? openCollapseIds.has(collapseId) : isFirst;
+                const showClass = isOpen ? 'show' : '';
+                const collapsedClass = isOpen ? '' : 'collapsed';
+
+                // Buat item accordion
+                const item = document.createElement('div');
+                item.className = 'accordion-item';
+
+                item.innerHTML = `
+                    <h2 class="accordion-header" id="heading-${key}">
+                        <button class="accordion-button py-2 ${collapsedClass}" type="button" data-bs-toggle="collapse" data-bs-target="#${collapseId}" aria-expanded="${isOpen}" aria-controls="${collapseId}">
+                            <strong>${data.title}</strong>
+                        </button>
+                    </h2>
+                    <div id="${collapseId}" class="accordion-collapse collapse ${showClass}" aria-labelledby="heading-${key}">
+                        <div class="accordion-body p-0">
+                            <div class="icon-grid" id="grid-${key}">
+                                <!-- Ikon di-*render* di sini -->
+                            </div>
+                        </div>
+                    </div>
+                `;
+                accordion.appendChild(item);
+
+                // Render ikon di dalam grid kategori ini menggunakan fungsi rekursif assembleBSicon
+                const grid = document.getElementById(`grid-${key}`);
+                data.icons.forEach(baseIconName => {
+                    // Rakit nama ikon secara dinamis berdasarkan prefix yang sedang aktif
+                    const assembledIconName = assembleBSicon(baseIconName, currentPrefix);
+
+                    // Jika ikon ini sudah terdeteksi tidak tersedia di Commons, jangan tampilkan
+                    if (missingIconsCache.has(assembledIconName)) {
+                        return;
+                    }
+
+                    const el = document.createElement('div');
+                    el.className = 'icon-item';
+                    el.draggable = true;
+                    el.dataset.baseIcon = baseIconName;
+                    el.dataset.iconName = assembledIconName.toLowerCase(); // Untuk pencarian
+
+                    // Gunakan gambar dari Commons. Jika gagal muat (404), ikon dihapus/tidak dimunculkan
+                    const imgUrl = getBSiconUrl(assembledIconName);
+                    el.innerHTML = `<img src="${imgUrl}" alt="${baseIconName}" loading="lazy" 
+                                    onerror="handleIconError(this, '${assembledIconName}')">`;
+
+                    // Event Drag Start - transfer nama ikon hasil rakitan prefix ke sel canvas
+                    el.addEventListener('dragstart', (e) => {
+                        hideIconTooltip();
+                        const activeAssembled = assembleBSicon(baseIconName, currentPrefix);
+                        e.dataTransfer.setData('text/plain', activeAssembled);
+                        e.dataTransfer.effectAllowed = 'copy';
+                        setTimeout(() => el.style.opacity = '0.5', 0);
+                    });
+
+                    // Event Drag End
+                    el.addEventListener('dragend', () => {
+                        el.style.opacity = '1';
+                    });
+
+                    grid.appendChild(el);
+                });
+
+                isFirst = false;
+            }
+
+            // Pertahankan filter pencarian jika input search tidak kosong
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput && searchInput.value.trim().length > 0) {
+                searchIcons();
+            }
+        }
+
+        // Fungsi Toggle Sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('collapsed');
+        }
+
+        // Fungsi Fitur Pencarian (Mencari berdasarkan nama rakitan maupun nama dasar)
+        function searchIcons() {
+            const input = document.getElementById('searchInput').value.trim().toLowerCase();
+            const allIcons = document.querySelectorAll('.icon-item');
+            const accordions = document.querySelectorAll('.accordion-collapse');
+
+            // Jika sedang mencari, buka semua accordion agar hasilnya terlihat
+            if (input.length > 0) {
+                accordions.forEach(acc => acc.classList.add('show'));
+            }
+
+            allIcons.forEach(icon => {
+                const assembledName = icon.dataset.iconName || '';
+                const baseName = (icon.dataset.baseIcon || '').toLowerCase();
+                if (assembledName.includes(input) || baseName.includes(input)) {
+                    icon.style.display = 'flex';
+                } else {
+                    icon.style.display = 'none';
+                }
+            });
+        }
+
+        // Fungsi Resize Canvas dengan mempertahankan data ikon yang sudah ada
+        function resizeCanvas() {
+            pendingCols = parseInt(document.getElementById('gridCols').value) || 1;
+            pendingRows = parseInt(document.getElementById('gridRows').value) || 1;
+
+            // Jika ukuran diperkecil dan belum peringatan belum disetujui, panggil Modal
+            if ((pendingCols < currentCols || pendingRows < currentRows) && !hasSeenResizeWarning) {
+                const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('resizeConfirmModal'));
+                modal.show();
+            } else {
+                applyResize();
+            }
+        }
+
+        function confirmResize() {
+            hasSeenResizeWarning = true; // Tandai bahwa pengguna sudah mengerti resikonya
+            const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
+            if (modal) modal.hide();
+            applyResize();
+        }
+
+        function cancelResize() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
+            if (modal) modal.hide();
+
+            // Kembalikan nilai di kotak input ke ukuran semula
+            document.getElementById('gridCols').value = currentCols;
+            document.getElementById('gridRows').value = currentRows;
+        }
+
+        function applyResize() {
+            // Simpan posisi ikon yang sudah diletakkan
+            const savedState = [];
+            for (let r = 0; r < currentRows; r++) {
+                for (let c = 0; c < currentCols; c++) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+                    if (cell) {
+                        const icons = Array.from(cell.querySelectorAll('.dropped-icon')).map(el => el.dataset.iconName);
+                        if (icons.length > 0) {
+                            savedState.push({ r, c, icons });
+                        }
+                    }
+                }
+            }
+
+            currentCols = pendingCols;
+            currentRows = pendingRows;
+
+            renderCanvas();
+
+            // Kembalikan ikon ke posisi semula (selama masih berada dalam batas kanvas yang baru)
+            savedState.forEach(item => {
+                if (item.r < currentRows && item.c < currentCols) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${item.r}"][data-col="${item.c}"]`);
+                    if (cell) {
+                        item.icons.forEach(iconName => addIconToCell(cell, iconName));
+                    }
+                }
+            });
+        }
+
+        // Fungsi Render Kanvas (Sama seperti sebelumnya dengan sedikit pembaruan)
+        function renderCanvas() {
+            const canvas = document.getElementById('route-canvas');
+            canvas.innerHTML = '';
+
+            // Set jumlah kolom CSS secara dinamis
+            canvas.style.gridTemplateColumns = `repeat(${currentCols}, var(--cell-size))`;
+
+            const totalCells = currentCols * currentRows;
+
+            for (let i = 0; i < totalCells; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'canvas-cell';
+
+                const r = Math.floor(i / currentCols);
+                const c = i % currentCols;
+
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+
+                // Hapus garis putus-putus pada batas luar paling kanan dan paling bawah
+                if (c === currentCols - 1) cell.style.borderRight = 'none';
+                if (r === currentRows - 1) cell.style.borderBottom = 'none';
+
+                cell.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'copy';
+                    cell.classList.add('drag-over');
+                });
+
+                cell.addEventListener('dragenter', (e) => {
+                    e.preventDefault();
+                    cell.classList.add('drag-over');
+                });
+
+                cell.addEventListener('dragleave', () => {
+                    cell.classList.remove('drag-over');
+                });
+
+                cell.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    cell.classList.remove('drag-over');
+                    const iconName = e.dataTransfer.getData('text/plain');
+                    if (iconName) {
+                        addIconToCell(cell, iconName);
+                    }
+                });
+
+                // Hapus semua ikon di sel jika di-klik ganda
+                cell.addEventListener('dblclick', () => {
+                    cell.innerHTML = '';
+                });
+
+                canvas.appendChild(cell);
+            }
+        }
+
+        // Fungsi menambahkan ikon ke kanvas dengan logika Overlay
+        function addIconToCell(cell, iconName) {
+            // Jika ikon sudah diketahui tidak ada di Commons, jangan tambahkan
+            if (missingIconsCache.has(iconName)) {
+                return;
+            }
+
+            const droppedEl = document.createElement('div');
+            droppedEl.className = 'dropped-icon';
+            droppedEl.dataset.iconName = iconName; // Simpan nama ikon murni untuk kebutuhan ekspor
+
+            const imgUrl = getBSiconUrl(iconName);
+            // Jika gambar gagal muat di canvas, jangan munculkan teks, cukup hapus elemen
+            droppedEl.innerHTML = `<img src="${imgUrl}" alt="${iconName}" 
+                                   onerror="handleDroppedIconError(this, '${iconName}')">`;
+
+            // Logika tumpukan transparan (!~). 
+            // Elemen baru selalu ditumpuk di atas elemen sebelumnya berkat position: absolute dan bg: transparent.
+            cell.appendChild(droppedEl);
+        }
+
+        // Fungsi Bersihkan Kanvas
+        function clearCanvas() {
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('clearConfirmModal'));
+            modal.show();
+        }
+
+        function executeClearCanvas() {
+            const cells = document.querySelectorAll('.canvas-cell');
+            cells.forEach(cell => cell.innerHTML = '');
+            const modal = bootstrap.Modal.getInstance(document.getElementById('clearConfirmModal'));
+            if (modal) modal.hide();
+        }
+
+        // Fungsi Ekspor (Generate Wikitext)
+        function exportData() {
+            let wikitext = "{{routemap\n|title=Rute Saya\n|map=\n";
+
+            // Looping dari atas ke bawah (Baris)
+            for (let r = 0; r < currentRows; r++) {
+                let rowIcons = [];
+                // Looping dari kiri ke kanan (Kolom)
+                for (let c = 0; c < currentCols; c++) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+                    const droppedIcons = cell.querySelectorAll('.dropped-icon');
+
+                    if (droppedIcons.length === 0) {
+                        rowIcons.push(""); // Sel kosong dibiarkan blank
+                    } else {
+                        // Gabungkan semua ikon dalam sel yang sama menggunakan !~
+                        const icons = Array.from(droppedIcons).map(el => el.dataset.iconName);
+                        rowIcons.push(icons.join("!~"));
+                    }
+                }
+                // Gabungkan sel dalam satu baris dengan backslash '\'
+                wikitext += rowIcons.join("\\") + "\n";
+            }
+
+            wikitext += "}}";
+
+            // Masukkan teks ke dalam text-area modal
+            document.getElementById('exportTextarea').value = wikitext;
+
+            // Tampilkan modal Bootstrap
+            const exportModal = new bootstrap.Modal(document.getElementById('exportModal'));
+            exportModal.show();
+        }
+
+        // Fungsi Menyalin Teks Ekspor ke Papan Klip (Clipboard)
+        function copyExport() {
+            const textarea = document.getElementById('exportTextarea');
+            textarea.select();
+            document.execCommand('copy');
+
+            // Beri umpan balik visual ke tombol
+            const copyBtn = document.getElementById('copyBtn');
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin!';
+            copyBtn.classList.replace('btn-primary', 'btn-success');
+
+            // Kembalikan tombol ke semula setelah 2 detik
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.classList.replace('btn-success', 'btn-primary');
+            }, 2000);
+        }
+
+        let iconTooltipTimeout = null;
+
+        // Fungsi menampilkan keterangan kode BSicon saat hover atau onclick
+        function showIconTooltip(element) {
+            const baseIcon = element.dataset.baseIcon;
+            if (!baseIcon) return;
+
+            const tooltip = document.getElementById('iconHoverTooltip');
+            if (!tooltip) return;
+
+            if (iconTooltipTimeout) {
+                clearTimeout(iconTooltipTimeout);
+                iconTooltipTimeout = null;
+            }
+
+            tooltip.textContent = baseIcon;
+            const rect = element.getBoundingClientRect();
+            const left = rect.left + (rect.width / 2);
+            let top = rect.top;
+
+            // Jika posisi ikon terlalu dekat dengan tepi atas layar, posisikan di bawah ikon
+            if (top < 50) {
+                top = rect.bottom + 10;
+                tooltip.style.transform = 'translate(-50%, 0)';
+            } else {
+                tooltip.style.transform = '';
+            }
+
+            tooltip.style.left = `${left}px`;
+            tooltip.style.top = `${top}px`;
+            tooltip.classList.add('active');
+        }
+
+        function hideIconTooltip() {
+            if (iconTooltipTimeout) {
+                clearTimeout(iconTooltipTimeout);
+                iconTooltipTimeout = null;
+            }
+            const tooltip = document.getElementById('iconHoverTooltip');
+            if (tooltip) {
+                tooltip.classList.remove('active');
+            }
+        }
+
+        // Inisialisasi event listener hover & onclick untuk ikon di sidebar
+        function initIconTooltipListeners() {
+            const wrapper = document.querySelector('.accordion-wrapper');
+            if (!wrapper) return;
+
+            // Hover masuk
+            wrapper.addEventListener('mouseover', (e) => {
+                const item = e.target.closest('.icon-item');
+                if (item) {
+                    showIconTooltip(item);
+                }
+            });
+
+            // Hover keluar
+            wrapper.addEventListener('mouseout', (e) => {
+                const item = e.target.closest('.icon-item');
+                if (item && !item.contains(e.relatedTarget)) {
+                    hideIconTooltip();
+                }
+            });
+
+            // Onclick (termasuk layar sentuh/tablet)
+            wrapper.addEventListener('click', (e) => {
+                const item = e.target.closest('.icon-item');
+                if (item) {
+                    showIconTooltip(item);
+                    // Sembunyikan otomatis setelah 2.5 detik
+                    iconTooltipTimeout = setTimeout(() => {
+                        hideIconTooltip();
+                    }, 2500);
+                }
+            });
+
+            // Sembunyikan jika klik di area mana pun di luar icon-item
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.icon-item')) {
+                    hideIconTooltip();
+                }
+            });
+
+            // Sembunyikan tooltip mengambang saat pengguna scroll
+            wrapper.addEventListener('scroll', () => {
+                hideIconTooltip();
+            });
+        }
+
+        // Inisialisasi Aplikasi
+        window.onload = function () {
+            renderSidebar();
+            renderCanvas();
+            initIconTooltipListeners();
+
+            // Auto tutup sidebar di layar hp pada muatan pertama
+            if (window.innerWidth < 768) {
+                document.getElementById('sidebar').classList.add('collapsed');
+            }
+        };
+
+        // Mengelola perubahan ukuran jendela
+        window.addEventListener('resize', () => {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth >= 768) {
+                sidebar.classList.remove('collapsed');
+            } else {
+                sidebar.classList.add('collapsed');
+            }
+        });
+    </script>
+
+    <!-- Tooltip Mengambang untuk Kode BSicon (Hover & Click) -->
+    <div id="iconHoverTooltip" class="icon-hover-tooltip"></div>
+</body>
+
+</html>
