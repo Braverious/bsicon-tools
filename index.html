@@ -413,6 +413,15 @@
 
 <body>
 
+    <!--
+    ██████╗ ██████╗  █████╗ ██╗   ██╗███████╗██████╗ ██╗ ██████╗ ██╗   ██╗███████╗
+    ██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝██╔══██╗██║██╔═══██╗██║   ██║██╔════╝
+    ██████╔╝██████╔╝███████║██║   ██║█████╗  ██████╔╝██║██║   ██║██║   ██║███████╗
+    ██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██╔══╝  ██╔══██╗██║██║   ██║██║   ██║╚════██║
+    ██████╔╝██║  ██║██║  ██║ ╚████╔╝ ███████╗██║  ██║██║╚██████╔╝╚██████╔╝███████║
+    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
+    -->
+
     <!-- Header -->
     <header class="app-header d-flex justify-content-start align-items-center">
         <button class="btn btn-dark btn-sm me-2 border-secondary" onclick="toggleSidebar()">
@@ -601,6 +610,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 
     <script>
+        console.log(`%c
+██████╗ ██████╗  █████╗ ██╗   ██╗███████╗██████╗ ██╗ ██████╗ ██╗   ██╗███████╗
+██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝██╔══██╗██║██╔═══██╗██║   ██║██╔════╝
+██████╔╝██████╔╝███████║██║   ██║█████╗  ██████╔╝██║██║   ██║██║   ██║███████╗
+██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██╔══╝  ██╔══██╗██║██║   ██║██║   ██║╚════██║
+██████╔╝██║  ██║██║  ██║ ╚████╔╝ ███████╗██║  ██║██║╚██████╔╝╚██████╔╝███████║
+╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
+`, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
+        console.log('%c🚀 SPOORWIKI Tools v2.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
+
         // Data Kategori dan Ikon Dasar (Base Icons)
         // Varian prefix (ex, u, t) dirakit secara dinamis melalui fungsi rekursif assembleBSicon.
         // hSTR dipertahankan di sini karena merupakan ikon khusus horizontal.
