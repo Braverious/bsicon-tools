@@ -54,6 +54,7 @@ Pengguna dapat mengubah tipe jalur seluruh katalog ikon hanya dengan satu klik t
 
 ### 6. Generator Ekspor Wikitext Wikipedia
 - Sekali klik tombol **Ekspor**, sistem akan mengonversi posisi seluruh sel kanvas menjadi sintaks MediaWiki:
+  {% raw %}
   ```wikitext
   {{routemap
   |title=Rute Saya
@@ -62,6 +63,7 @@ Pengguna dapat mengubah tipe jalur seluruh katalog ikon hanya dengan satu klik t
   STR\KRZ\STR
   }}
   ```
+  {% endraw %}
 - Dilengkapi dialog modal dengan tombol **Salin** (*Copy to Clipboard*) langsung.
 
 ---
