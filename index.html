@@ -5,13 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPOORWIKI Tools - ID</title>
-    <!-- Favicon (FontAwesome)-->
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome untuk Ikon UI -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Google Fonts -->
     <link
         href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&family=Inter:wght@400;500;600&display=swap"
         rel="stylesheet">
@@ -36,7 +32,6 @@
             overflow: hidden;
         }
 
-        /* Navbar & Header */
         .app-header {
             background-color: #1a1d20;
             color: white;
@@ -45,7 +40,6 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        /* KAI Sign Styles */
         .kai-sign {
             background-color: transparent;
             border: 2px solid #ffffff;
@@ -60,7 +54,6 @@
             user-select: none;
         }
 
-        /* SVG untuk lis diagonal ganda sejajar di pojok kanan bawah */
         .kai-sign::after {
             content: '';
             position: absolute;
@@ -117,7 +110,6 @@
             position: relative;
         }
 
-        /* Sidebar Styles */
         .sidebar {
             width: var(--sidebar-width);
             background-color: white;
@@ -128,7 +120,6 @@
             z-index: 1040;
         }
 
-        /* Sidebar Toggle Logic */
         .sidebar.collapsed {
             margin-left: calc(var(--sidebar-width) * -1);
         }
@@ -144,12 +135,10 @@
             overflow-y: auto;
         }
 
-        /* Custom Accordion Chevron */
         .accordion-button::after {
             font-family: "Font Awesome 6 Free";
             font-weight: 900;
             content: "\f078";
-            /* Chevron Down */
             background-image: none !important;
             transition: transform 0.2s ease-in-out;
         }
@@ -159,7 +148,6 @@
             transform: rotate(-180deg);
         }
 
-        /* Icon Grid in Sidebar: selalu tepat 4 kolom per baris (desktop & mobile) */
         .icon-grid {
             display: grid;
             grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -189,7 +177,6 @@
             word-break: break-word;
             padding: 4px;
             overflow: hidden;
-            /* Mencegah gambar tumpah */
             box-sizing: border-box;
             position: relative;
         }
@@ -212,7 +199,6 @@
             cursor: grabbing;
         }
 
-        /* Floating Tooltip untuk Kode Ikon (Hover & Click) */
         .icon-hover-tooltip {
             position: fixed;
             z-index: 99999;
@@ -253,7 +239,6 @@
             width: 0;
         }
 
-        /* Canvas Area Styles */
         .panel-canvas {
             flex-grow: 1;
             background-color: #e9ecef;
@@ -281,13 +266,11 @@
             align-items: flex-start;
         }
 
-        /* Grid Setup for the actual Route Map */
         .route-canvas {
             background-color: var(--canvas-bg);
             border: 2px solid #adb5bd;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             display: grid;
-            /* grid-template-columns kini akan diatur secara dinamis oleh JavaScript */
             grid-auto-rows: var(--cell-size);
         }
 
@@ -333,7 +316,40 @@
             object-fit: contain;
         }
 
-        /* Mobile specific adjustments */
+        .mobile-hint {
+            flex-shrink: 0;
+            margin: 8px 12px;
+            padding: 8px 10px;
+            background-color: #e7f1ff;
+            border: 1px solid #b6d4fe;
+            border-radius: 8px;
+            color: #084298;
+            font-size: 0.72rem;
+            line-height: 1.35;
+        }
+
+        .mobile-hint-icon {
+            margin-top: 2px;
+            color: #0d6efd;
+        }
+
+        .mobile-hint-btn {
+            margin-top: 6px;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #0d6efd;
+            background-color: #ffffff;
+            border: 1px solid #0d6efd;
+            border-radius: 6px;
+        }
+
+        .mobile-hint-btn:hover,
+        .mobile-hint-btn:active {
+            color: #ffffff;
+            background-color: #0d6efd;
+        }
+
         @media (max-width: 767.98px) {
             .sidebar {
                 position: absolute;
@@ -347,7 +363,6 @@
             }
         }
 
-        /* Prefix Selector Styles */
         .prefix-selector {
             padding: 8px 12px 10px 12px;
             background-color: #f8f9fa;
@@ -423,7 +438,6 @@
     ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
     -->
 
-    <!-- Header -->
     <header class="app-header d-flex justify-content-start align-items-center">
         <button class="btn btn-dark btn-sm me-2 border-secondary" onclick="toggleSidebar()">
             <i class="fa-solid fa-bars"></i>
@@ -436,7 +450,6 @@
 
     <div class="main-container">
 
-        <!-- PANEL KIRI: Koleksi Ikon (Sidebar) -->
         <div class="sidebar" id="sidebar">
             <div class="search-box pb-2">
                 <div class="input-group input-group-sm">
@@ -446,12 +459,11 @@
                 </div>
             </div>
 
-            <!-- Pemilih Tipe Jalur (Prefix Selector - Hanya 1 yang aktif) -->
             <div class="prefix-selector">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                     <span class="fw-semibold text-secondary"
                         style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                        <!-- <i class="fa-solid fa-route me-1"></i> -->Tipe Jalur:
+                        Tipe Jalur:
                     </span>
                     <span class="badge bg-primary" id="activePrefixBadge" style="font-size: 0.65rem;">Standar
                         (std)</span>
@@ -488,15 +500,23 @@
                 </div>
             </div>
 
-            <!-- Accordion untuk Kategori -->
+            <div class="mobile-hint d-md-none" id="mobileHint" role="note">
+                <div class="d-flex align-items-start gap-2">
+                    <i class="fa-solid fa-circle-info mobile-hint-icon"></i>
+                    <span class="mobile-hint-text">Sebagian gambar mungkin membutuhkan waktu yang lebih lama untuk
+                        ditampilkan.</span>
+                </div>
+                <button type="button" class="btn btn-sm mobile-hint-btn" onclick="dismissMobileHint()">
+                    Ya, saya mengerti
+                </button>
+            </div>
+
             <div class="accordion-wrapper">
                 <div class="accordion accordion-flush" id="categoryAccordion">
-                    <!-- Akordeon akan diisi secara dinamis melalui JavaScript -->
                 </div>
             </div>
         </div>
 
-        <!-- PANEL KANAN: Kanvas Rute -->
         <div class="panel-canvas">
             <div class="p-2 bg-white border-bottom text-center text-muted" style="font-size: 0.75rem;">
                 <strong>Tips:</strong> Klik dua kali pada sel untuk menghapus. Seret beberapa ikon ke sel
@@ -526,7 +546,6 @@
 
             <div class="canvas-wrapper" id="canvas-scroll-area">
                 <div class="route-canvas" id="route-canvas">
-                    <!-- Sel kanvas dirender via JS -->
                 </div>
             </div>
 
@@ -538,7 +557,6 @@
         </div>
     </div>
 
-    <!-- Modal Ekspor Wikitext -->
     <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -563,7 +581,6 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Pengecilan Kanvas -->
     <div class="modal fade" id="resizeConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -585,7 +602,6 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Kosongkan Kanvas -->
     <div class="modal fade" id="clearConfirmModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -604,10 +620,8 @@
         </div>
     </div>
 
-    <!-- Bootstrap 5 JS Bundle (Includes Popper for accordions) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
-    <!-- Library MD5 ringan untuk generate URL MediaWiki -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
 
     <script>
@@ -628,7 +642,6 @@
 `, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
         console.log('%c🚀 SPOORWIKI Tools v2.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
 
-        // Varian prefix (ex, u, t) dirakit secara dinamis melalui fungsi rekursif assembleBSicon.
         const iconDatabase = {
             "sepur-lurus": {
                 title: "Sepur Lurus",
@@ -755,7 +768,6 @@
             }
         };
 
-        // State Prefix yang sedang aktif (default: '' = jalur biasa tanpa prefix)
         let currentPrefix = '';
         // Cache untuk menyimpan nama ikon yang gagal dimuat dari Wikimedia Commons (tidak tersedia)
         // Ikon dalam cache ini tidak akan dimunculkan ke antarmuka pengguna
@@ -777,9 +789,6 @@
             }
         }
 
-        /**
-         * Handler jika gambar pada sel canvas gagal dimuat
-         */
         function handleDroppedIconError(imgEl, iconName) {
             if (!imgEl) return;
             missingIconsCache.add(iconName);
@@ -814,17 +823,13 @@
          * @returns {string} Nama BSicon lengkap hasil rakitan prefix
          */
         function assembleBSicon(baseIcon, prefix) {
-            // Basis kasus 1: Dasar ikon kosong
             if (!baseIcon) return '';
 
-            // Basis kasus 2: Tanpa prefix (jalur biasa/standar)
             if (!prefix || prefix === '' || prefix === 'none' || prefix === 'std') {
                 return baseIcon;
             }
 
-            // Jika prefix diberikan sebagai array
             if (Array.isArray(prefix)) {
-                // Basis kasus 3: Array prefix telah habis diproses
                 if (prefix.length === 0) {
                     return baseIcon;
                 }
@@ -832,11 +837,9 @@
                 const current = prefix[0];
                 const remaining = prefix.slice(1);
 
-                // Langkah rekursif
                 return current + assembleBSicon(baseIcon, remaining);
             }
 
-            // Jika prefix diberikan berupa string
             if (typeof prefix === 'string') {
                 const prefixList = prefix.trim().split(/[\s,+]+/).filter(Boolean);
                 return assembleBSicon(baseIcon, prefixList);
@@ -869,7 +872,6 @@
         function setPrefix(prefix) {
             currentPrefix = prefix;
 
-            // Perbarui tombol aktif di UI
             const buttons = document.querySelectorAll('.prefix-btn');
             buttons.forEach(btn => {
                 if (btn.dataset.prefix === prefix) {
@@ -879,7 +881,6 @@
                 }
             });
 
-            // Perbarui label badge tipe jalur
             const badge = document.getElementById('activePrefixBadge');
             if (badge) {
                 const labels = {
@@ -892,7 +893,6 @@
                 badge.textContent = labels[prefix] || (prefix ? prefix.toUpperCase() : 'Biasa');
             }
 
-            // Render ulang sidebar untuk memperbarui tampilan thumbnail dan data drag
             renderSidebar();
         }
 
@@ -900,11 +900,9 @@
         let currentRows = 10;
         let pendingCols = 7;
         let pendingRows = 10;
-        let hasSeenResizeWarning = false; // Flag peringatan resize
+        let hasSeenResizeWarning = false;
 
-        // Fungsi Generate URL Gambar Commons dengan algoritma MD5 MediaWiki
         function getBSiconUrl(iconName) {
-            // Nama fail di Wikipedia Commons
             const fileName = `BSicon_${iconName}.svg`;
 
             // MediaWiki menghitung hash dari nama fail secara spesifik (case sensitive)
@@ -920,11 +918,9 @@
             return `https://upload.wikimedia.org/wikipedia/commons/${dir1}/${dir2}/${encodedFileName}`;
         }
 
-        // Fungsi untuk merender akordeon kategori di Sidebar
         function renderSidebar() {
             const accordion = document.getElementById('categoryAccordion');
 
-            // Simpan status accordion mana saja yang sedang terbuka sebelum re-render
             const existingCollapses = accordion.querySelectorAll('.accordion-collapse');
             const openCollapseIds = new Set(
                 Array.from(existingCollapses)
@@ -933,18 +929,16 @@
             );
             const hasExistingState = existingCollapses.length > 0;
 
-            accordion.innerHTML = ''; // Kosongkan
+            accordion.innerHTML = '';
 
             let isFirst = true;
 
             for (const [key, data] of Object.entries(iconDatabase)) {
-                // Tentukan apakah accordion ini terbuka (default tertutup semua saat pertama kali load)
                 const collapseId = `collapse-${key}`;
                 const isOpen = hasExistingState ? openCollapseIds.has(collapseId) : false;
                 const showClass = isOpen ? 'show' : '';
                 const collapsedClass = isOpen ? '' : 'collapsed';
 
-                // Buat item accordion
                 const item = document.createElement('div');
                 item.className = 'accordion-item';
 
@@ -957,20 +951,16 @@
                     <div id="${collapseId}" class="accordion-collapse collapse ${showClass}" aria-labelledby="heading-${key}">
                         <div class="accordion-body p-0">
                             <div class="icon-grid" id="grid-${key}">
-                                <!-- Ikon di-*render* di sini -->
                             </div>
                         </div>
                     </div>
                 `;
                 accordion.appendChild(item);
 
-                // Render ikon di dalam grid kategori ini menggunakan fungsi rekursif assembleBSicon
                 const grid = document.getElementById(`grid-${key}`);
                 data.icons.forEach(baseIconName => {
-                    // Rakit nama ikon secara dinamis berdasarkan prefix yang sedang aktif
                     const assembledIconName = assembleBSicon(baseIconName, currentPrefix);
 
-                    // Jika ikon ini sudah terdeteksi tidak tersedia di Commons, jangan tampilkan
                     if (missingIconsCache.has(assembledIconName)) {
                         return;
                     }
@@ -981,14 +971,12 @@
                     // event touch, sehingga dimatikan dan diganti attachTouchDrag().
                     el.draggable = !window.matchMedia('(pointer: coarse)').matches;
                     el.dataset.baseIcon = baseIconName;
-                    el.dataset.iconName = assembledIconName.toLowerCase(); // Untuk pencarian
+                    el.dataset.iconName = assembledIconName.toLowerCase();
 
-                    // Gunakan gambar dari Commons. Jika gagal muat (404), ikon dihapus/tidak dimunculkan
                     const imgUrl = getBSiconUrl(assembledIconName);
                     el.innerHTML = `<img src="${imgUrl}" alt="${baseIconName}" loading="lazy" 
                                     onerror="handleIconError(this, '${assembledIconName}')">`;
 
-                    // Event Drag Start - transfer nama ikon hasil rakitan prefix ke sel canvas
                     el.addEventListener('dragstart', (e) => {
                         hideIconTooltip();
                         const activeAssembled = assembleBSicon(baseIconName, currentPrefix);
@@ -997,12 +985,10 @@
                         setTimeout(() => el.style.opacity = '0.5', 0);
                     });
 
-                    // Event Drag End
                     el.addEventListener('dragend', () => {
                         el.style.opacity = '1';
                     });
 
-                    // Dukungan drag & drop untuk layar sentuh (mobile)
                     attachTouchDrag(el, baseIconName);
 
                     grid.appendChild(el);
@@ -1011,7 +997,6 @@
                 isFirst = false;
             }
 
-            // Pertahankan filter pencarian jika input search tidak kosong
             const searchInput = document.getElementById('searchInput');
             if (searchInput && searchInput.value.trim().length > 0) {
                 searchIcons();
@@ -1080,13 +1065,12 @@
             el.addEventListener('touchmove', (e) => {
                 const t = e.touches[0];
                 if (!dragging) {
-                    // Jika jari bergeser sebelum tahan selesai, anggap sebagai scroll
                     if (Math.abs(t.clientX - startX) > MOVE_TOLERANCE || Math.abs(t.clientY - startY) > MOVE_TOLERANCE) {
                         clearTimeout(timer);
                     }
                     return;
                 }
-                e.preventDefault(); // Cegah scroll saat drag
+                e.preventDefault();
                 ghost.style.left = t.clientX + 'px';
                 ghost.style.top = t.clientY + 'px';
                 const cell = cellAt(t.clientX, t.clientY);
@@ -1113,19 +1097,21 @@
             el.addEventListener('contextmenu', (e) => e.preventDefault());
         }
 
-        // Fungsi Toggle Sidebar
+        function dismissMobileHint() {
+            const hint = document.getElementById('mobileHint');
+            if (hint) hint.remove();
+        }
+
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('collapsed');
         }
 
-        // Fungsi Fitur Pencarian (Mencari berdasarkan nama rakitan maupun nama dasar)
         function searchIcons() {
             const input = document.getElementById('searchInput').value.trim().toLowerCase();
             const allIcons = document.querySelectorAll('.icon-item');
             const accordions = document.querySelectorAll('.accordion-collapse');
 
-            // Jika sedang mencari, buka semua accordion agar hasilnya terlihat
             if (input.length > 0) {
                 accordions.forEach(acc => acc.classList.add('show'));
             }
@@ -1141,12 +1127,10 @@
             });
         }
 
-        // Fungsi Resize Canvas dengan mempertahankan data ikon yang sudah ada
         function resizeCanvas() {
             pendingCols = parseInt(document.getElementById('gridCols').value) || 1;
             pendingRows = parseInt(document.getElementById('gridRows').value) || 1;
 
-            // Jika ukuran diperkecil dan belum peringatan belum disetujui, panggil Modal
             if ((pendingCols < currentCols || pendingRows < currentRows) && !hasSeenResizeWarning) {
                 const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('resizeConfirmModal'));
                 modal.show();
@@ -1156,7 +1140,7 @@
         }
 
         function confirmResize() {
-            hasSeenResizeWarning = true; // Tandai bahwa pengguna sudah mengerti resikonya
+            hasSeenResizeWarning = true;
             const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
             if (modal) modal.hide();
             applyResize();
@@ -1166,13 +1150,11 @@
             const modal = bootstrap.Modal.getInstance(document.getElementById('resizeConfirmModal'));
             if (modal) modal.hide();
 
-            // Kembalikan nilai di kotak input ke ukuran semula
             document.getElementById('gridCols').value = currentCols;
             document.getElementById('gridRows').value = currentRows;
         }
 
         function applyResize() {
-            // Simpan posisi ikon yang sudah diletakkan
             const savedState = [];
             for (let r = 0; r < currentRows; r++) {
                 for (let c = 0; c < currentCols; c++) {
@@ -1191,7 +1173,6 @@
 
             renderCanvas();
 
-            // Kembalikan ikon ke posisi semula (selama masih berada dalam batas kanvas yang baru)
             savedState.forEach(item => {
                 if (item.r < currentRows && item.c < currentCols) {
                     const cell = document.querySelector(`.canvas-cell[data-row="${item.r}"][data-col="${item.c}"]`);
@@ -1202,12 +1183,10 @@
             });
         }
 
-        // Fungsi Render Kanvas (Sama seperti sebelumnya dengan sedikit pembaruan)
         function renderCanvas() {
             const canvas = document.getElementById('route-canvas');
             canvas.innerHTML = '';
 
-            // Set jumlah kolom CSS secara dinamis
             canvas.style.gridTemplateColumns = `repeat(${currentCols}, var(--cell-size))`;
 
             const totalCells = currentCols * currentRows;
@@ -1222,7 +1201,6 @@
                 cell.dataset.row = r;
                 cell.dataset.col = c;
 
-                // Hapus garis putus-putus pada batas luar paling kanan dan paling bawah
                 if (c === currentCols - 1) cell.style.borderRight = 'none';
                 if (r === currentRows - 1) cell.style.borderBottom = 'none';
 
@@ -1250,7 +1228,6 @@
                     }
                 });
 
-                // Hapus semua ikon di sel jika di-klik ganda
                 cell.addEventListener('dblclick', () => {
                     cell.innerHTML = '';
                 });
@@ -1259,19 +1236,16 @@
             }
         }
 
-        // Fungsi menambahkan ikon ke kanvas dengan logika Overlay
         function addIconToCell(cell, iconName) {
-            // Jika ikon sudah diketahui tidak ada di Commons, jangan tambahkan
             if (missingIconsCache.has(iconName)) {
                 return;
             }
 
             const droppedEl = document.createElement('div');
             droppedEl.className = 'dropped-icon';
-            droppedEl.dataset.iconName = iconName; // Simpan nama ikon murni untuk kebutuhan ekspor
+            droppedEl.dataset.iconName = iconName;
 
             const imgUrl = getBSiconUrl(iconName);
-            // Jika gambar gagal muat di canvas, jangan munculkan teks, cukup hapus elemen
             droppedEl.innerHTML = `<img src="${imgUrl}" alt="${iconName}" 
                                    onerror="handleDroppedIconError(this, '${iconName}')">`;
 
@@ -1280,7 +1254,6 @@
             cell.appendChild(droppedEl);
         }
 
-        // Fungsi Bersihkan Kanvas
         function clearCanvas() {
             const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('clearConfirmModal'));
             modal.show();
@@ -1293,20 +1266,17 @@
             if (modal) modal.hide();
         }
 
-        // Fungsi Ekspor (Generate Wikitext)
         function exportData() {
             let wikitext = "{{routemap\n|title=Rute Saya\n|map=\n";
 
-            // Looping dari atas ke bawah (Baris)
             for (let r = 0; r < currentRows; r++) {
                 let rowIcons = [];
-                // Looping dari kiri ke kanan (Kolom)
                 for (let c = 0; c < currentCols; c++) {
                     const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
                     const droppedIcons = cell.querySelectorAll('.dropped-icon');
 
                     if (droppedIcons.length === 0) {
-                        rowIcons.push(""); // Sel kosong dibiarkan blank
+                        rowIcons.push("");
                     } else {
                         // Gabungkan semua ikon dalam sel yang sama menggunakan !~
                         const icons = Array.from(droppedIcons).map(el => el.dataset.iconName);
@@ -1319,27 +1289,22 @@
 
             wikitext += "}}";
 
-            // Masukkan teks ke dalam text-area modal
             document.getElementById('exportTextarea').value = wikitext;
 
-            // Tampilkan modal Bootstrap
             const exportModal = new bootstrap.Modal(document.getElementById('exportModal'));
             exportModal.show();
         }
 
-        // Fungsi Menyalin Teks Ekspor ke Papan Klip (Clipboard)
         function copyExport() {
             const textarea = document.getElementById('exportTextarea');
             textarea.select();
             document.execCommand('copy');
 
-            // Beri umpan balik visual ke tombol
             const copyBtn = document.getElementById('copyBtn');
             const originalText = copyBtn.innerHTML;
             copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin!';
             copyBtn.classList.replace('btn-primary', 'btn-success');
 
-            // Kembalikan tombol ke semula setelah 2 detik
             setTimeout(() => {
                 copyBtn.innerHTML = originalText;
                 copyBtn.classList.replace('btn-success', 'btn-primary');
@@ -1348,7 +1313,6 @@
 
         let iconTooltipTimeout = null;
 
-        // Fungsi menampilkan keterangan kode BSicon saat hover atau onclick
         function showIconTooltip(element) {
             const baseIcon = element.dataset.baseIcon;
             if (!baseIcon) return;
@@ -1366,7 +1330,6 @@
             const left = rect.left + (rect.width / 2);
             let top = rect.top;
 
-            // Jika posisi ikon terlalu dekat dengan tepi atas layar, posisikan di bawah ikon
             if (top < 50) {
                 top = rect.bottom + 10;
                 tooltip.style.transform = 'translate(-50%, 0)';
@@ -1390,12 +1353,10 @@
             }
         }
 
-        // Inisialisasi event listener hover & onclick untuk ikon di sidebar
         function initIconTooltipListeners() {
             const wrapper = document.querySelector('.accordion-wrapper');
             if (!wrapper) return;
 
-            // Hover masuk
             wrapper.addEventListener('mouseover', (e) => {
                 const item = e.target.closest('.icon-item');
                 if (item) {
@@ -1403,7 +1364,6 @@
                 }
             });
 
-            // Hover keluar
             wrapper.addEventListener('mouseout', (e) => {
                 const item = e.target.closest('.icon-item');
                 if (item && !item.contains(e.relatedTarget)) {
@@ -1411,44 +1371,37 @@
                 }
             });
 
-            // Onclick (termasuk layar sentuh/tablet)
             wrapper.addEventListener('click', (e) => {
                 const item = e.target.closest('.icon-item');
                 if (item) {
                     showIconTooltip(item);
-                    // Sembunyikan otomatis setelah 2.5 detik
                     iconTooltipTimeout = setTimeout(() => {
                         hideIconTooltip();
                     }, 2500);
                 }
             });
 
-            // Sembunyikan jika klik di area mana pun di luar icon-item
             document.addEventListener('click', (e) => {
                 if (!e.target.closest('.icon-item')) {
                     hideIconTooltip();
                 }
             });
 
-            // Sembunyikan tooltip mengambang saat pengguna scroll
             wrapper.addEventListener('scroll', () => {
                 hideIconTooltip();
             });
         }
 
-        // Inisialisasi Aplikasi
         window.onload = function () {
             renderSidebar();
             renderCanvas();
             initIconTooltipListeners();
 
-            // Auto tutup sidebar di layar hp pada muatan pertama
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('collapsed');
             }
         };
 
-        // Mengelola perubahan ukuran jendela
         window.addEventListener('resize', () => {
             const sidebar = document.getElementById('sidebar');
             if (window.innerWidth >= 768) {
@@ -1459,7 +1412,6 @@
         });
     </script>
 
-    <!-- Tooltip Mengambang untuk Kode BSicon (Hover & Click) -->
     <div id="iconHoverTooltip" class="icon-hover-tooltip"></div>
 </body>
 
