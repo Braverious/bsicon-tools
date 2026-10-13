@@ -159,21 +159,12 @@
             transform: rotate(-180deg);
         }
 
-        /* Icon Grid in Sidebar */
+        /* Icon Grid in Sidebar: selalu tepat 4 kolom per baris (desktop & mobile) */
         .icon-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(55px, 1fr));
+            grid-template-columns: repeat(4, minmax(0, 1fr));
             gap: 6px;
             padding: 8px;
-        }
-
-        /* Tampilan Desktop & Tablet: Tepat 4 kolom per baris */
-        @media (min-width: 768px) {
-            .icon-grid {
-                grid-template-columns: repeat(4, 1fr);
-                gap: 6px;
-                padding: 8px;
-            }
         }
 
         .icon-item {
@@ -190,6 +181,9 @@
             color: #495057;
             cursor: grab;
             user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+            -webkit-tap-highlight-color: transparent;
             transition: all 0.2s ease;
             text-align: center;
             word-break: break-word;
@@ -983,7 +977,9 @@
 
                     const el = document.createElement('div');
                     el.className = 'icon-item';
-                    el.draggable = true;
+                    // Di layar sentuh, drag native HTML5 mengambil alih long-press dan membatalkan
+                    // event touch, sehingga dimatikan dan diganti attachTouchDrag().
+                    el.draggable = !window.matchMedia('(pointer: coarse)').matches;
                     el.dataset.baseIcon = baseIconName;
                     el.dataset.iconName = assembledIconName.toLowerCase(); // Untuk pencarian
 
@@ -1059,6 +1055,12 @@
                     dragging = true;
                     hideIconTooltip();
                     el.style.opacity = '0.5';
+                    // Di mobile sidebar menutupi canvas: tutup agar sel canvas terlihat & dapat dijangkau.
+                    // Elemen tetap di DOM sehingga event touch yang sedang berjalan tidak terputus.
+                    if (window.innerWidth < 768) {
+                        const sb = document.getElementById('sidebar');
+                        if (sb) sb.classList.add('collapsed');
+                    }
                     const img = el.querySelector('img');
                     ghost = document.createElement('div');
                     ghost.style.cssText = 'position:fixed;z-index:99999;pointer-events:none;width:56px;height:56px;' +
