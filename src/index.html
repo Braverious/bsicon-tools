@@ -651,6 +651,14 @@
                         aria-label="Jumlah Baris">
                 </div>
                 <div class="toolbar-actions">
+                    <button class="btn btn-sm btn-outline-secondary toolbar-btn" id="undoBtn" onclick="undo()"
+                        title="Urungkan tindakan (Ctrl+Z)" aria-label="Undo" disabled>
+                        <i class="fa-solid fa-rotate-left"></i><span class="d-none d-sm-inline">Undo</span>
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary toolbar-btn" id="redoBtn" onclick="redo()"
+                        title="Ulangi tindakan (Ctrl+Y atau Ctrl+Shift+Z)" aria-label="Redo" disabled>
+                        <i class="fa-solid fa-rotate-right"></i><span class="d-none d-sm-inline">Redo</span>
+                    </button>
                     <button class="btn btn-sm btn-outline-danger toolbar-btn" onclick="clearCanvas()">
                         <i class="fa-solid fa-trash-can"></i><span>Kosongkan</span>
                     </button>
@@ -1197,6 +1205,7 @@
                     const t = e.changedTouches[0];
                     const cell = cellAt(t.clientX, t.clientY);
                     if (cell) {
+                        pushHistory();
                         addIconToCell(cell, assembleBSicon(baseIconName, currentPrefix));
                     }
                 }
@@ -1337,7 +1346,93 @@
             pendingRows = currentRows;
         }
 
+        // Riwayat status kanvas untuk fitur Undo & Redo
+        const undoStack = [];
+        const redoStack = [];
+        const MAX_HISTORY = 40;
+
+        function getCanvasState() {
+            const icons = [];
+            for (let r = 0; r < currentRows; r++) {
+                for (let c = 0; c < currentCols; c++) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+                    if (cell) {
+                        const cellIcons = Array.from(cell.querySelectorAll('.dropped-icon')).map(el => el.dataset.iconName);
+                        if (cellIcons.length > 0) {
+                            icons.push({ r, c, icons: cellIcons });
+                        }
+                    }
+                }
+            }
+            return {
+                cols: currentCols,
+                rows: currentRows,
+                icons
+            };
+        }
+
+        function pushHistory() {
+            const state = getCanvasState();
+            undoStack.push(JSON.stringify(state));
+            if (undoStack.length > MAX_HISTORY) {
+                undoStack.shift();
+            }
+            // Kosongkan redoStack saat ada tindakan baru
+            redoStack.length = 0;
+            updateHistoryButtons();
+        }
+
+        function updateHistoryButtons() {
+            const undoBtn = document.getElementById('undoBtn');
+            const redoBtn = document.getElementById('redoBtn');
+            if (undoBtn) undoBtn.disabled = undoStack.length === 0;
+            if (redoBtn) redoBtn.disabled = redoStack.length === 0;
+        }
+
+        function restoreCanvasState(stateObj) {
+            currentCols = stateObj.cols;
+            currentRows = stateObj.rows;
+            pendingCols = currentCols;
+            pendingRows = currentRows;
+
+            const gridColsEl = document.getElementById('gridCols');
+            const gridRowsEl = document.getElementById('gridRows');
+            if (gridColsEl) gridColsEl.value = currentCols;
+            if (gridRowsEl) gridRowsEl.value = currentRows;
+
+            renderCanvas();
+
+            stateObj.icons.forEach(item => {
+                const cell = document.querySelector(`.canvas-cell[data-row="${item.r}"][data-col="${item.c}"]`);
+                if (cell) {
+                    item.icons.forEach(iconName => addIconToCell(cell, iconName));
+                }
+            });
+            updateHistoryButtons();
+        }
+
+        function undo() {
+            if (undoStack.length === 0) return;
+            const currentState = getCanvasState();
+            redoStack.push(JSON.stringify(currentState));
+
+            const prevStateStr = undoStack.pop();
+            const prevState = JSON.parse(prevStateStr);
+            restoreCanvasState(prevState);
+        }
+
+        function redo() {
+            if (redoStack.length === 0) return;
+            const currentState = getCanvasState();
+            undoStack.push(JSON.stringify(currentState));
+
+            const nextStateStr = redoStack.pop();
+            const nextState = JSON.parse(nextStateStr);
+            restoreCanvasState(nextState);
+        }
+
         function applyResize() {
+            pushHistory();
             const savedState = [];
             for (let r = 0; r < currentRows; r++) {
                 for (let c = 0; c < currentCols; c++) {
@@ -1407,12 +1502,16 @@
                     cell.classList.remove('drag-over');
                     const iconName = e.dataTransfer.getData('text/plain');
                     if (iconName) {
+                        pushHistory();
                         addIconToCell(cell, iconName);
                     }
                 });
 
                 cell.addEventListener('dblclick', () => {
-                    cell.innerHTML = '';
+                    if (cell.querySelectorAll('.dropped-icon').length > 0) {
+                        pushHistory();
+                        cell.innerHTML = '';
+                    }
                 });
 
                 canvas.appendChild(cell);
@@ -1443,6 +1542,10 @@
         }
 
         function executeClearCanvas() {
+            const cellsWithIcons = document.querySelectorAll('.canvas-cell .dropped-icon');
+            if (cellsWithIcons.length > 0) {
+                pushHistory();
+            }
             const cells = document.querySelectorAll('.canvas-cell');
             cells.forEach(cell => cell.innerHTML = '');
             const modal = bootstrap.Modal.getInstance(document.getElementById('clearConfirmModal'));
@@ -1617,6 +1720,30 @@
                 document.getElementById('sidebar').classList.add('collapsed');
             }
         };
+
+        // Pintasan keyboard: Ctrl+Z (Undo) dan Ctrl+Y / Ctrl+Shift+Z (Redo)
+        window.addEventListener('keydown', (e) => {
+            // Abaikan jika fokus sedang berada pada input teks atau textarea
+            const tag = (e.target.tagName || '').toLowerCase();
+            if (tag === 'input' || tag === 'textarea') return;
+
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+
+            if (ctrlOrCmd && !e.altKey) {
+                if (e.key === 'z' || e.key === 'Z') {
+                    e.preventDefault();
+                    if (e.shiftKey) {
+                        redo();
+                    } else {
+                        undo();
+                    }
+                } else if (e.key === 'y' || e.key === 'Y') {
+                    e.preventDefault();
+                    redo();
+                }
+            }
+        });
 
         window.addEventListener('resize', () => {
             const sidebar = document.getElementById('sidebar');
