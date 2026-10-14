@@ -1658,8 +1658,7 @@
             droppedEl.innerHTML = `<img src="${imgUrl}" alt="${iconName}" 
                                    onerror="handleDroppedIconError(this, '${iconName}')">`;
 
-            /* Logika tumpukan transparan (!~). 
-            /* Elemen baru selalu ditumpuk di atas elemen sebelumnya berkat position: absolute dan bg: transparent. */
+            // Logika tumpukan transparan (!~). Elemen baru selalu ditumpuk di atas elemen sebelumnya.
             cell.appendChild(droppedEl);
         }
 
@@ -1818,10 +1817,16 @@
                 if (line.startsWith('|') && !line.includes('\\')) continue;
                 if (line.startsWith('}}')) continue;
 
-                // Jika baris diakhiri tanda hubung '-' (seperti SKRZ- \n G2BUE), gabungkan dengan baris berikutnya
+                // Gabungkan baris yang terputus di tengah nama ikon (misal: "SKRZ-" dilanjutkan "G2BUE")
+                // Kecualikan ikon paralel yang sah berakhiran '-' (seperti vSTR-, vSHI2g+l-)
                 while (line.endsWith('-') && i + 1 < rawLines.length) {
+                    const lastToken = line.split('\\').pop().split('!~').pop().trim();
+                    const nextLine = rawLines[i + 1].trim();
+                    const isParallelIcon = /^[a-z]*v/.test(lastToken) && lastToken.length > 2;
+                    const nextIsContinuation = /^[A-Za-z0-9(]/.test(nextLine) && !nextLine.startsWith('{{');
+                    if (isParallelIcon || !nextIsContinuation) break;
                     i++;
-                    line += rawLines[i].trim();
+                    line += nextLine;
                 }
 
                 preprocessedLines.push(line);
@@ -1830,22 +1835,19 @@
             const grid = [];
 
             for (let line of preprocessedLines) {
-                // Ambil hanya marka BSicon sebelum penanda teks kolom kanan (~~)
                 let iconPart = line;
-                if (iconPart.includes('~~')) {
-                    iconPart = iconPart.split('~~')[0];
+
+                // 1. Ekstrak teks sisi kiri (format: <Teks Kiri>! !<BSicons>)
+                const bangMatch = iconPart.match(/!\s*!/);
+                if (bangMatch) {
+                    iconPart = iconPart.substring(iconPart.indexOf(bangMatch[0]) + bangMatch[0].length).trim();
+                } else if (iconPart.startsWith('!') || iconPart.startsWith('|')) {
+                    iconPart = iconPart.substring(1).trim();
                 }
 
-                // Tangani penanda teks sisi kiri diagram Wikipedia:
-                // Format: <Teks Kiri>! !<Ikon-Ikon BSicon> atau ! <Teks Kiri> ! <Ikon-Ikon>
-                if (iconPart.includes('!')) {
-                    // Jika ada pemisah '! !' atau '!~' bukan sekadar overlay, pisahkan bagian teks kiri
-                    const bangSplit = iconPart.split(/!\s*!/);
-                    if (bangSplit.length > 1) {
-                        iconPart = bangSplit[bangSplit.length - 1].trim();
-                    } else if (iconPart.startsWith('!') || iconPart.startsWith('|')) {
-                        iconPart = iconPart.substring(1).trim();
-                    }
+                // 2. Buang keterangan teks sisi kanan (setelah ~~)
+                if (iconPart.includes('~~')) {
+                    iconPart = iconPart.split('~~')[0];
                 }
 
                 // Pisahkan kolom sel menggunakan backslash '\'
