@@ -64,6 +64,11 @@ Pengguna dapat mengubah tipe jalur seluruh katalog ikon hanya dengan satu klik t
   ```
 - Dilengkapi dialog modal dengan tombol **Salin** (*Copy to Clipboard*) langsung.
 
+### 7. Fitur Impor Sintaks Route Map
+- Pengguna atau kontributor dapat menempelkan (*paste*) kode bagan rute Wikipedia yang sudah ada (baik utuh `{{routemap}}` maupun baris BSicon dengan pemisah `\`).
+- Sistem secara otomatis mengekstrak ikon-ikon di dalam marka BSicon dan memuatnya ke kanvas (termasuk penyesuaian dimensi kanvas dan tumpukan overlay `!~`), sementara teks keterangan stasiun atau jarak (`~~`) diabaikan secara cerdas.
+- Dilengkapi dukungan **Undo** (*Ctrl+Z*) sehingga kanvas sebelum diimpor dapat dikembalikan kapan saja.
+
 ---
 
 ## 🚀 Cara Penggunaan

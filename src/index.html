@@ -685,6 +685,10 @@
                         title="Simpan kanvas rute sebagai gambar PNG">
                         <i class="fa-solid fa-image"></i><span>Simpan</span>
                     </button>
+                    <button class="btn btn-sm btn-outline-dark toolbar-btn d-none d-md-inline-flex"
+                        onclick="openImportModal()" title="Impor bagan rute dari sintaks Wikipedia / BSicon">
+                        <i class="fa-solid fa-file-import"></i><span>Impor</span>
+                    </button>
                     <button class="btn btn-sm btn-dark toolbar-btn" onclick="exportData()">
                         <i class="fa-solid fa-code"></i><span>Ekspor</span>
                     </button>
@@ -731,6 +735,84 @@
         </div>
     </div>
 
+    <!-- Modal Sambutan Pertama Kali untuk Mobile: Pilihan Buat Baru atau Impor -->
+    <div class="modal fade" id="welcomePromptModal" tabindex="-1" aria-labelledby="welcomePromptModalLabel"
+        aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="welcomePromptModalLabel">
+                        Mulai Diagram Rute
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="text-secondary small mb-4">
+                        Selamat datang di <strong>SPOORWIKI Tools</strong>. Apakah Anda ingin merancang diagram rute
+                        baru dari awal atau mengimpor kode bagan rute Wikipedia yang sudah ada?
+                    </p>
+                    <div class="d-grid gap-3">
+                        <button type="button"
+                            class="btn btn-outline-primary py-3 d-flex align-items-center justify-content-start px-3 gap-3 text-start"
+                            onclick="chooseStartNew()">
+                            <div class="rounded-circle bg-primary-subtle text-primary p-2 d-flex align-items-center justify-content-center"
+                                style="width: 44px; height: 44px; flex-shrink: 0;">
+                                <i class="fa-solid fa-plus fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Buat Diagram Baru</div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">Mulai dengan kanvas kosong
+                                    siap rakit</div>
+                            </div>
+                        </button>
+                        <button type="button"
+                            class="btn btn-outline-dark py-3 d-flex align-items-center justify-content-start px-3 gap-3 text-start"
+                            onclick="chooseImportExisting()">
+                            <div class="rounded-circle bg-secondary-subtle text-dark p-2 d-flex align-items-center justify-content-center"
+                                style="width: 44px; height: 44px; flex-shrink: 0;">
+                                <i class="fa-solid fa-file-import fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Impor Diagram Wikipedia</div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">Muat & edit diagram dari
+                                    sintaks wikitext / BSicon</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel"><i class="fa-solid fa-file-import"></i> Impor Sintaks
+                        Route Map</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-2">
+                        Tempelkan (*paste*) sintaks bagan rute Wikipedia (<code>{{routemap}}</code> atau baris BSicon
+                        dengan pemisah <code>\</code>). Hanya ikon di bagian marka BSicon yang akan dimuat ke kanvas;
+                        teks keterangan stasiun di sebelah kanan akan diabaikan secara otomatis.
+                    </p>
+                    <textarea id="importTextarea" class="form-control font-monospace" rows="12"
+                        placeholder="Contoh:&#10;{{routemap&#10;|title=Nama Jalur&#10;|map=&#10;STR\BHF\STR~~0.0~~Stasiun Utama&#10;STR\STR!~PORT\STR~~2.5~~Pelabuhan&#10;}}"
+                        style="font-size: 0.85rem;"></textarea>
+                    <div id="importFeedback" class="small mt-2" style="display: none;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success" id="importSubmitBtn" onclick="executeImport()">
+                        <i class="fa-solid fa-upload"></i> Muat ke Kanvas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="resizeConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -771,7 +853,6 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
@@ -885,7 +966,8 @@
                     'BHF', 'HST', 'KBHFa', 'KBHFe',
                     'PLT', 'BUILDING', 'KKBHF', 'lELC',
                     'PSTR', 'PSTR(L)', 'PSTR(R)', 'PLTr', 'PLTl',
-                    'PENDEa', 'PENDEe', 'PENDE@G', 'PENDE@F'
+                    'PENDEa', 'PENDEe', 'PENDE@G', 'PENDE@F',
+                    'ELC-PT'
                 ]
             },
             "paralel": {
@@ -1600,23 +1682,57 @@
         function exportData() {
             let wikitext = "{{routemap\n|title=Isi Nama Stasiun di sini\n|map=\n";
 
-            for (let r = 0; r < currentRows; r++) {
-                let rowIcons = [];
+            // Cari batas baris dan kolom yang memiliki ikon agar tidak menghasilkan baris kosong berlebihan di akhir
+            let maxUsedRow = -1;
+            for (let r = currentRows - 1; r >= 0; r--) {
+                let rowHasIcons = false;
                 for (let c = 0; c < currentCols; c++) {
                     const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
-                    const droppedIcons = cell.querySelectorAll('.dropped-icon');
+                    if (cell && cell.querySelectorAll('.dropped-icon').length > 0) {
+                        rowHasIcons = true;
+                        break;
+                    }
+                }
+                if (rowHasIcons) {
+                    maxUsedRow = r;
+                    break;
+                }
+            }
 
+            const exportRows = maxUsedRow >= 0 ? maxUsedRow + 1 : currentRows;
+
+            // Kumpulkan isi sel, lalu cari kolom terkiri & terkanan yang terpakai di SELURUH baris.
+            // Semua baris harus memiliki lebar seragam, karena Routemap Wikipedia merender
+            // baris yang lebih pendek secara terpusat (center) sehingga posisinya akan bergeser.
+            const rowsData = [];
+            let minUsedCol = Infinity;
+            let maxUsedCol = -1;
+            for (let r = 0; r < exportRows; r++) {
+                const rowIcons = [];
+                for (let c = 0; c < currentCols; c++) {
+                    const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+                    const droppedIcons = cell ? cell.querySelectorAll('.dropped-icon') : [];
                     if (droppedIcons.length === 0) {
                         rowIcons.push("");
                     } else {
                         // Gabungkan semua ikon dalam sel yang sama menggunakan !~
-                        const icons = Array.from(droppedIcons).map(el => el.dataset.iconName);
-                        rowIcons.push(icons.join("!~"));
+                        rowIcons.push(Array.from(droppedIcons).map(el => el.dataset.iconName).join("!~"));
+                        if (c < minUsedCol) minUsedCol = c;
+                        if (c > maxUsedCol) maxUsedCol = c;
                     }
                 }
-                // Gabungkan sel dalam satu baris dengan backslash '\'
-                wikitext += rowIcons.join("\\") + "\n";
+                rowsData.push(rowIcons);
             }
+
+            if (maxUsedCol < 0) {
+                minUsedCol = 0;
+                maxUsedCol = currentCols - 1;
+            }
+
+            rowsData.forEach(rowIcons => {
+                // Gabungkan sel dalam satu baris dengan backslash '\'
+                wikitext += rowIcons.slice(minUsedCol, maxUsedCol + 1).join("\\") + "\n";
+            });
 
             wikitext += "}}";
 
@@ -1640,6 +1756,206 @@
                 copyBtn.innerHTML = originalText;
                 copyBtn.classList.replace('btn-success', 'btn-primary');
             }, 2000);
+        }
+
+        /**
+         * Penanganan pilihan di modal pembuka (khusus mobile)
+         */
+        function chooseStartNew() {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('welcomePromptModal'));
+            if (modal) modal.hide();
+        }
+
+        function chooseImportExisting() {
+            const welcomeModal = bootstrap.Modal.getInstance(document.getElementById('welcomePromptModal'));
+            if (welcomeModal) welcomeModal.hide();
+            setTimeout(() => {
+                openImportModal();
+            }, 300);
+        }
+
+        /**
+         * Membuka modal impor dan mereset status feedback
+         */
+        function openImportModal() {
+            const feedbackEl = document.getElementById('importFeedback');
+            if (feedbackEl) {
+                feedbackEl.style.display = 'none';
+                feedbackEl.innerHTML = '';
+            }
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('importModal'));
+            modal.show();
+        }
+
+        /**
+         * Mem-parse teks templat wikitext / {{routemap}}
+         * Hanya mengambil blok ikon BSicon (sebelum penanda keterangan teks ~~).
+         * Mengembalikan { grid: [ [ [icons], ... ], ... ], cols: number, rows: number }
+         */
+        function parseRoutemapWikitext(rawText) {
+            if (!rawText || !rawText.trim()) return null;
+
+            let text = rawText.trim();
+
+            // Jika sintaks berisi parameter |map= atau \nmap=, ambil bagian setelahnya
+            const mapParamMatch = text.match(/\|\s*map\s*=\s*([\s\S]*)/i);
+            if (mapParamMatch) {
+                text = mapParamMatch[1];
+            }
+
+            // Hapus penutup templat '}}' di akhir jika ada
+            text = text.replace(/\}\}\s*$/, '');
+
+            const rawLines = text.split(/\r?\n/);
+            const preprocessedLines = [];
+
+            // 1. Rekonstruksi baris yang terputus (line wrapping)
+            for (let i = 0; i < rawLines.length; i++) {
+                let line = rawLines[i].trim();
+                if (!line) continue;
+
+                // Abaikan baris parameter templat lain (misal |title=, |navbar=, |bottom=, dsb)
+                if (line.startsWith('|') && !line.includes('\\')) continue;
+                if (line.startsWith('}}')) continue;
+
+                // Jika baris diakhiri tanda hubung '-' (seperti SKRZ- \n G2BUE), gabungkan dengan baris berikutnya
+                while (line.endsWith('-') && i + 1 < rawLines.length) {
+                    i++;
+                    line += rawLines[i].trim();
+                }
+
+                preprocessedLines.push(line);
+            }
+
+            const grid = [];
+
+            for (let line of preprocessedLines) {
+                // Ambil hanya marka BSicon sebelum penanda teks kolom kanan (~~)
+                let iconPart = line;
+                if (iconPart.includes('~~')) {
+                    iconPart = iconPart.split('~~')[0];
+                }
+
+                // Tangani penanda teks sisi kiri diagram Wikipedia:
+                // Format: <Teks Kiri>! !<Ikon-Ikon BSicon> atau ! <Teks Kiri> ! <Ikon-Ikon>
+                if (iconPart.includes('!')) {
+                    // Jika ada pemisah '! !' atau '!~' bukan sekadar overlay, pisahkan bagian teks kiri
+                    const bangSplit = iconPart.split(/!\s*!/);
+                    if (bangSplit.length > 1) {
+                        iconPart = bangSplit[bangSplit.length - 1].trim();
+                    } else if (iconPart.startsWith('!') || iconPart.startsWith('|')) {
+                        iconPart = iconPart.substring(1).trim();
+                    }
+                }
+
+                // Pisahkan kolom sel menggunakan backslash '\'
+                const rawCells = iconPart.split('\\');
+
+                const rowCells = [];
+                for (let cellStr of rawCells) {
+                    const trimmedCell = cellStr.trim();
+                    if (!trimmedCell) {
+                        rowCells.push([]); // Sel kosong
+                    } else {
+                        // Dukungan tumpukan overlay '!~'
+                        const stackedIcons = trimmedCell
+                            .split('!~')
+                            .map(icon => icon.trim())
+                            .filter(icon => icon.length > 0);
+                        rowCells.push(stackedIcons);
+                    }
+                }
+
+                if (rowCells.length > 0) {
+                    grid.push(rowCells);
+                }
+            }
+
+            if (grid.length === 0) return null;
+
+            // Hitung lebar kolom maksimum dari seluruh baris
+            let maxCols = 0;
+            grid.forEach(row => {
+                if (row.length > maxCols) maxCols = row.length;
+            });
+
+            // Normalisasi: Modul Routemap Wikipedia merender setiap baris secara TERPUSAT (center).
+            // Baris yang lebih pendek digeser ke tengah, sehingga sisa kolom dibagi rata kiri-kanan.
+            grid.forEach(row => {
+                const diff = maxCols - row.length;
+                if (diff <= 0) return;
+                const padLeft = Math.floor(diff / 2);
+                const padRight = diff - padLeft;
+                for (let i = 0; i < padLeft; i++) row.unshift([]);
+                for (let i = 0; i < padRight; i++) row.push([]);
+            });
+
+            return {
+                grid: grid,
+                rows: grid.length,
+                cols: maxCols
+            };
+        }
+
+        /**
+         * Eksekusi muat data sintaks yang di-paste ke kanvas
+         */
+        function executeImport() {
+            const textarea = document.getElementById('importTextarea');
+            const feedbackEl = document.getElementById('importFeedback');
+            const rawVal = textarea ? textarea.value : '';
+
+            const parsed = parseRoutemapWikitext(rawVal);
+            if (!parsed || parsed.rows === 0 || parsed.cols === 0) {
+                if (feedbackEl) {
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.className = 'alert alert-danger py-2 px-3 small mt-2';
+                    feedbackEl.innerHTML = '<i class="fa-solid fa-triangle-exclamation me-1"></i> Tidak ditemukan pola sintaks BSicon atau routemap yang valid. Pastikan format menggunakan pemisah backslash (\\).';
+                }
+                return;
+            }
+
+            // Simpan riwayat perubahan untuk Undo
+            pushHistory();
+
+            // Sesuaikan dimensi kanvas dengan data yang diimpor
+            currentCols = Math.max(1, parsed.cols);
+            currentRows = Math.max(1, parsed.rows);
+            pendingCols = currentCols;
+            pendingRows = currentRows;
+
+            const gridColsInput = document.getElementById('gridCols');
+            const gridRowsInput = document.getElementById('gridRows');
+            if (gridColsInput) gridColsInput.value = currentCols;
+            if (gridRowsInput) gridRowsInput.value = currentRows;
+
+            // Render ulang kanvas
+            renderCanvas();
+
+            // Isi sel kanvas dengan ikon yang di-parse
+            let totalIconsLoaded = 0;
+            for (let r = 0; r < parsed.rows; r++) {
+                for (let c = 0; c < parsed.cols; c++) {
+                    const iconList = parsed.grid[r][c];
+                    if (iconList && iconList.length > 0) {
+                        const cell = document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+                        if (cell) {
+                            iconList.forEach(iconName => {
+                                addIconToCell(cell, iconName);
+                                totalIconsLoaded++;
+                            });
+                        }
+                    }
+                }
+            }
+
+            // Tutup modal impor
+            const modal = bootstrap.Modal.getInstance(document.getElementById('importModal'));
+            if (modal) modal.hide();
+
+            // Bersihkan input teks impor untuk pemakaian berikutnya
+            if (textarea) textarea.value = '';
+            if (feedbackEl) feedbackEl.style.display = 'none';
         }
 
         /**
@@ -1814,6 +2130,14 @@
 
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('collapsed');
+                // Tampilkan dialog pilihan Buat Baru atau Impor saat pertama kali landing di versi mobile
+                setTimeout(() => {
+                    const welcomeModalEl = document.getElementById('welcomePromptModal');
+                    if (welcomeModalEl) {
+                        const welcomeModal = bootstrap.Modal.getOrCreateInstance(welcomeModalEl);
+                        welcomeModal.show();
+                    }
+                }, 400);
             }
         };
 
