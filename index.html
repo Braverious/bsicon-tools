@@ -352,8 +352,9 @@
             overflow: auto;
             padding: 20px;
             display: flex;
-            justify-content: center;
+            justify-content: safe center;
             align-items: flex-start;
+            -webkit-overflow-scrolling: touch;
         }
 
         .route-canvas {
@@ -364,6 +365,8 @@
             grid-auto-rows: var(--cell-size);
             position: relative;
             user-select: none;
+            margin: auto;
+            flex-shrink: 0;
         }
 
         .canvas-cell {
