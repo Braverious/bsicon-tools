@@ -362,6 +362,8 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
             display: grid;
             grid-auto-rows: var(--cell-size);
+            position: relative;
+            user-select: none;
         }
 
         .canvas-cell {
@@ -377,6 +379,41 @@
         .canvas-cell.drag-over {
             background-color: var(--drop-highlight);
             border-color: #198754;
+        }
+
+        .canvas-cell.is-selected {
+            background-color: rgba(13, 110, 253, 0.16) !important;
+            outline: 2px solid #0d6efd !important;
+            outline-offset: -2px;
+            z-index: 10;
+        }
+
+        .canvas-cell.is-cut {
+            opacity: 0.45;
+            filter: grayscale(40%);
+        }
+
+        .selection-marquee {
+            position: absolute;
+            border: 1.5px solid #0d6efd;
+            background-color: rgba(13, 110, 253, 0.18);
+            pointer-events: none;
+            z-index: 50;
+            display: none;
+            box-sizing: border-box;
+            border-radius: 2px;
+        }
+
+        .tips-fading-text {
+            display: inline-block;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tips-fading-text.fade-out {
+            opacity: 0;
+            transform: translateY(-4px);
         }
 
         /* Danger Zone saat pemotongan dimensi kanvas (Opsi 2) */
@@ -591,7 +628,7 @@
         </button>
         <div class="kai-sign">
             <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
-            <p class="kai-sign-elev">v 3.0+</p>
+            <p class="kai-sign-elev">v 4.0+</p>
         </div>
     </header>
 
@@ -665,9 +702,10 @@
         </div>
 
         <div class="panel-canvas">
-            <div class="p-2 bg-white border-bottom text-center text-muted" style="font-size: 0.75rem;">
-                <strong>Tips:</strong> Klik dua kali pada sel untuk menghapus. Seret beberapa ikon ke sel
-                yang sama untuk menumpuk overlay (!~).
+            <div class="p-2 bg-white border-bottom text-center text-muted tips-banner-container"
+                style="font-size: 0.75rem; min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 4px;">
+                <strong>Tips:</strong>
+                <span id="dynamicTipText" class="tips-fading-text">Klik dua kali pada sel untuk menghapus.</span>
             </div>
 
             <div class="canvas-toolbar">
@@ -889,7 +927,7 @@
 ██║  ██║██║╚██████╔╝╚██████╔╝███████║
 ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
 `, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
-        console.log('%c🚀 SPOORWIKI Tools Build v3.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
+        console.log('%c🚀 SPOORWIKI Tools Build v4.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
 
         const iconDatabase = {
             "sepur-lurus": {
@@ -1045,8 +1083,6 @@
                     'vSTR2+4~r', 'vSTR2+4~l', 'vSTR3+1~r', 'vSTR3+1~l',
                     'vSTR2', 'vSTR3', 'vSTRc2', 'vSTRc3',
                     'vSTR+1', 'vSTR+4', 'vSTRc1', 'vSTRc4',
-                    // 'vSTR2', 'vSTR3', 'STR2+r', 'STR3+l',
-                    // 'vSTR+1', 'vSTR+4', 'STRr+1', 'STRl+4',
                     'vBUE', 'vSKRZ-G2h', 'vBUE-', 'v-BUE',
                     'vSTRo', 'hvSTRa', 'hvSTR', 'hvSTR',
                     'vENDEa', 'vENDEe', 'vENDExa', 'vENDExe',
@@ -1677,11 +1713,334 @@
             });
         }
 
+        // State seleksi kanvas dan clipboard
+        const selectedCellCoords = new Set(); // Format string: "r,c"
+        let clipboardData = null; // { mode: 'copy'|'cut', origin: {r, c}, cells: [ { dr, dc, icons: [] } ] }
+        let isMarqueeSelecting = false;
+        let marqueeStart = { x: 0, y: 0 };
+        let marqueeBoxEl = null;
+
+        function getCellKey(r, c) {
+            return `${r},${c}`;
+        }
+
+        function getCellEl(r, c) {
+            return document.querySelector(`.canvas-cell[data-row="${r}"][data-col="${c}"]`);
+        }
+
+        function getCellIcons(cell) {
+            if (!cell) return [];
+            return Array.from(cell.querySelectorAll('.dropped-icon')).map(el => el.dataset.iconName);
+        }
+
+        function clearSelection() {
+            selectedCellCoords.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                const cell = getCellEl(r, c);
+                if (cell) cell.classList.remove('is-selected');
+            });
+            selectedCellCoords.clear();
+        }
+
+        function selectCell(r, c, add = false) {
+            if (!add) {
+                clearSelection();
+            }
+            const key = getCellKey(r, c);
+            selectedCellCoords.add(key);
+            const cell = getCellEl(r, c);
+            if (cell) cell.classList.add('is-selected');
+        }
+
+        function deselectCell(r, c) {
+            const key = getCellKey(r, c);
+            selectedCellCoords.delete(key);
+            const cell = getCellEl(r, c);
+            if (cell) cell.classList.remove('is-selected');
+        }
+
+        function isCellSelected(r, c) {
+            return selectedCellCoords.has(getCellKey(r, c));
+        }
+
+        function updateCellDraggable(cell) {
+            const hasIcons = cell.querySelectorAll('.dropped-icon').length > 0;
+            cell.draggable = hasIcons;
+        }
+
+        function clearCutHighlights() {
+            document.querySelectorAll('.canvas-cell.is-cut').forEach(cell => {
+                cell.classList.remove('is-cut');
+            });
+        }
+
+        function initCanvasSelection() {
+            const canvas = document.getElementById('route-canvas');
+            if (!canvas) return;
+
+            if (!marqueeBoxEl) {
+                marqueeBoxEl = document.createElement('div');
+                marqueeBoxEl.className = 'selection-marquee';
+                canvas.appendChild(marqueeBoxEl);
+            }
+
+            canvas.addEventListener('mousedown', (e) => {
+                if (e.button !== 0) return;
+
+                const targetCell = e.target.closest('.canvas-cell');
+                const canvasRect = canvas.getBoundingClientRect();
+                const mouseX = e.clientX - canvasRect.left;
+                const mouseY = e.clientY - canvasRect.top;
+
+                if (targetCell) {
+                    const r = parseInt(targetCell.dataset.row);
+                    const c = parseInt(targetCell.dataset.col);
+                    const isSelected = isCellSelected(r, c);
+                    const hasIcons = targetCell.querySelectorAll('.dropped-icon').length > 0;
+
+                    // Jika klik pada sel yang sudah dipilih dan ada ikonnya, biarkan untuk Drag
+                    if (isSelected && hasIcons) {
+                        return;
+                    }
+
+                    // Multi-select toggle dengan Ctrl / Shift / Meta
+                    if (e.ctrlKey || e.shiftKey || e.metaKey) {
+                        if (isSelected) {
+                            deselectCell(r, c);
+                        } else {
+                            selectCell(r, c, true);
+                        }
+                        return;
+                    }
+
+                    // Jika klik sel yang memiliki ikon (tanpa drag), pilih sel ini
+                    if (hasIcons) {
+                        selectCell(r, c, false);
+                        return;
+                    }
+                }
+
+                // Klik sel kosong atau canvas background -> mulai Marquee Selection
+                if (!e.ctrlKey && !e.shiftKey && !e.metaKey) {
+                    clearSelection();
+                }
+
+                isMarqueeSelecting = true;
+                marqueeStart = { x: mouseX, y: mouseY };
+
+                marqueeBoxEl.style.left = `${mouseX}px`;
+                marqueeBoxEl.style.top = `${mouseY}px`;
+                marqueeBoxEl.style.width = '0px';
+                marqueeBoxEl.style.height = '0px';
+                marqueeBoxEl.style.display = 'block';
+
+                const onMouseMove = (moveEvent) => {
+                    if (!isMarqueeSelecting) return;
+
+                    const curX = moveEvent.clientX - canvasRect.left;
+                    const curY = moveEvent.clientY - canvasRect.top;
+
+                    const left = Math.max(0, Math.min(marqueeStart.x, curX));
+                    const top = Math.max(0, Math.min(marqueeStart.y, curY));
+                    const width = Math.min(canvasRect.width - left, Math.abs(curX - marqueeStart.x));
+                    const height = Math.min(canvasRect.height - top, Math.abs(curY - marqueeStart.y));
+
+                    marqueeBoxEl.style.left = `${left}px`;
+                    marqueeBoxEl.style.top = `${top}px`;
+                    marqueeBoxEl.style.width = `${width}px`;
+                    marqueeBoxEl.style.height = `${height}px`;
+
+                    const boxRight = left + width;
+                    const boxBottom = top + height;
+
+                    const allCells = canvas.querySelectorAll('.canvas-cell');
+                    allCells.forEach(cell => {
+                        const cellLeft = cell.offsetLeft;
+                        const cellTop = cell.offsetTop;
+                        const cellRight = cellLeft + cell.offsetWidth;
+                        const cellBottom = cellTop + cell.offsetHeight;
+
+                        const intersects = !(cellRight < left || cellLeft > boxRight ||
+                            cellBottom < top || cellTop > boxBottom);
+
+                        const r = parseInt(cell.dataset.row);
+                        const c = parseInt(cell.dataset.col);
+
+                        if (intersects) {
+                            selectCell(r, c, true);
+                        } else if (!moveEvent.ctrlKey && !moveEvent.shiftKey && !moveEvent.metaKey) {
+                            deselectCell(r, c);
+                        }
+                    });
+                };
+
+                const onMouseUp = () => {
+                    isMarqueeSelecting = false;
+                    if (marqueeBoxEl) marqueeBoxEl.style.display = 'none';
+                    window.removeEventListener('mousemove', onMouseMove);
+                    window.removeEventListener('mouseup', onMouseUp);
+                };
+
+                window.addEventListener('mousemove', onMouseMove);
+                window.addEventListener('mouseup', onMouseUp);
+            });
+
+            // Hilangkan seleksi (.is-selected) jika pengguna mengklik area luar canvas (misal di canvas-wrapper)
+            const wrapper = document.getElementById('canvas-scroll-area');
+            if (wrapper) {
+                wrapper.addEventListener('mousedown', (e) => {
+                    if (e.target === wrapper) {
+                        clearSelection();
+                        clearCutHighlights();
+                    }
+                });
+            }
+        }
+
+        function copySelection() {
+            if (selectedCellCoords.size === 0) return;
+
+            let minR = Infinity;
+            let minC = Infinity;
+            const cellsData = [];
+
+            selectedCellCoords.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                if (r < minR) minR = r;
+                if (c < minC) minC = c;
+            });
+
+            selectedCellCoords.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                const cell = getCellEl(r, c);
+                const icons = getCellIcons(cell);
+                cellsData.push({
+                    dr: r - minR,
+                    dc: c - minC,
+                    icons: icons
+                });
+            });
+
+            clipboardData = {
+                mode: 'copy',
+                origin: { r: minR, c: minC },
+                cells: cellsData
+            };
+            clearCutHighlights();
+        }
+
+        function cutSelection() {
+            if (selectedCellCoords.size === 0) return;
+            copySelection();
+            if (clipboardData) {
+                clipboardData.mode = 'cut';
+                clearCutHighlights();
+                selectedCellCoords.forEach(key => {
+                    const [r, c] = key.split(',').map(Number);
+                    const cell = getCellEl(r, c);
+                    if (cell) cell.classList.add('is-cut');
+                });
+            }
+        }
+
+        function pasteSelection(targetR = null, targetC = null) {
+            if (!clipboardData || !clipboardData.cells || clipboardData.cells.length === 0) return;
+
+            if (targetR === null || targetC === null) {
+                if (selectedCellCoords.size > 0) {
+                    let minR = Infinity;
+                    let minC = Infinity;
+                    selectedCellCoords.forEach(key => {
+                        const [r, c] = key.split(',').map(Number);
+                        if (r < minR || (r === minR && c < minC)) {
+                            minR = r;
+                            minC = c;
+                        }
+                    });
+                    targetR = minR;
+                    targetC = minC;
+                } else {
+                    targetR = clipboardData.origin.r;
+                    targetC = clipboardData.origin.c;
+                }
+            }
+
+            pushHistory();
+
+            if (clipboardData.mode === 'cut') {
+                const originR = clipboardData.origin.r;
+                const originC = clipboardData.origin.c;
+                clipboardData.cells.forEach(item => {
+                    const sourceCell = getCellEl(originR + item.dr, originC + item.dc);
+                    if (sourceCell) {
+                        sourceCell.innerHTML = '';
+                        updateCellDraggable(sourceCell);
+                    }
+                });
+                clearCutHighlights();
+                clipboardData.mode = 'copy';
+            }
+
+            clearSelection();
+            clipboardData.cells.forEach(item => {
+                const r = targetR + item.dr;
+                const c = targetC + item.dc;
+                if (r >= 0 && r < currentRows && c >= 0 && c < currentCols) {
+                    const cell = getCellEl(r, c);
+                    if (cell) {
+                        cell.innerHTML = '';
+                        item.icons.forEach(iconName => addIconToCell(cell, iconName));
+                        updateCellDraggable(cell);
+                        selectCell(r, c, true);
+                    }
+                }
+            });
+        }
+
+        function deleteSelection() {
+            if (selectedCellCoords.size === 0) return;
+
+            let hasAnyIcons = false;
+            selectedCellCoords.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                const cell = getCellEl(r, c);
+                if (cell && cell.querySelectorAll('.dropped-icon').length > 0) {
+                    hasAnyIcons = true;
+                }
+            });
+
+            if (hasAnyIcons) {
+                pushHistory();
+                selectedCellCoords.forEach(key => {
+                    const [r, c] = key.split(',').map(Number);
+                    const cell = getCellEl(r, c);
+                    if (cell) {
+                        cell.innerHTML = '';
+                        updateCellDraggable(cell);
+                    }
+                });
+            }
+            clearCutHighlights();
+        }
+
         function renderCanvas() {
             const canvas = document.getElementById('route-canvas');
             canvas.innerHTML = '';
 
             canvas.style.gridTemplateColumns = `repeat(${currentCols}, var(--cell-size))`;
+
+            // Reset marquee box & bersihkan koordinat seleksi yang melebihi dimensi kanvas baru
+            marqueeBoxEl = document.createElement('div');
+            marqueeBoxEl.className = 'selection-marquee';
+            canvas.appendChild(marqueeBoxEl);
+
+            const validSelected = new Set();
+            selectedCellCoords.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                if (r < currentRows && c < currentCols) validSelected.add(key);
+            });
+            selectedCellCoords.clear();
+            validSelected.forEach(k => selectedCellCoords.add(k));
 
             const totalCells = currentCols * currentRows;
 
@@ -1695,12 +2054,58 @@
                 cell.dataset.row = r;
                 cell.dataset.col = c;
 
+                if (selectedCellCoords.has(getCellKey(r, c))) {
+                    cell.classList.add('is-selected');
+                }
+
                 if (c === currentCols - 1) cell.style.borderRight = 'none';
                 if (r === currentRows - 1) cell.style.borderBottom = 'none';
 
+                // --- Event Drag & Drop Internal / Eksternal ---
+                cell.addEventListener('dragstart', (e) => {
+                    const hasIcons = cell.querySelectorAll('.dropped-icon').length > 0;
+                    if (!hasIcons && !isCellSelected(r, c)) {
+                        e.preventDefault();
+                        return;
+                    }
+
+                    // Jika sel yang ditarik belum diseleksi, jadikan dia satu-satunya yang diseleksi
+                    if (!isCellSelected(r, c)) {
+                        selectCell(r, c, false);
+                    }
+
+                    // Kumpulkan data semua sel yang sedang diseleksi
+                    const cellsData = [];
+                    selectedCellCoords.forEach(key => {
+                        const [sr, sc] = key.split(',').map(Number);
+                        const sCell = getCellEl(sr, sc);
+                        const icons = getCellIcons(sCell);
+                        if (icons.length > 0) {
+                            cellsData.push({
+                                dr: sr - r, // offset relatif terhadap sel yang ditarik (handle)
+                                dc: sc - c,
+                                icons: icons
+                            });
+                        }
+                    });
+
+                    const payload = {
+                        type: 'canvas-move',
+                        origin: { r, c },
+                        cells: cellsData
+                    };
+
+                    e.dataTransfer.setData('application/json', JSON.stringify(payload));
+                    e.dataTransfer.effectAllowed = 'move';
+                });
+
                 cell.addEventListener('dragover', (e) => {
                     e.preventDefault();
-                    e.dataTransfer.dropEffect = 'copy';
+                    if (e.dataTransfer.types.includes('application/json')) {
+                        e.dataTransfer.dropEffect = 'move';
+                    } else {
+                        e.dataTransfer.dropEffect = 'copy';
+                    }
                     cell.classList.add('drag-over');
                 });
 
@@ -1716,10 +2121,61 @@
                 cell.addEventListener('drop', (e) => {
                     e.preventDefault();
                     cell.classList.remove('drag-over');
+
+                    const rawJson = e.dataTransfer.getData('application/json');
+                    if (rawJson) {
+                        try {
+                            const data = JSON.parse(rawJson);
+                            if (data.type === 'canvas-move') {
+                                const targetR = r;
+                                const targetC = c;
+
+                                if (targetR === data.origin.r && targetC === data.origin.c) {
+                                    return;
+                                }
+
+                                pushHistory();
+
+                                // 1. Kosongkan sel-sel sumber lama
+                                data.cells.forEach(item => {
+                                    const srcR = data.origin.r + item.dr;
+                                    const srcC = data.origin.c + item.dc;
+                                    const sourceCell = getCellEl(srcR, srcC);
+                                    if (sourceCell) {
+                                        sourceCell.innerHTML = '';
+                                        updateCellDraggable(sourceCell);
+                                    }
+                                });
+
+                                // 2. Tulis ke sel-sel tujuan baru
+                                clearSelection();
+                                data.cells.forEach(item => {
+                                    const destR = targetR + item.dr;
+                                    const destC = targetC + item.dc;
+                                    if (destR >= 0 && destR < currentRows && destC >= 0 && destC < currentCols) {
+                                        const destCell = getCellEl(destR, destC);
+                                        if (destCell) {
+                                            destCell.innerHTML = '';
+                                            item.icons.forEach(iconName => addIconToCell(destCell, iconName));
+                                            updateCellDraggable(destCell);
+                                            selectCell(destR, destC, true);
+                                        }
+                                    }
+                                });
+                                return;
+                            }
+                        } catch (err) {
+                            console.error('Error parsing canvas drag payload:', err);
+                        }
+                    }
+
+                    // Drop icon dari Sidebar
                     const iconName = e.dataTransfer.getData('text/plain');
                     if (iconName) {
                         pushHistory();
                         addIconToCell(cell, iconName);
+                        updateCellDraggable(cell);
+                        selectCell(r, c, false);
                     }
                 });
 
@@ -1727,6 +2183,7 @@
                     if (cell.querySelectorAll('.dropped-icon').length > 0) {
                         pushHistory();
                         cell.innerHTML = '';
+                        updateCellDraggable(cell);
                     }
                 });
 
@@ -1749,6 +2206,7 @@
 
             // Logika tumpukan transparan (!~). Elemen baru selalu ditumpuk di atas elemen sebelumnya.
             cell.appendChild(droppedEl);
+            updateCellDraggable(cell);
         }
 
         function clearCanvas() {
@@ -1762,7 +2220,12 @@
                 pushHistory();
             }
             const cells = document.querySelectorAll('.canvas-cell');
-            cells.forEach(cell => cell.innerHTML = '');
+            cells.forEach(cell => {
+                cell.innerHTML = '';
+                updateCellDraggable(cell);
+            });
+            clearSelection();
+            clearCutHighlights();
             const modal = bootstrap.Modal.getInstance(document.getElementById('clearConfirmModal'));
             if (modal) modal.hide();
         }
@@ -2206,11 +2669,40 @@
             });
         }
 
+        function initDynamicTips() {
+            const tipEl = document.getElementById('dynamicTipText');
+            if (!tipEl) return;
+
+            const tips = [
+                'Klik dua kali pada sel untuk menghapus.',
+                'Seret beberapa ikon ke sel yang sama untuk menumpuk overlay (!~).',
+                '<strong>Ctrl + Z</strong> untuk Undo dan <strong>Ctrl + Y</strong> untuk Redo.',
+                '<strong>Ctrl + C</strong> untuk menyalin item dan <strong>Ctrl + V</strong> untuk menempelkan item.',
+                'Klik & seret mouse pada kanvas untuk memilih dan memindahkan banyak item sekaligus.'
+            ];
+
+            let currentIndex = 0;
+            const DISPLAY_DURATION = 30000;
+            const FADE_DURATION = 400;
+
+            setInterval(() => {
+                tipEl.classList.add('fade-out');
+
+                setTimeout(() => {
+                    currentIndex = (currentIndex + 1) % tips.length;
+                    tipEl.innerHTML = tips[currentIndex];
+                    tipEl.classList.remove('fade-out');
+                }, FADE_DURATION);
+            }, DISPLAY_DURATION);
+        }
+
         window.onload = function () {
             renderSidebar();
             renderCanvas();
+            initCanvasSelection();
             initIconTooltipListeners();
             initDimensionInputs();
+            initDynamicTips();
 
             const resizeModalEl = document.getElementById('resizeConfirmModal');
             if (resizeModalEl) {
@@ -2232,9 +2724,9 @@
             }
         };
 
-        // Pintasan keyboard: Ctrl+Z (Undo) dan Ctrl+Y / Ctrl+Shift+Z (Redo)
+        // Pintasan keyboard: Undo/Redo, Copy/Cut/Paste, Delete, Escape
         window.addEventListener('keydown', (e) => {
-            // Abaikan jika fokus sedang berada pada input teks atau textarea
+            // Abaikan jika fokus sedang berada pada input teks, textarea, atau modal aktif
             const tag = (e.target.tagName || '').toLowerCase();
             if (tag === 'input' || tag === 'textarea') return;
 
@@ -2242,17 +2734,45 @@
             const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
 
             if (ctrlOrCmd && !e.altKey) {
-                if (e.key === 'z' || e.key === 'Z') {
+                const keyLower = e.key.toLowerCase();
+                if (keyLower === 'z') {
                     e.preventDefault();
                     if (e.shiftKey) {
                         redo();
                     } else {
                         undo();
                     }
-                } else if (e.key === 'y' || e.key === 'Y') {
+                } else if (keyLower === 'y') {
                     e.preventDefault();
                     redo();
+                } else if (keyLower === 'c') {
+                    e.preventDefault();
+                    copySelection();
+                } else if (keyLower === 'x') {
+                    e.preventDefault();
+                    cutSelection();
+                } else if (keyLower === 'v') {
+                    e.preventDefault();
+                    pasteSelection();
+                } else if (keyLower === 'a') {
+                    // Ctrl+A: Pilih semua sel kanvas yang berisi ikon
+                    e.preventDefault();
+                    clearSelection();
+                    const cells = document.querySelectorAll('.canvas-cell');
+                    cells.forEach(cell => {
+                        if (cell.querySelectorAll('.dropped-icon').length > 0) {
+                            const r = parseInt(cell.dataset.row);
+                            const c = parseInt(cell.dataset.col);
+                            selectCell(r, c, true);
+                        }
+                    });
                 }
+            } else if (e.key === 'Delete' || e.key === 'Backspace') {
+                e.preventDefault();
+                deleteSelection();
+            } else if (e.key === 'Escape') {
+                clearSelection();
+                clearCutHighlights();
             }
         });
 
