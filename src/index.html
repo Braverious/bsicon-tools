@@ -172,6 +172,26 @@
             padding: 8px;
         }
 
+        .icon-grid-divider {
+            grid-column: 1 / -1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 6px 0 2px 0;
+            color: #6c757d;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .icon-grid-divider::before,
+        .icon-grid-divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid #dee2e6;
+        }
+
         .icon-item {
             width: 100%;
             aspect-ratio: 1 / 1;
@@ -379,6 +399,15 @@
             transition: background-color 0.1s ease;
         }
 
+        .route-canvas.no-grid {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .route-canvas.no-grid .canvas-cell {
+            border: none !important;
+        }
+
         .canvas-cell.drag-over {
             background-color: var(--drop-highlight);
             border-color: #198754;
@@ -405,6 +434,114 @@
             display: none;
             box-sizing: border-box;
             border-radius: 2px;
+        }
+
+        /* Trash Zone saat memindahkan/menyeret item terseleksi */
+        .canvas-trash-zone {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%) scale(0.75);
+            width: 84px;
+            height: 96px;
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.95), rgba(186, 30, 45, 0.98));
+            color: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(220, 53, 69, 0.45), 0 0 0 2px rgba(255, 255, 255, 0.25);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            z-index: 1060;
+            pointer-events: auto;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .canvas-trash-zone.is-visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) scale(1);
+        }
+
+        .canvas-trash-zone.drag-hover {
+            transform: translateY(-50%) scale(1.15);
+            background: linear-gradient(135deg, #dc3545, #9c1221);
+            box-shadow: 0 16px 36px rgba(220, 53, 69, 0.65), 0 0 0 4px rgba(255, 255, 255, 0.7);
+            border: 2px dashed #ffffff;
+        }
+
+        .trash-icon-container {
+            font-size: 1.85rem;
+            line-height: 1;
+            transition: transform 0.2s ease;
+        }
+
+        .canvas-trash-zone.drag-hover .trash-icon-container {
+            animation: trashShake 0.4s infinite alternate;
+        }
+
+        @keyframes trashShake {
+            0% {
+                transform: rotate(-10deg) scale(1.1);
+            }
+
+            100% {
+                transform: rotate(10deg) scale(1.1);
+            }
+        }
+
+        .canvas-trash-zone.is-dropping {
+            animation: trashChomp 0.5s ease forwards;
+        }
+
+        @keyframes trashChomp {
+            0% {
+                transform: translateY(-50%) scale(1.15);
+            }
+
+            35% {
+                transform: translateY(-50%) scale(0.85);
+            }
+
+            70% {
+                transform: translateY(-50%) scale(1.2);
+            }
+
+            100% {
+                transform: translateY(-50%) scale(1);
+            }
+        }
+
+        .trash-label {
+            font-size: 0.62rem;
+            font-weight: 700;
+            text-align: center;
+            line-height: 1.1;
+            letter-spacing: 0.2px;
+            text-transform: uppercase;
+            padding: 0 4px;
+        }
+
+        @media (max-width: 576px) {
+            .canvas-trash-zone {
+                right: 12px;
+                width: 72px;
+                height: 80px;
+                border-radius: 12px;
+            }
+
+            .trash-icon-container {
+                font-size: 1.5rem;
+            }
+
+            .trash-label {
+                font-size: 0.55rem;
+            }
         }
 
         .tips-fading-text {
@@ -501,6 +638,14 @@
             width: 100%;
             height: 100%;
             object-fit: contain;
+        }
+
+        /* Ikon setengah-lebar / peron sambungan (misal dPLT, cPLT) direntangkan horizontal agar menyatu mulus tanpa celah */
+        .dropped-icon[data-icon-name*="dPLT"] img,
+        .dropped-icon[data-icon-name*="dplt"] img,
+        .dropped-icon[data-icon-name*="cPLT"] img,
+        .dropped-icon[data-icon-name*="cplt"] img {
+            object-fit: fill;
         }
 
         .mobile-hint {
@@ -718,14 +863,14 @@
                     <input type="number" id="gridCols" class="form-control form-control-sm text-center toolbar-input"
                         value="7" min="1" max="50" onchange="resizeCanvas()"
                         onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" title="Jumlah Kolom"
-                        aria-label="Jumlah Kolom">
+                        oninput="this.value = this.value.replace(/\D/g, ''); if(+this.value > 50) this.value = 50;"
+                        title="Jumlah Kolom" aria-label="Jumlah Kolom">
                     <span class="toolbar-times">×</span>
                     <input type="number" id="gridRows" class="form-control form-control-sm text-center toolbar-input"
                         value="10" min="1" max="100" onchange="resizeCanvas()"
                         onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '');" title="Jumlah Baris"
-                        aria-label="Jumlah Baris">
+                        oninput="this.value = this.value.replace(/\D/g, ''); if(+this.value > 100) this.value = 100;"
+                        title="Jumlah Baris" aria-label="Jumlah Baris">
                 </div>
                 <div class="toolbar-actions">
                     <button class="btn btn-sm btn-outline-secondary toolbar-btn" id="undoBtn" onclick="undo()"
@@ -755,6 +900,12 @@
 
             <div class="canvas-wrapper" id="canvas-scroll-area">
                 <div class="route-canvas" id="route-canvas">
+                </div>
+                <div class="canvas-trash-zone" id="canvasTrashZone" title="Lepaskan di sini untuk menghapus">
+                    <div class="trash-icon-container">
+                        <i class="fa-solid fa-trash-can trash-icon"></i>
+                    </div>
+                    <span class="trash-label">Lepas untuk Hapus</span>
                 </div>
             </div>
 
@@ -970,7 +1121,14 @@
                     'WKRZ2+4o', 'KRZ3+1Wo', 'WKRZq2+4o', '',
                     'PRSl', 'PRSr', 'NATl', 'NATr',
                     'ACC', 'INT', 'ACCq', 'INTq',
-                    'DAMPF', 'TRAJEKT', 'lDAMPF', 'TRAJEKTq'
+                    'DAMPF', 'TRAJEKT', 'lDAMPF', 'TRAJEKTq',
+                    'DST', 'DST3+1', 'DST2+4', 'DSTq',
+                    'BHF', 'BHF3+1', 'BHF2+4', 'BHFq',
+                    'KDST2', 'KDST3', 'KBHF2', 'KBHF3',
+                    'KDST1', 'KDST4', 'KBHF1', 'KBHF4',
+                    'KDSTa', 'KDSTe', 'KDSTaq', 'KDSTeq',
+                    'KBHFa', 'KBHFe', 'KBHFaq', 'KBHFeq',
+
                 ]
             },
             "sepur-belok": {
@@ -1053,14 +1211,15 @@
                     'xSPL+1', 'xSPL+4', 'xSPLr+1', 'xSPLl+4',
                     'SHI1l;gl', 'SHI1l;gr', 'SHI1r;gl', 'SHI1r;gr',
                     'SHI1+l;g+l', 'SHI1+l;g+r', 'SHI1+r;g+l', 'SHI1+r;g+r',
+                    'PSLle', 'PSLla', 'PSLra', 'PSLra',
+                    'YRD', 'YRDa', 'YRDm', 'YRDe',
+                    'YRDENDEa', 'YRDENDEe', 'YRDCONTg', 'YRDCONTf',
+                    '--divider:Persilangan--',
                     'KRZ', 'KRX', 'KRZ2+4', 'KRZ3+1',
                     'ABZgl', 'ABZgr', 'ABZg+l', 'ABZg+r',
                     'KRZo', 'KRZu', 'KRXo', 'KRXu',
                     'KRZh', 'KRZqh', 'KRZ2+4h', 'KRZ3+1h',
                     'KRXh',
-                    'PSLle', 'PSLla', 'PSLra', 'PSLra',
-                    'YRD', 'YRDa', 'YRDm', 'YRDe',
-                    'YRDENDEa', 'YRDENDEe', 'YRDCONTg', 'YRDCONTf'
                 ]
             },
             "stasiun": {
@@ -1075,7 +1234,13 @@
                     'PLT~R', 'PLT~L', 'PLTm~Lq', 'PLTm~Rq',
                     'PENDEa', 'PENDEe', 'PENDE@G', 'PENDE@F',
                     'vPLT-STR', 'vSTR-PLT', 'vPLT-ENDE@G', 'vPLT-ENDE@F',
-                    'ELC-PT', 'ELC-KS', 'ELC', 'lELC'
+                    'ELC-PT', 'ELC-KS', 'ELC', 'lELC',
+                    '--divider:Nomor Peron--',
+                    'num0l', 'num0r', 'num1l', 'num1r',
+                    'num2l', 'num2r', 'num3l', 'num3r',
+                    'num4l', 'num4r', 'num5l', 'num5r',
+                    'num6l', 'num6r', 'num7l', 'num7r',
+                    'num8l', 'num8r', 'num9l', 'num9r'
                 ]
             },
             "paralel": {
@@ -1091,16 +1256,22 @@
                     'STR2+r-', 'STR3+l-', '-STR2+r', '-STR3+l',
                     '-STRr+1', '-STRl+4', 'STRr+1-', 'STRl+4-',
                     'vBUE', 'vSKRZ-G2h', 'vBUE-', 'v-BUE',
-                    'vSTRo', 'hvSTRa', 'hvSTR', 'hvSTR',
+                    'vSTRo', 'vSKRZ-G4h', 'vSBRÜCKE', 'hvSTR',
                     'vENDEa', 'vENDEe', 'vENDExa', 'vENDExe',
                     'v-ENDEa', 'vENDEa-', 'vENDEe-', 'v-ENDEe',
                     'vENDEa-SHI1+r', 'vENDEe-SHI1r', 'vSHI1+l-ENDEa', 'vSHI1l-ENDEe',
-                    'vCONTg', 'vCONTg@G', 'vCONTf', 'vCONTf@F',
-                    'vCONTf-', 'v-CONTf', 'vCONTg-', 'v-CONTg',
+                    'vENDEa-STR', 'vENDEe-STR', 'vSTR-ENDEa', 'vSTR-ENDEe',
+                    'vCONTg@G', 'vCONTg', 'vCONTf', 'vCONTf@F',
+                    'vCONTgq', 'vCONTg@Gq', 'vCONTf@Fq', 'vCONTfq',
+                    'vCONT1', 'vCONT4', 'vCONT3', 'vCONT2',
+                    'vCONTg-', 'v-CONTg', 'vCONTf-', 'v-CONTf',
                     'vCONTgfa', 'vCONTgfe', 'vCONTfa', 'vCONTga',
-                    'vCONT1+3', 'vCONT2+4', 'vCONT3+1', 'vCONT4+2',
                     'vBHF', 'vKRZ', 'vSTR-BHF', 'vBHF-STR',
                     'vBHF(R)f-STR', 'vBHF(R)g-STR', 'vSTR-BHF(L)g', 'vSTR-BHF(L)f',
+                    'hvSTRa', 'hvSTR', 'hvSTRe', 'hvSTRq',
+                    'hvSTRa@g~L', 'hvSTR~L', 'hvSTRa~R', 'hvSTRa@g~R',
+                    'hvSTRe@f~L', 'hvSTRe~L', 'hvSTR~R', 'hvSTRe@f~R',
+
                 ]
             },
             "fasilitas": {
@@ -1123,7 +1294,28 @@
                     'lENDE@G', 'lENDE@F', 'lENDE@Gq', 'lENDE@Fq',
                     'lENDE1', 'lENDE4', 'lENDE2', 'lENDE3',
                     'FOREST', 'BEACH', 'MOUNTAIN', 'FACTORY',
-                    'XPLTq'
+                    'XPLTq',
+                    '--divider:Jembatan--',
+                    'lMKRZo', 'lMKRZu', 'lMKRXo', 'lMKRXu',
+                    'lKRZo+R', 'lKRZo+L', 'lKRZu+G', 'lKRZu+F',
+                    'lMKRZ2+4u', 'lMKRZ3+1u', 'lMKRZq2+4u', 'lMKRZq3+1u',
+                    'lhSTRae', 'lhSTRaeq', 'lhSTRae(r)', '',
+                    'lhSTRa(r)', 'lhSTRa', 'lhSTRa(l)', '',
+                    'lhSTR(r)', 'lhSTR', 'lhSTR(l)', '',
+                    'lhSTRe@f(r)', 'lhSTRe@f', 'lhSTRe@f(l)', '',
+                    'lhKRZW(Rr)', 'lhKRZW', 'lhKRZW(Ll)', '',
+                    'lhSTR(r)q', 'lhSTRq', 'lhSTR(l)q', '',
+                    'lhSTRa@g(l)q', 'lhSTRa@gq', 'lhSTRe@fq', 'lhSTRe@f(l)q',
+                    'lhSTR2+4(r)', 'lhSTR2+4', 'lhSTR2+4(l)', '',
+                    'lhSTR3+1(r)', 'lhSTR3+1', 'lhSTR3+1(l)', '',
+                    'lhSTR2(r)', 'lhSTR2', 'lhSTR2(l)', '',
+                    'lhSTR3(r)', 'lhSTR3', 'lhSTR3(l)', '',
+                    'lhSTR+4(r)', 'lhSTR+4', 'lhSTR+4(l)', '',
+                    'lhSTR+1(r)', 'lhSTR+1', 'lhSTR+1(l)', '',
+                    '--divider:Mata Angin--',
+                    'numNNNE', 'numNNNW', 'numNENE', 'numNWNW',
+                    'numNSSE', 'numNSSW', 'numNESE', 'numNWSW',
+                    'numN000', 'numN270', 'numN090', 'numN180'
                 ]
             },
             "sudut": {
@@ -1136,6 +1328,8 @@
                     'tSTRc1', 'tSTRc4', 'tSTRc2', 'tSTRc3',
                     'STRc12', 'STRc34', 'STRc14', 'STRc23',
                     'STRc13', 'STRc24', 'STRc1234', '',
+                    'lMSTRc2o', 'lMSTRc3o', 'lhSTRa@fq', 'lhSTRe@gq',
+                    'lMSTRc1o', 'lMSTRc4o', 'lhSTRa@f(l)q', 'lhSTRe@g(l)q',
                 ]
             },
             "efek": {
@@ -1203,6 +1397,9 @@
          */
         function assembleBSicon(baseIcon, prefix) {
             if (!baseIcon) return '';
+            if (baseIcon.startsWith('--divider:')) return '';
+            // Ikon penomoran peron (num0l s.d. num9r) dan mata angin (numN...) tidak memiliki varian prefix Wikipedia (ex, t, u, h)
+            if (/^num(\d+[lr]|N.*)$/i.test(baseIcon)) return baseIcon;
 
             if (!prefix || prefix === '' || prefix === 'none' || prefix === 'std') {
                 return baseIcon;
@@ -1338,6 +1535,15 @@
 
                 const grid = document.getElementById(`grid-${key}`);
                 data.icons.forEach(baseIconName => {
+                    if (baseIconName.startsWith('--divider:')) {
+                        const label = baseIconName.replace(/^--divider:|--$/g, '');
+                        const div = document.createElement('div');
+                        div.className = 'icon-grid-divider';
+                        div.textContent = label;
+                        grid.appendChild(div);
+                        return;
+                    }
+
                     const assembledIconName = assembleBSicon(baseIconName, currentPrefix);
 
                     if (missingIconsCache.has(assembledIconName)) {
@@ -1489,9 +1695,13 @@
             const input = document.getElementById('searchInput').value.trim().toLowerCase();
             const allIcons = document.querySelectorAll('.icon-item');
             const accordions = document.querySelectorAll('.accordion-collapse');
+            const dividers = document.querySelectorAll('.icon-grid-divider');
 
             if (input.length > 0) {
                 accordions.forEach(acc => acc.classList.add('show'));
+                dividers.forEach(div => div.style.display = 'none');
+            } else {
+                dividers.forEach(div => div.style.display = 'flex');
             }
 
             allIcons.forEach(icon => {
@@ -1805,11 +2015,6 @@
                     const isSelected = isCellSelected(r, c);
                     const hasIcons = targetCell.querySelectorAll('.dropped-icon').length > 0;
 
-                    // Jika klik pada sel yang sudah dipilih dan ada ikonnya, biarkan untuk Drag
-                    if (isSelected && hasIcons) {
-                        return;
-                    }
-
                     // Multi-select toggle dengan Ctrl / Shift / Meta
                     if (e.ctrlKey || e.shiftKey || e.metaKey) {
                         if (isSelected) {
@@ -1820,14 +2025,17 @@
                         return;
                     }
 
-                    // Jika klik sel yang memiliki ikon (tanpa drag), pilih sel ini
+                    // Jika klik pada sel yang memiliki ikon:
+                    // Pilih sel tersebut dan biarkan HTML5 dragstart menangani penarikan sel (jangan aktifkan marquee)
                     if (hasIcons) {
-                        selectCell(r, c, false);
+                        if (!isSelected) {
+                            selectCell(r, c, false);
+                        }
                         return;
                     }
                 }
 
-                // Klik sel kosong atau canvas background -> mulai Marquee Selection
+                // Klik sel kosong atau canvas background -> bersihkan seleksi dan mulai Marquee Selection
                 if (!e.ctrlKey && !e.shiftKey && !e.metaKey) {
                     clearSelection();
                 }
@@ -2030,6 +2238,98 @@
             clearCutHighlights();
         }
 
+        let isTrashZoneActive = false;
+
+        function showTrashZone() {
+            const trashEl = document.getElementById('canvasTrashZone');
+            if (!trashEl) return;
+            isTrashZoneActive = true;
+            trashEl.classList.remove('is-dropping', 'drag-hover');
+            trashEl.classList.add('is-visible');
+        }
+
+        function hideTrashZone() {
+            const trashEl = document.getElementById('canvasTrashZone');
+            if (!trashEl) return;
+            isTrashZoneActive = false;
+            trashEl.classList.remove('is-visible', 'drag-hover');
+        }
+
+        function initCanvasTrashZone() {
+            const trashEl = document.getElementById('canvasTrashZone');
+            if (!trashEl) return;
+
+            trashEl.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+                trashEl.classList.add('drag-hover');
+            });
+
+            trashEl.addEventListener('dragenter', (e) => {
+                e.preventDefault();
+                trashEl.classList.add('drag-hover');
+            });
+
+            trashEl.addEventListener('dragleave', (e) => {
+                // Hindari flickering jika kursor berada di atas ikon anak
+                if (!trashEl.contains(e.relatedTarget)) {
+                    trashEl.classList.remove('drag-hover');
+                }
+            });
+
+            trashEl.addEventListener('drop', (e) => {
+                e.preventDefault();
+                trashEl.classList.remove('drag-hover');
+
+                const rawJson = e.dataTransfer.getData('application/json');
+                if (rawJson) {
+                    try {
+                        const data = JSON.parse(rawJson);
+                        if (data.type === 'canvas-move' && data.cells) {
+                            pushHistory();
+
+                            // Hapus seluruh sel sumber yang sedang dipindahkan
+                            data.cells.forEach(item => {
+                                const srcR = data.origin.r + item.dr;
+                                const srcC = data.origin.c + item.dc;
+                                const cell = getCellEl(srcR, srcC);
+                                if (cell) {
+                                    cell.innerHTML = '';
+                                    updateCellDraggable(cell);
+                                }
+                            });
+
+                            clearSelection();
+                            clearCutHighlights();
+
+                            // Efek animasi css makan/hapus trash can
+                            trashEl.classList.add('is-dropping');
+                            setTimeout(() => {
+                                trashEl.classList.remove('is-dropping');
+                                hideTrashZone();
+                            }, 500);
+                            return;
+                        }
+                    } catch (err) {
+                        console.error('Error handling trash drop payload:', err);
+                    }
+                }
+                hideTrashZone();
+            });
+
+            // Klik langsung pada tombol tempat sampah juga dapat menghapus seleksi saat ini
+            trashEl.addEventListener('click', () => {
+                if (selectedCellCoords.size > 0) {
+                    deleteSelection();
+                    trashEl.classList.add('is-dropping');
+                    setTimeout(() => {
+                        trashEl.classList.remove('is-dropping');
+                        hideTrashZone();
+                    }, 500);
+                }
+            });
+        }
+
         function renderCanvas() {
             const canvas = document.getElementById('route-canvas');
             canvas.innerHTML = '';
@@ -2104,6 +2404,11 @@
 
                     e.dataTransfer.setData('application/json', JSON.stringify(payload));
                     e.dataTransfer.effectAllowed = 'move';
+                    showTrashZone();
+                });
+
+                cell.addEventListener('dragend', () => {
+                    hideTrashZone();
                 });
 
                 cell.addEventListener('dragover', (e) => {
@@ -2376,14 +2681,13 @@
                 if (line.startsWith('|') && !line.includes('\\')) continue;
                 if (line.startsWith('}}')) continue;
 
-                // Gabungkan baris yang terputus di tengah nama ikon (misal: "SKRZ-" dilanjutkan "G2BUE")
-                // Kecualikan ikon paralel yang sah berakhiran '-' (seperti vSTR-, vSHI2g+l-)
+                // Gabungkan baris yang terputus di tengah nama ikon (contoh: SKRZ- terpotong ke G2BUE)
                 while (line.endsWith('-') && i + 1 < rawLines.length) {
                     const lastToken = line.split('\\').pop().split('!~').pop().trim();
                     const nextLine = rawLines[i + 1].trim();
-                    const isParallelIcon = /^[a-z]*v/.test(lastToken) && lastToken.length > 2;
+                    const isIncompletePrefix = /^(?:[a-z]*SKRZ|KRZW|TUNNEL)-$/i.test(lastToken);
                     const nextIsContinuation = /^[A-Za-z0-9(]/.test(nextLine) && !nextLine.startsWith('{{');
-                    if (isParallelIcon || !nextIsContinuation) break;
+                    if (!isIncompletePrefix || !nextIsContinuation) break;
                     i++;
                     line += nextLine;
                 }
@@ -2535,18 +2839,28 @@
                 btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Proses...</span>';
             }
 
+            // Simpan status seleksi bila ada agar tidak ikut terpotret
+            const hadSelection = selectedCellCoords.size > 0;
+            const savedSelected = new Set(selectedCellCoords);
+
             try {
                 if (typeof html2canvas !== 'function') {
                     throw new Error('Library html2canvas belum siap.');
                 }
 
+                // Bersihkan seleksi/highlight visual dan hilangkan border sel kanvas
+                clearSelection();
+                clearCutHighlights();
+                canvasEl.classList.add('no-grid');
+
                 // Render kanvas dengan skala 2x agar hasil PNG jernih dan tajam
                 const renderedCanvas = await html2canvas(canvasEl, {
                     scale: 2,
                     useCORS: true,
-                    allowTaint: false,
+                    allowTaint: true,
                     backgroundColor: '#ffffff',
-                    logging: false
+                    logging: false,
+                    imageTimeout: 15000
                 });
 
                 // Buat tautan unduhan otomatis
@@ -2563,6 +2877,17 @@
                 console.error('Gagal mengekspor PNG:', err);
                 alert('Gagal menyimpan gambar PNG: ' + (err.message || 'Terjadi kesalahan saat merender kanvas.'));
             } finally {
+                // Kembalikan border kanvas & sel
+                canvasEl.classList.remove('no-grid');
+
+                // Kembalikan seleksi jika sebelumnya ada
+                if (hadSelection) {
+                    savedSelected.forEach(key => {
+                        const [r, c] = key.split(',').map(Number);
+                        selectCell(r, c, true);
+                    });
+                }
+
                 if (btn) {
                     btn.disabled = false;
                     btn.innerHTML = originalContent;
@@ -2707,6 +3032,7 @@
             renderSidebar();
             renderCanvas();
             initCanvasSelection();
+            initCanvasTrashZone();
             initIconTooltipListeners();
             initDimensionInputs();
             initDynamicTips();
