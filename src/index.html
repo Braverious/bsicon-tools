@@ -236,6 +236,42 @@
             cursor: grabbing;
         }
 
+        .custom-icon-preview-box {
+            width: 88px;
+            height: 88px;
+            background-color: #ffffff;
+            border: 2px dashed #0d6efd;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: all 0.2s ease;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.12);
+        }
+
+        .custom-icon-preview-box:hover {
+            transform: scale(1.05);
+            background-color: #f8f9fa;
+            border-color: #0b5ed7;
+            box-shadow: 0 6px 16px rgba(13, 110, 253, 0.22);
+        }
+
+        .custom-icon-preview-box:active {
+            cursor: grabbing;
+            transform: scale(0.98);
+        }
+
+        .custom-icon-preview-box img {
+            width: 72px;
+            height: 72px;
+            object-fit: contain;
+            pointer-events: none;
+        }
+
         .icon-hover-tooltip {
             position: fixed;
             z-index: 99999;
@@ -776,7 +812,7 @@
         </button>
         <div class="kai-sign">
             <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
-            <p class="kai-sign-elev">v 4.0+</p>
+            <p class="kai-sign-elev">v 4.1+</p>
         </div>
     </header>
 
@@ -788,6 +824,10 @@
                     <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
                     <input type="text" class="form-control" id="searchInput" placeholder="Cari ikon (cth: STR, BHF)..."
                         onkeyup="searchIcons()">
+                    <button class="btn btn-primary" type="button" onclick="openCustomIconModal()"
+                        title="Cari & Muat Ikon Kustom Manual">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
                 </div>
             </div>
 
@@ -887,6 +927,10 @@
                     <button class="btn btn-sm btn-outline-primary toolbar-btn" id="savePngBtn" onclick="saveAsPNG()"
                         title="Simpan kanvas rute sebagai gambar PNG">
                         <i class="fa-solid fa-image"></i><span>Simpan</span>
+                    </button>
+                    <button class="btn btn-sm btn-outline-dark toolbar-btn d-none d-md-inline-flex"
+                        onclick="openCustomIconModal()" title="Cari & Muat Ikon Kustom Manual">
+                        <i class="fa-solid fa-shapes"></i><span>Input</span>
                     </button>
                     <button class="btn btn-sm btn-outline-dark toolbar-btn d-none d-md-inline-flex"
                         onclick="openImportModal()" title="Impor bagan rute dari sintaks Wikipedia / BSicon">
@@ -1022,6 +1066,58 @@
         </div>
     </div>
 
+    <!-- Modal Input Manual Ikon (Khusus) -->
+    <div class="modal fade" id="customIconModal" tabindex="-1" aria-labelledby="customIconModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="customIconModalLabel">
+                        Input ikon khusus </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <p class="text-muted small mb-3">
+                        Ketik nama ikon BSicon Wikimedia (contoh: <code>STR</code>, <code>BHF</code>, <code>vSTR</code>,
+                        <code>dPLT</code>).
+                    </p>
+                    <div class="input-group mb-3">
+                        <span class="input-group-text font-monospace bg-light">BSicon_</span>
+                        <input type="text" class="form-control font-monospace" id="customIconInput"
+                            placeholder="cth: STRq" autocomplete="off" oninput="handleCustomIconInput(this.value)">
+                        <button class="btn btn-outline-secondary" type="button" onclick="clearCustomIconInput()"
+                            title="Bersihkan">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <!-- Area Pratinjau / Buffering Status -->
+                    <div id="customIconStatusArea" class="text-center py-3">
+                        <div class="text-muted small">Ketik nama ikon untuk melihat pratinjau...</div>
+                    </div>
+
+                    <!-- Kotak Pratinjau Ikon Interaktif (Drag & Drop) -->
+                    <div id="customIconPreviewWrapper"
+                        class="d-none flex-column align-items-center justify-content-center p-3 bg-light rounded-3 border">
+                        <div class="custom-icon-preview-box" id="customIconPreviewBox" draggable="true"
+                            title="Klik & seret ke kanvas!">
+                            <!-- Preview Image injected via JS -->
+                        </div>
+                        <div class="fw-bold mt-2 font-monospace" id="customIconPreviewName" style="font-size: 0.9rem;">
+                        </div>
+                        <div class="text-primary small mt-1 text-center" style="font-size: 0.75rem;">
+                            <i class="fa-solid fa-hand-pointer me-1"></i><strong>Seret ikon di atas ke kanvas</strong>
+                            untuk meletakkannya.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="resizeConfirmModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -1081,7 +1177,7 @@
 ██║  ██║██║╚██████╔╝╚██████╔╝███████║
 ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
 `, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
-        console.log('%c🚀 SPOORWIKI Tools Build v4.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
+        console.log('%c🚀 SPOORWIKI Tools Build v4.1 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
 
         const iconDatabase = {
             "sepur-lurus": {
@@ -1126,7 +1222,7 @@
                     'BHF', 'BHF3+1', 'BHF2+4', 'BHFq',
                     'KDST2', 'KDST3', 'KBHF2', 'KBHF3',
                     'KDST1', 'KDST4', 'KBHF1', 'KBHF4',
-                    'KDSTa', 'KDSTe', 'KDSTaq', 'KDSTeq',
+                    'KDSTe', 'KDSTa', 'KDSTaq', 'KDSTeq',
                     'KBHFa', 'KBHFe', 'KBHFaq', 'KBHFeq',
 
                 ]
@@ -2651,6 +2747,133 @@
         }
 
         /**
+         * Penanganan Modal Input Ikon Manual
+         */
+        let customIconDebounceTimer = null;
+        let activeCustomIcon = null;
+
+        function openCustomIconModal() {
+            const input = document.getElementById('customIconInput');
+            if (input) input.value = '';
+            clearCustomIconInput();
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('customIconModal'));
+            modal.show();
+            setTimeout(() => {
+                if (input) input.focus();
+            }, 400);
+        }
+
+        function clearCustomIconInput() {
+            const input = document.getElementById('customIconInput');
+            if (input) input.value = '';
+            activeCustomIcon = null;
+
+            const statusArea = document.getElementById('customIconStatusArea');
+            const previewWrapper = document.getElementById('customIconPreviewWrapper');
+            const previewBox = document.getElementById('customIconPreviewBox');
+
+            if (statusArea) {
+                statusArea.classList.remove('d-none');
+                statusArea.innerHTML = '<div class="text-muted small">Ketik nama ikon untuk melihat pratinjau...</div>';
+            }
+            if (previewWrapper) previewWrapper.classList.add('d-none');
+            if (previewBox) previewBox.innerHTML = '';
+        }
+
+        function handleCustomIconInput(value) {
+            clearTimeout(customIconDebounceTimer);
+
+            // Bersihkan awalan jika user mengetik BSicon_ atau spasi
+            let rawName = value.trim();
+            if (rawName.startsWith('BSicon_')) {
+                rawName = rawName.substring(7);
+            }
+            if (rawName.endsWith('.svg')) {
+                rawName = rawName.slice(0, -4);
+            }
+
+            const statusArea = document.getElementById('customIconStatusArea');
+            const previewWrapper = document.getElementById('customIconPreviewWrapper');
+            const previewBox = document.getElementById('customIconPreviewBox');
+            const previewName = document.getElementById('customIconPreviewName');
+
+            if (!rawName) {
+                clearCustomIconInput();
+                return;
+            }
+
+            // Buffering visual
+            if (statusArea) {
+                statusArea.classList.remove('d-none');
+                statusArea.innerHTML = `
+                    <div class="d-flex align-items-center justify-content-center gap-2 text-primary py-2">
+                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                        <span class="small fw-semibold">Memeriksa Wikimedia Commons...</span>
+                    </div>
+                `;
+            }
+            if (previewWrapper) previewWrapper.classList.add('d-none');
+
+            customIconDebounceTimer = setTimeout(() => {
+                loadCustomIconPreview(rawName);
+            }, 350);
+        }
+
+        function loadCustomIconPreview(iconName) {
+            const statusArea = document.getElementById('customIconStatusArea');
+            const previewWrapper = document.getElementById('customIconPreviewWrapper');
+            const previewBox = document.getElementById('customIconPreviewBox');
+            const previewName = document.getElementById('customIconPreviewName');
+
+            const imgUrl = getBSiconUrl(iconName);
+            const testImg = new Image();
+
+            testImg.onload = function () {
+                activeCustomIcon = iconName;
+                if (statusArea) statusArea.classList.add('d-none');
+                if (previewName) previewName.textContent = iconName;
+                if (previewBox) {
+                    previewBox.innerHTML = `<img src="${imgUrl}" alt="${iconName}">`;
+                    previewBox.setAttribute('draggable', 'true');
+
+                    // Event dragstart untuk drag dari modal ke kanvas
+                    previewBox.ondragstart = (e) => {
+                        e.dataTransfer.setData('text/plain', iconName);
+                        e.dataTransfer.effectAllowed = 'copy';
+                        setTimeout(() => {
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('customIconModal'));
+                            if (modal) modal.hide();
+                        }, 50);
+                    };
+
+                    // Dukungan sentuhan layar (touch-drag) di mobile
+                    attachTouchDrag(previewBox, iconName);
+                }
+                if (previewWrapper) {
+                    previewWrapper.classList.remove('d-none');
+                    previewWrapper.classList.add('d-flex');
+                }
+            };
+
+            testImg.onerror = function () {
+                activeCustomIcon = null;
+                if (statusArea) {
+                    statusArea.classList.remove('d-none');
+                    statusArea.innerHTML = `
+                        <div class="alert alert-warning py-2 px-3 small my-1 d-inline-flex align-items-center gap-2">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            <div>Ikon <strong>BSicon_${iconName}.svg</strong> tidak ditemukan di Wikimedia Commons.</div>
+                        </div>
+                    `;
+                }
+                if (previewWrapper) previewWrapper.classList.add('d-none');
+                if (previewBox) previewBox.innerHTML = '';
+            };
+
+            testImg.src = imgUrl;
+        }
+
+        /**
          * Mem-parse teks templat wikitext / {{routemap}}
          * Hanya mengambil blok ikon BSicon (sebelum penanda keterangan teks ~~).
          * Mengembalikan { grid: [ [ [icons], ... ], ... ], cols: number, rows: number }
@@ -3006,11 +3229,12 @@
             if (!tipEl) return;
 
             const tips = [
-                'Klik dua kali pada sel untuk menghapus.',
+                'Klik dua kali pada sel untuk menghapus atau geser ikon ke tempat sampah.',
                 'Seret beberapa ikon ke sel yang sama untuk menumpuk overlay (!~).',
                 '<strong>Ctrl + Z</strong> untuk Undo dan <strong>Ctrl + Y</strong> untuk Redo.',
                 '<strong>Ctrl + C</strong> untuk menyalin item dan <strong>Ctrl + V</strong> untuk menempelkan item.',
-                'Klik & seret mouse pada kanvas untuk memilih dan memindahkan banyak item sekaligus.'
+                'Klik & seret mouse pada kanvas untuk memilih dan memindahkan banyak item sekaligus.',
+                'Gunakan Dekstop untuk pengalaman yang lebih baik.'
             ];
 
             let currentIndex = 0;
