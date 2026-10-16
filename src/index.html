@@ -1199,7 +1199,10 @@
                     'tSTR2+4a@f', 'tSTR3+1a@f', 'tSTR2+4a', 'tSTR3+1a',
                     'tSTR3+1e@g', 'tSTR2+4e@g', 'tSTR3+1e', 'tSTR2+4e',
                     'STRb', 'STRbl', 'STRbr', 'STRbm',
-                    'BUE', 'SKRZ-G1', 'SKRZ-G1BUE', 'SKRZ-G2BUE',
+                    'SKRZ-GD', 'SKRZ-G1', 'SKRZ-G2', 'SKRZ-G4',
+                    'SKRZ-GDq', 'SKRZ-G1q', 'SKRZ-G2q', 'SKRZ-G4q',
+                    'SKRZ-GDBUE', 'SKRZ-G1BUE', 'SKRZ-G2BUE', 'SKRZ-G4BUE',
+                    'BUE', '', 'BUE3+1', 'BUE2+4',
                     'SKRZ-G2o', 'SKRZ-G4o', 'SKRZ-G2u', 'SKRZ-G4u',
                     'SKRZ-G2oq', 'SKRZ-G4oq', 'SKRZ-G2uq', 'SKRZ-G4uq',
                     'STRuq', '-STRu', 'STRu-', 'tSTRea',
@@ -1277,6 +1280,8 @@
                     'ABZ2l', 'ABZ3r', 'ABZr+2f', 'ABZl+3f',
                     'ABZ+1l', 'ABZ+4r', 'ABZr+1g', 'ABZl+4g',
                     'ABZ23', 'ABZ+14', 'ABZr+12', 'ABZl+34',
+                    'ABZ2x3', 'ABZ3x2', 'ABZ+1x4', 'ABZ+4x1',
+                    'ABZr+1x2', 'ABZl+4x3', 'ABZl+3x4', 'ABZr+2x1',
                     'ABZ1+fr', 'ABZ2+gr', 'ABZ3+gl', 'ABZ4+fl',
                     'WYE23', 'WYE+14', 'WYEr+12', 'WYEl+34',
                     'SPLa', 'SPLa.F', 'vSHI2gl-', 'v-SHI2gr',
@@ -1291,6 +1296,7 @@
                     'eSHI2grq-', 'eSHI2g+rq-', '-eSHI2glq', '-eSHI2g+lq',
                     'xSHI2grq-', 'xSHI2g+rq-', '-xSHI2glq', '-xSHI2g+lq',
                     'vSTR-ABZg+1', 'vSTR-ABZg2', 'vABZg+4-STR', 'vABZg3-STR',
+                    'vSTR-eABZg+1', '', '', 'veABZg3-STR',
                     'vABZq+l', 'vABZq+r', 'vABZg+l', 'vABZg+r',
                     'vABZgl', 'vABZgr', 'vABZql', 'vABZqr',
                     'vABZg2-', 'v-ABZg3', 'v-ABZg2', 'vABZg3-',
@@ -1374,8 +1380,18 @@
                 title: "Lainnya",
                 icons: [
                     'lENDE', 'BOOT', 'FLUG', 'PET',
+                    'lBUEq', 'lvBUE', 'lvBUE-', 'lv-BUE',
                     'WASSER', 'WASSERq', 'vWASSER', 'vWASSERq',
-                    'RP2', 'RP2q', 'RP4', 'RP4q',
+                    'RD1', 'RP1', 'RP2', 'RP4',
+                    'RD1q', 'RP1q', 'RP2q', 'RP4q',
+                    'RD12+4', 'RD13+1', 'RP12+4', 'RP13+1',
+                    'RP22+4', 'RP23+1', 'RP42+4', 'RP43+1',
+                    'RP4c2', 'RP4c3', 'RP2c2', 'RP2c3',
+                    'RP4c1', 'RP4c4', 'RP2c1', 'RP2c4',
+                    'RP22+n', 'RP23+n', 'RP42+n', 'RP43+n',
+                    'RP2s+1', 'RP2s+4', 'RP4s+1', 'RP4s+4',
+                    'RP22+w', 'RP23+e', 'RP43+e', 'RP42+w',
+                    'RP2w+1', 'RP2e+4', 'RP42+w', 'RP43+e',
                     'hRP2', 'hRP2q', 'hRP4', 'hRP4q',
                     'hRP2a', 'hRP2e', 'hRP2aq', 'hRP2eq',
                     'hRP4a', 'hRP4e', 'hRP4aq', 'hRP4eq',
@@ -2808,7 +2824,7 @@
                 statusArea.innerHTML = `
                     <div class="d-flex align-items-center justify-content-center gap-2 text-primary py-2">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                        <span class="small fw-semibold">Memeriksa Wikimedia Commons...</span>
+                        <span class="small fw-semibold">Memeriksa endpoint...</span>
                     </div>
                 `;
             }
@@ -2862,7 +2878,7 @@
                     statusArea.innerHTML = `
                         <div class="alert alert-warning py-2 px-3 small my-1 d-inline-flex align-items-center gap-2">
                             <i class="fa-solid fa-triangle-exclamation"></i>
-                            <div>Ikon <strong>BSicon_${iconName}.svg</strong> tidak ditemukan di Wikimedia Commons.</div>
+                            <div>Ikon <strong>BSicon_${iconName}.svg</strong> tidak ditemukan di CDN BSicons.</div>
                         </div>
                     `;
                 }
