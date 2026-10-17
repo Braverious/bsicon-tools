@@ -322,84 +322,231 @@
         }
 
         .canvas-toolbar {
-            background-color: white;
-            padding: 10px 15px;
-            border-bottom: 1px solid #dee2e6;
+            background-color: #ffffff;
+            padding: 8px 16px;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             overflow-x: auto;
             overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .canvas-toolbar::-webkit-scrollbar {
-            height: 4px;
+            height: 3px;
         }
 
         .canvas-toolbar::-webkit-scrollbar-thumb {
-            background: #ced4da;
+            background: #dee2e6;
             border-radius: 4px;
         }
 
         .canvas-toolbar::-webkit-scrollbar-track {
-            background: #f8f9fa;
+            background: transparent;
         }
 
-        .toolbar-size,
+        /* Segmented Groups & Dock Controls */
+        .toolbar-size {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            padding: 3px 6px;
+            border-radius: 9px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .toolbar-size-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-right: 6px;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar-input {
+            width: 48px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            padding: 0 4px;
+        }
+
+        .toolbar-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
+        }
+
+        .toolbar-times {
+            margin: 0 5px;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
         .toolbar-actions {
             display: flex;
             align-items: center;
+            gap: 8px;
             flex-wrap: nowrap;
             flex-shrink: 0;
         }
 
-        .toolbar-actions {
-            gap: 8px;
+        /* Segmented Button Group (Studio Pill Bar) */
+        .toolbar-dock-group {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
         }
 
-        .toolbar-input {
-            width: 60px;
-        }
-
-        .toolbar-times {
-            margin: 0 6px;
-            color: #6c757d;
-        }
-
-        .toolbar-btn {
+        /* Dock Icon Button */
+        .dock-btn {
+            position: relative;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: #475569;
+            border-radius: 7px;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.16s ease;
+            text-decoration: none;
+        }
+
+        .dock-btn:hover:not(:disabled) {
+            background-color: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .dock-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .dock-btn:disabled {
+            color: #cbd5e1;
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        /* Varian Aksi Spesifik Dock */
+        .dock-btn.danger-action:hover:not(:disabled) {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .dock-btn.primary-action:hover:not(:disabled) {
+            background-color: #eff6ff;
+            color: #2563eb;
+        }
+
+        .dock-btn.accent-action:hover:not(:disabled) {
+            background-color: #f0fdf4;
+            color: #16a34a;
+        }
+
+        /* Primary Call-to-Action Pills */
+        .dock-pill-btn {
+            display: inline-flex;
+            align-items: center;
             gap: 6px;
+            padding: 5px 12px;
+            height: 32px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.16s ease;
             white-space: nowrap;
-            flex-shrink: 0;
+        }
+
+        .dock-pill-btn:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            transform: translateY(-1px);
+        }
+
+        .dock-pill-btn.pill-highlight {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.2);
+        }
+
+        .dock-pill-btn.pill-highlight:hover {
+            background: #1e293b;
+            color: #ffffff;
+            box-shadow: 0 4px 8px rgba(15, 23, 42, 0.25);
+        }
+
+        .dock-divider {
+            width: 1px;
+            height: 20px;
+            background-color: #e2e8f0;
+            margin: 0 2px;
         }
 
         @media (max-width: 575.98px) {
             .canvas-toolbar {
-                padding: 8px 10px;
+                padding: 6px 8px;
+                gap: 8px;
                 justify-content: flex-start;
+                scroll-behavior: smooth;
+            }
+
+            .toolbar-size {
+                padding: 2px 4px;
             }
 
             .toolbar-input {
-                width: 50px;
-            }
-
-            .toolbar-times {
-                margin: 0 4px;
-            }
-
-            .toolbar-actions {
-                gap: 5px;
-            }
-
-            .toolbar-btn {
-                padding: 0.3rem 0.5rem;
+                width: 38px;
+                height: 32px;
                 font-size: 0.8rem;
-                gap: 4px;
+            }
+
+            /* Ukuran tombol ramah sentuhan jari (Touch-friendly target) */
+            .dock-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 0.88rem;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .dock-pill-btn {
+                padding: 4px 10px;
+                height: 34px;
+                font-size: 0.78rem;
+                -webkit-tap-highlight-color: transparent;
             }
         }
 
@@ -578,6 +725,232 @@
             .trash-label {
                 font-size: 0.55rem;
             }
+        }
+
+        .draft-restore-banner {
+            background-color: #1a1d20;
+            color: #ffffff;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1045;
+            transition: all 0.3s ease;
+        }
+
+        .draft-restore-banner.d-none {
+            display: none !important;
+        }
+
+        .project-action-btn {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            color: #212529;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .project-action-btn:hover {
+            background-color: #f8f9fa;
+            border-color: #adb5bd;
+            color: #000000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .project-action-btn:hover .text-muted {
+            color: #6c757d !important;
+        }
+
+        .project-action-btn:hover .project-action-icon {
+            background-color: rgba(33, 37, 41, 0.08) !important;
+            color: #000000 !important;
+        }
+
+        .project-action-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+            background-color: #e9ecef;
+        }
+
+        /* Context Menu untuk Sisip / Hapus Baris & Kolom Kanvas */
+        .canvas-context-menu {
+            position: fixed;
+            z-index: 1070;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            padding: 6px 0;
+            min-width: 220px;
+            display: none;
+            user-select: none;
+            -webkit-user-select: none;
+            animation: ctxFadeIn 0.12s ease-out;
+        }
+
+        @keyframes ctxFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .canvas-context-menu .ctx-header {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+            padding: 4px 14px 2px;
+        }
+
+        .canvas-context-menu .ctx-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 14px;
+            font-size: 0.82rem;
+            color: #212529;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.12s ease, color 0.12s ease;
+        }
+
+        .canvas-context-menu .ctx-item:hover {
+            background-color: #f1f3f5;
+            color: #0d6efd;
+        }
+
+        .canvas-context-menu .ctx-item.text-danger:hover {
+            background-color: #f8d7da;
+            color: #dc3545 !important;
+        }
+
+        .canvas-context-menu .ctx-item i {
+            width: 16px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .canvas-context-menu .ctx-divider {
+            height: 1px;
+            background-color: #e9ecef;
+            margin: 4px 0;
+        }
+
+        /* Toast / Banner Progress Simpan Gambar PNG */
+        .export-progress-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            padding: 14px 18px;
+            min-width: 310px;
+            max-width: 90vw;
+            z-index: 1080;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            animation: toastSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        @keyframes toastSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .export-progress-toast.is-visible {
+            display: flex;
+        }
+
+        .export-progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .export-progress-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-progress-percent {
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: monospace;
+            color: #2563eb;
+        }
+
+        .export-progress-close-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 2px 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 4px;
+            line-height: 1;
+            transition: color 0.15s ease, background 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .export-progress-close-btn:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .export-progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #f1f5f9;
+            border-radius: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .export-progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            border-radius: 100px;
+            transition: width 0.25s ease-out;
+        }
+
+        .export-progress-status {
+            font-size: 0.73rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .tips-fading-text {
@@ -812,7 +1185,7 @@
         </button>
         <div class="kai-sign">
             <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
-            <p class="kai-sign-elev">v 4.1+</p>
+            <p class="kai-sign-elev">v 5.0+</p>
         </div>
     </header>
 
@@ -890,6 +1263,27 @@
         </div>
 
         <div class="panel-canvas">
+            <!-- Banner Pemulihan Draft Otomatis (jika ada sesi sebelumnya yang belum disimpan) -->
+            <div id="draftRestoreBanner" class="draft-restore-banner d-none">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left fs-5"></i>
+                    <div>
+                        <strong>Draft Ditemukan:</strong> Ada rancangan layout sebelumnya yang belom disimpan! (<span
+                            id="draftTimeAgo">beberapa saat lalu</span>).
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-light btn-sm fw-bold px-3 py-1 text-dark"
+                        onclick="restoreDraftSession()">
+                        Pulihkan
+                    </button>
+                    <button type="button" class="btn btn-outline-light btn-sm px-2 py-1" onclick="dismissDraftBanner()"
+                        title="Abaikan">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
             <div class="p-2 bg-white border-bottom text-center text-muted tips-banner-container"
                 style="font-size: 0.75rem; min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 4px;">
                 <strong>Tips:</strong>
@@ -897,46 +1291,76 @@
             </div>
 
             <div class="canvas-toolbar">
+                <!-- Ukuran Grid Kanvas -->
                 <div class="toolbar-size">
-                    <span class="fw-semibold me-2 d-none d-md-inline"><i class="fa-solid fa-border-all"></i>
-                        Ukuran:</span>
-                    <input type="number" id="gridCols" class="form-control form-control-sm text-center toolbar-input"
-                        value="7" min="1" max="50" onchange="resizeCanvas()"
+                    <span class="toolbar-size-label d-none d-sm-inline-flex">
+                        <i class="fa-solid fa-border-all"></i>
+                    </span>
+                    <input type="number" id="gridCols" class="toolbar-input text-center" value="7" min="1" max="50"
+                        onchange="resizeCanvas()"
                         onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
                         oninput="this.value = this.value.replace(/\D/g, ''); if(+this.value > 50) this.value = 50;"
                         title="Jumlah Kolom" aria-label="Jumlah Kolom">
                     <span class="toolbar-times">×</span>
-                    <input type="number" id="gridRows" class="form-control form-control-sm text-center toolbar-input"
-                        value="10" min="1" max="100" onchange="resizeCanvas()"
+                    <input type="number" id="gridRows" class="toolbar-input text-center" value="10" min="1" max="100"
+                        onchange="resizeCanvas()"
                         onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
                         oninput="this.value = this.value.replace(/\D/g, ''); if(+this.value > 100) this.value = 100;"
                         title="Jumlah Baris" aria-label="Jumlah Baris">
                 </div>
+
                 <div class="toolbar-actions">
-                    <button class="btn btn-sm btn-outline-secondary toolbar-btn" id="undoBtn" onclick="undo()"
-                        title="Urungkan tindakan (Ctrl+Z)" aria-label="Undo" disabled>
-                        <i class="fa-solid fa-rotate-left"></i><span class="d-none d-sm-inline">Undo</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary toolbar-btn" id="redoBtn" onclick="redo()"
-                        title="Ulangi tindakan (Ctrl+Y atau Ctrl+Shift+Z)" aria-label="Redo" disabled>
-                        <i class="fa-solid fa-rotate-right"></i><span class="d-none d-sm-inline">Redo</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger toolbar-btn" onclick="clearCanvas()">
-                        <i class="fa-solid fa-trash-can"></i><span>Kosongkan</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-primary toolbar-btn" id="savePngBtn" onclick="saveAsPNG()"
-                        title="Simpan kanvas rute sebagai gambar PNG">
-                        <i class="fa-solid fa-image"></i><span>Simpan</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-dark toolbar-btn d-none d-md-inline-flex"
-                        onclick="openCustomIconModal()" title="Cari & Muat Ikon Kustom Manual">
-                        <i class="fa-solid fa-shapes"></i><span>Input</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-dark toolbar-btn d-none d-md-inline-flex"
-                        onclick="openImportModal()" title="Impor bagan rute dari sintaks Wikipedia / BSicon">
+                    <!-- Group 1: Undo & Redo -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn" id="undoBtn" onclick="undo()" title="Urungkan tindakan (Ctrl+Z)"
+                            aria-label="Undo" disabled>
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button class="dock-btn" id="redoBtn" onclick="redo()"
+                            title="Ulangi tindakan (Ctrl+Y atau Ctrl+Shift+Z)" aria-label="Redo" disabled>
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Group 2: Modifikasi Kanvas (Struktur & Kosongkan) -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn primary-action" type="button" onclick="openStructureModal()"
+                            title="Sisip / Hapus Baris & Kolom" aria-label="Kelola Struktur">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                        </button>
+                        <button class="dock-btn danger-action" onclick="clearCanvas()"
+                            title="Kosongkan Semua Sel Kanvas" aria-label="Kosongkan Kanvas">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+
+                    <!-- Group 3: File, Proyek & Input -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn accent-action" type="button" id="projectModalBtn"
+                            onclick="openProjectModal()" title="Manajemen Berkas Proyek (.spoor)" aria-label="Proyek">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </button>
+                        <input type="file" id="spoorFileInput" accept=".spoor,application/json" style="display: none;"
+                            onchange="handleSpoorFileSelected(event)">
+
+                        <button class="dock-btn primary-action" id="savePngBtn" onclick="saveAsPNG()"
+                            title="Simpan kanvas rute sebagai gambar PNG" aria-label="Simpan PNG">
+                            <i class="fa-solid fa-image"></i>
+                        </button>
+
+                        <button class="dock-btn d-none d-md-inline-flex" onclick="openCustomIconModal()"
+                            title="Cari & Muat Ikon Manual" aria-label="Input Ikon Kustom">
+                            <i class="fa-solid fa-shapes"></i>
+                        </button>
+                    </div>
+
+                    <!-- Tombol Utama: Impor & Ekspor Sintaks Wikipedia -->
+                    <button class="dock-pill-btn pill-highlight d-none d-md-inline-flex" onclick="openImportModal()"
+                        title="Impor bagan rute dari sintaks Wikipedia / BSicon" aria-label="Impor Sintaks">
                         <i class="fa-solid fa-file-import"></i><span>Impor</span>
                     </button>
-                    <button class="btn btn-sm btn-dark toolbar-btn" onclick="exportData()">
+                    <button class="dock-pill-btn pill-highlight" onclick="exportData()"
+                        title="Hasilkan sintaks templat {{routemap}} Wikipedia">
                         <i class="fa-solid fa-code"></i><span>Ekspor</span>
                     </button>
                 </div>
@@ -1045,11 +1469,12 @@
                 </div>
                 <div class="modal-body">
                     <p class="text-muted small mb-2">
-                        Tempelkan (<i>paste</i>) sintaks diagram lintasan Wikipedia (<code>{{routemap}}</code> atau
-                        baris
-                        BSicon
-                        dengan pemisah <code>\</code>). Hanya ikon di bagian marka BSicon yang akan dimuat ke kanvas;
-                        teks keterangan stasiun di sebelah kanan akan diabaikan secara otomatis.
+                        <strong>
+                            Tempelkan (<i>paste</i>) sintaks diagram lintasan Wikipedia (<code>{{routemap}}</code>
+                            atau baris BSicon dengan pemisah <code>\</code>).
+                        </strong><br>
+                        Hanya ikon di bagian marka BSicon yang akan dimuat ke kanvas; teks keterangan stasiun di sebelah
+                        kanan akan diabaikan secara otomatis.
                     </p>
                     <textarea id="importTextarea" class="form-control font-monospace" rows="12"
                         placeholder="Contoh:&#10;{{routemap&#10;|title=Nama Stasiun&#10;|map=&#10;STR\BHF\STR~~0.0~~Stasiun Utama&#10;STR\STR!~PORT\STR~~2.5~~Pelabuhan&#10;}}"
@@ -1061,6 +1486,58 @@
                     <button type="button" class="btn btn-success" id="importSubmitBtn" onclick="executeImport()">
                         <i class="fa-solid fa-upload"></i> Muat ke Kanvas
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Proyek (.spoor) -->
+    <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="projectModalLabel">
+                        Simpan Proyek
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="text-secondary small mb-4">
+                        Format berkas <code>.spoor</code> khusus Spoorwiki menyimpan susunan seluruh kanvas, dimensi
+                        baris/kolom, dan
+                        tumpukan ikon secara utuh ke komputer Anda.
+                    </p>
+                    <div class="d-grid gap-3">
+                        <button type="button"
+                            class="btn project-action-btn py-3 d-flex align-items-center gap-3 text-start px-3"
+                            onclick="executeSaveSpoorFromModal()">
+                            <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-2 d-flex align-items-center justify-content-center project-action-icon"
+                                style="width: 44px; height: 44px; flex-shrink: 0;">
+                                <i class="fa-solid fa-file-arrow-down fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Simpan File (.spoor)</div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">Unduh kanvas rute saat ini
+                                    sebagai berkas proyek lokal</div>
+                            </div>
+                        </button>
+                        <button type="button"
+                            class="btn project-action-btn py-3 d-flex align-items-center gap-3 text-start px-3"
+                            onclick="executeOpenSpoorFromModal()">
+                            <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-2 d-flex align-items-center justify-content-center project-action-icon"
+                                style="width: 44px; height: 44px; flex-shrink: 0;">
+                                <i class="fa-solid fa-file-arrow-up fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Buka File (.spoor)</div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">Muat dan lanjutkan pengerjaan
+                                    dari berkas proyek yang ada</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -1143,7 +1620,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-danger"><i class="fa-solid fa-trash-can"></i> Kosongkan Kanvas</h5>
+                    <h5 class="modal-title text-danger">Kosongkan Kanvas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1157,11 +1634,188 @@
         </div>
     </div>
 
+    <!-- Modal Konfirmasi Hapus Baris / Kolom yang Memiliki Ikon -->
+    <div class="modal fade" id="deleteRowColConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold" id="deleteRowColConfirmTitle">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>Konfirmasi Hapus
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3" id="deleteRowColConfirmBody">
+                    Apakah Anda yakin ingin menghapus?
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger btn-sm fw-bold" id="deleteRowColConfirmActionBtn">
+                        <i class="fa-solid fa-trash-can me-1"></i> Tetap Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Sisip / Hapus Baris & Kolom (Struktur Kanvas) -->
+    <div class="modal fade" id="structureModal" tabindex="-1" aria-labelledby="structureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="structureModalLabel">
+                        Kelola Struktur Kanvas
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="alert alert-light border small text-muted mb-3 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-primary fs-5"></i>
+                        <div>
+                            Target posisi aktif saat ini:
+                            <strong id="structureActiveTargetText" class="text-dark">Baris 1, Kolom 1</strong>.
+                            <div class="text-secondary" style="font-size: 0.72rem;">(Tip: Anda juga dapat langsung
+                                <strong>klik kanan</strong> pada sel manapun di kanvas)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Operasi Baris -->
+                    <div class="card mb-3 border-light-subtle shadow-sm">
+                        <div
+                            class="card-header bg-body-tertiary py-2 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold small"><i class="fa-solid fa-grip-lines me-1 text-primary"></i> Operasi
+                                Baris (Row)</span>
+                            <span class="badge bg-secondary-subtle text-secondary" id="structureRowCountBadge">10
+                                Baris</span>
+                        </div>
+                        <div class="card-body p-2 d-grid gap-2">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-row-above')">
+                                        <i class="fa-solid fa-arrow-up text-primary"></i>
+                                        <span>Sisip di Atas</span>
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-row-below')">
+                                        <i class="fa-solid fa-arrow-down text-primary"></i>
+                                        <span>Sisip di Bawah</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button"
+                                class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                onclick="executeStructureAction('delete-row')">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Hapus Baris Ini</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Operasi Kolom -->
+                    <div class="card border-light-subtle shadow-sm">
+                        <div
+                            class="card-header bg-body-tertiary py-2 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold small"><i
+                                    class="fa-solid fa-grip-lines-vertical me-1 text-success"></i> Operasi Kolom
+                                (Column)</span>
+                            <span class="badge bg-secondary-subtle text-secondary" id="structureColCountBadge">7
+                                Kolom</span>
+                        </div>
+                        <div class="card-body p-2 d-grid gap-2">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-col-left')">
+                                        <i class="fa-solid fa-arrow-left text-success"></i>
+                                        <span>Sisip di Kiri</span>
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-col-right')">
+                                        <i class="fa-solid fa-arrow-right text-success"></i>
+                                        <span>Sisip di Kanan</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button"
+                                class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                onclick="executeStructureAction('delete-col')">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Hapus Kolom Ini</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu Kanvas (Klik Kanan pada Sel) -->
+    <div id="canvasContextMenu" class="canvas-context-menu">
+        <div class="ctx-header" id="ctxMenuHeader">Sel (0, 0)</div>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-row-above')">
+            <i class="fa-solid fa-arrow-up text-primary"></i> Sisip Baris di Atas
+        </a>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-row-below')">
+            <i class="fa-solid fa-arrow-down text-primary"></i> Sisip Baris di Bawah
+        </a>
+        <div class="ctx-divider"></div>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-col-left')">
+            <i class="fa-solid fa-arrow-left text-success"></i> Sisip Kolom di Kiri
+        </a>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-col-right')">
+            <i class="fa-solid fa-arrow-right text-success"></i> Sisip Kolom di Kanan
+        </a>
+        <div class="ctx-divider"></div>
+        <a class="ctx-item text-danger" href="javascript:void(0)" onclick="handleCtxAction('delete-row')">
+            <i class="fa-solid fa-xmark"></i> Hapus Baris Ini
+        </a>
+        <a class="ctx-item text-danger" href="javascript:void(0)" onclick="handleCtxAction('delete-col')">
+            <i class="fa-solid fa-xmark"></i> Hapus Kolom Ini
+        </a>
+    </div>
+
+    <!-- Toast Progres Simpan Gambar PNG -->
+    <div id="exportProgressToast" class="export-progress-toast" role="status" aria-live="polite">
+        <div class="export-progress-header">
+            <div class="export-progress-title">
+                <i class="fa-solid fa-spinner fa-spin text-primary"></i>
+                <span id="exportProgressTitleText">Memproses Gambar...</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="export-progress-percent" id="exportProgressPercent">0%</span>
+                <button type="button" class="export-progress-close-btn" onclick="cancelExportProgress()"
+                    title="Tutup / Batalkan" aria-label="Tutup progress">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div class="export-progress-bar-bg">
+            <div class="export-progress-bar-fill" id="exportProgressBarFill"></div>
+        </div>
+        <div class="export-progress-status">
+            <span id="exportProgressStatusText">Menyiapkan kanvas & font...</span>
+            <span class="text-muted" style="font-size: 0.68rem;">Resolusi Tinggi (2x)</span>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
-    <script>console.log("%c\n██████╗ ██████╗  █████╗ ██╗   ██╗███████╗\n██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝\n██████╔╝██████╔╝███████║██║   ██║█████╗  \n██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██╔══╝  \n██████╔╝██║  ██║██║  ██║ ╚████╔╝ ███████╗\n╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝\n\n██████╗ ██╗ ██████╗ ██╗   ██╗███████╗\n██╔══██╗██║██╔═══██╗██║   ██║██╔════╝\n██████╔╝██║██║   ██║██║   ██║███████╗\n██╔══██╗██║██║   ██║██║   ██║╚════██║\n██║  ██║██║╚██████╔╝╚██████╔╝███████║\n╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝\n","color: #0d6efd; font-family: monospace; font-weight: bold;"),console.log("%c🚀 SPOORWIKI Tools Build v4.1 | Made by Braverious","color: #198754; font-weight: bold; font-size: 13px;");const iconDatabase={"sepur-lurus":{title:"Sepur Lurus",icons:["STR","STRq","STR2+4","STR3+1","STRg","STRf","CONTge","CONTfa","CONTg@G","CONTf@F","CONTg","CONTf","CONT1+f","CONT4+f","CONT2+g","CONT3+g","ENDE@G","ENDE@F","ENDEa","ENDEe","CONTg@Gq","CONTgq","CONTfq","CONTf@Fq","ENDE@Gq","ENDEaq","ENDEeq","ENDE@Fq","ENDE2@F","ENDE3@F","ENDE2","ENDE3","ENDE1@G","ENDE4@G","ENDE1","ENDE4","ENDE2@G","ENDE3@G","ENDE2+4xe","ENDE3+1xe","ENDE1@F","ENDE4@F","ENDE3+1xa","ENDE2+4xa","CONT2+4","CONT3+1","CONT4","CONT1","CONT1+3","CONT4+2","CONT3","CONT2","tSTR2+4a@f","tSTR3+1a@f","tSTR2+4a","tSTR3+1a","tSTR3+1e@g","tSTR2+4e@g","tSTR3+1e","tSTR2+4e","STRb","STRbl","STRbr","STRbm","SKRZ-GD","SKRZ-G1","SKRZ-G2","SKRZ-G4","SKRZ-GDq","SKRZ-G1q","SKRZ-G2q","SKRZ-G4q","SKRZ-GDBUE","SKRZ-G1BUE","SKRZ-G2BUE","SKRZ-G4BUE","BUE","","BUE3+1","BUE2+4","SKRZ-G2o","SKRZ-G4o","SKRZ-G2u","SKRZ-G4u","SKRZ-G2oq","SKRZ-G4oq","SKRZ-G2uq","SKRZ-G4uq","STRuq","-STRu","STRu-","tSTRea","hSTRae","STRo","BRÜCKE2","eLFT","hSTRaeq","STRoq","BRÜCKE2q","LFTq","hSTR2+4ae","hSTR3+1ae","TUNNEL2+4","TUNNEL3+1","SBRÜCKEa","SBRÜCKEe","SBRÜCKE","SBRÜCKEm","SKRZ-G2h","SKRZ-G4h","SKRZ-G2o","SKRZ-G4o","htSTRaa","htSTRee","TUNNEL1","TUNNEL1-m","hSTRae(l)","hSTRae(r)","STRo(l)","STRo(r)","hSTRe@f","hSTRa@g","hSTR(r)","hSTR(l)","hSTR","hBHF","hHST","hKRZW","WVIADUKT1-R","WVIADUKT1-L","WBRÜCKE2","hKRZWae","WKRZ2+4u","WKRZ3+1u","WKRZq2+4u","WKRZq3+1u","WKRZ2+4o","KRZ3+1Wo","WKRZq2+4o","","PRSl","PRSr","NATl","NATr","ACC","INT","ACCq","INTq","DAMPF","TRAJEKT","lDAMPF","TRAJEKTq","DST","DST3+1","DST2+4","DSTq","BHF","BHF3+1","BHF2+4","BHFq","KDST2","KDST3","KBHF2","KBHF3","KDST1","KDST4","KBHF1","KBHF4","KDSTe","KDSTa","KDSTaq","KDSTeq","KBHFa","KBHFe","KBHFaq","KBHFeq"]},"sepur-belok":{title:"Sepur Belok",icons:["STR2","STR3","STR2+r","STR3+l","STR+1","STR+4","STRr+1","STRl+4","CONTf+4","CONTf+1","CONT2+r","CONT3+l","CONTg+3","CONTg+2","CONT1+r","CONT4+l","tSTR2a","tSTR3a","tSTR2e","tSTR3e","tSTR+1e","tSTR+4e","tSTR+1a","tSTR+4a","tSTR2a@f","tSTR3a@f","tSTR2e@f","tSTR3e@f","tSTR+1e@g","tSTR+4e@g","tSTR+1a@g","tSTR+4a@g","tSTR2+re","tSTR3+le","tSTR2+ra","tSTR3+la","tSTRr+1a","tSTRl+4a","tSTRr+1e","tSTRl+4e","SHI1+r","SHI1+l","SHI1r","SHI1l","STR2~RG","STR3~LG","STR2+4h","STR3+1h","STR+1~RF","STR+4~LF","STR3h+1","STR2h+4","v-STR+rg","vSTR+lg-","hv-STR+rg","hvSTR+lg-","v-STRrf","vSTRlf-","hv-STRrf","hvSTRlf-","vvSTRl~r~r~L","vvSTRr~l~l~R","vvSTRl~r~r~G","vvSTRr~l~l~G","vvSTR+l~r~r~L","vvSTR+r~l~l~R","vvSTR+l~r~r~F","vvSTR+r~l~l~F","STR2+1","STR3+4","STR1+4","STR2+3","lCONTf@G","lCONTg@G","lvCONTf@F","lvCONTg@G","vSTR+l","vSTR+r","hvSTR+l","hvSTR+r","vSTRl","vSTRr","hvSTRl","hvSTRr"]},wesel:{title:"Wesel",icons:["STRc2","STRc3","ABZg2","ABZg3","STRc1","STRc4","ABZg+1","ABZg+4","eABZg2","eABZg3","xABZg2","xABZg3","eABZg+1","eABZg+4","xABZg+1","xABZg+4","ABZ4+2f","ABZ1+3f","ABZ2+4r","ABZ3+1l","ABZ3+1g","ABZ2+4g","ABZ1+3r","ABZ4+2l","eABZ4+2f","eABZ1+3f","eABZ2+4r","eABZ3+1l","eABZ3+1g","eABZ2+4g","eABZ1+3r","eABZ4+2l","ABZ4+2xf","ABZ1+3xf","ABZ2+4xr","ABZ3+1xl","ABZ3+1xg","ABZ2+4xg","ABZ1+3xr","ABZ4+2xl","ABZ4+fx2","ABZ1+fx3","ABZ2+rx4","ABZ3+lx1","ABZ3+gx1","ABZ2+gx4","ABZ1+rx3","ABZ4+lx2","ABZq2","ABZq+3","ABZ2+gr","ABZ3+gl","ABZq1","ABZq+4","ABZ1+fr","ABZ4+fl","xABZq2","xABZq+3","eABZq2","eABZq+3","xABZq1","xABZq+4","eABZq1","eABZq+4","ABZ2+gxr","ABZ3+gxl","ABZ2+rxg","ABZ3+lxg","ABZ1+fxr","ABZ4+fxl","ABZ1+rxf","ABZ4+lxf","ABZ2l","ABZ3r","ABZr+2f","ABZl+3f","ABZ+1l","ABZ+4r","ABZr+1g","ABZl+4g","ABZ23","ABZ+14","ABZr+12","ABZl+34","ABZ2x3","ABZ3x2","ABZ+1x4","ABZ+4x1","ABZr+1x2","ABZl+4x3","ABZl+3x4","ABZr+2x1","ABZ1+fr","ABZ2+gr","ABZ3+gl","ABZ4+fl","WYE23","WYE+14","WYEr+12","WYEl+34","SPLa","SPLa.F","vSHI2gl-","v-SHI2gr","SPLe","SPLe.G","vSHI2g+l-","v-SHI2g+r","xSPLa","eSPLa","xSPLa.F","eSPLa.F","xSPLe","eSPLe","xSPLe.G","eSPLe.G","evSHI2gl-","ev-SHI2gr","xv-SHI2gr","xvSHI2gl-","evSHI2g+l-","ev-SHI2g+r","xv-SHI2g+r","xvSHI2g+l-","SPLaq","SPLeq","SPLa.Fq","","eSPLaq","eSPLeq","xSPLaq","xSPLeq","SHI2grq-","SHI2g+rq-","-SHI2glq","-SHI2g+lq","eSHI2grq-","eSHI2g+rq-","-eSHI2glq","-eSHI2g+lq","xSHI2grq-","xSHI2g+rq-","-xSHI2glq","-xSHI2g+lq","vSTR-ABZg+1","vSTR-ABZg2","vABZg+4-STR","vABZg3-STR","vSTR-eABZg+1","","","veABZg3-STR","vABZq+l","vABZq+r","vABZg+l","vABZg+r","vABZgl","vABZgr","vABZql","vABZqr","vABZg2-","v-ABZg3","v-ABZg2","vABZg3-","vABZg+1-","v-ABZg+4","v-ABZg+1","vABZg+4-","evABZg2-","ev-ABZg3","ev-ABZg2","evABZg3-","evABZg+1-","ev-ABZg+4","ev-ABZg+1","evABZg+4-","xvABZg2-","xv-ABZg3","xv-ABZg2","xvABZg3-","xvABZg+1-","xv-ABZg+4","xv-ABZg+1","xvABZg+4-","SPLg+2","SPLg+3","SPLr+2","SPLl+3","SPL+1","SPL+4","SPLr+1","SPLl+4","eSPLg+2","eSPLg+3","eSPLr+2","eSPLl+3","eSPL+1","eSPL+4","eSPLr+1","eSPLl+4","xSPLg+2","xSPLg+3","xSPLr+2","xSPLl+3","xSPL+1","xSPL+4","xSPLr+1","xSPLl+4","SHI1l;gl","SHI1l;gr","SHI1r;gl","SHI1r;gr","SHI1+l;g+l","SHI1+l;g+r","SHI1+r;g+l","SHI1+r;g+r","PSLle","PSLla","PSLra","PSLra","YRD","YRDa","YRDm","YRDe","YRDENDEa","YRDENDEe","YRDCONTg","YRDCONTf","--divider:Persilangan--","KRZ","KRX","KRZ2+4","KRZ3+1","ABZgl","ABZgr","ABZg+l","ABZg+r","KRZo","KRZu","KRXo","KRXu","KRZh","KRZqh","KRZ2+4h","KRZ3+1h","KRXh"]},stasiun:{title:"Bangunan & Stasiun",icons:["BHF","HST","KBHFa","KBHFe","PLT","dPLT","PLTmm","cPLT","BUILDING","PUMPHOUSE","WTURM","lHUT","PLTlr","PLTae","PSTR","PSTRq","PSTR(L)","PSTR(R)","PSTR(L)q","PSTR(R)q","PLTr","PLTl","PLTa","PLTe","PLT~R","PLT~L","PLTm~Lq","PLTm~Rq","PENDEa","PENDEe","PENDE@G","PENDE@F","vPLT-STR","vSTR-PLT","vPLT-ENDE@G","vPLT-ENDE@F","ELC-PT","ELC-KS","ELC","lELC","--divider:Nomor Peron--","num0l","num0r","num1l","num1r","num2l","num2r","num3l","num3r","num4l","num4r","num5l","num5r","num6l","num6r","num7l","num7r","num8l","num8r","num9l","num9r"]},paralel:{title:"Sepur Paralel",icons:["vSTR","vSTRfg","vSTR-","v-STR","vSTRq","vSTRgfq","vSTR2+4","vSTR3+1","vSTR2+4~r","vSTR2+4~l","vSTR3+1~r","vSTR3+1~l","vSTR2","vSTR3","vSTRc2","vSTRc3","vSTR+1","vSTR+4","vSTRc1","vSTRc4","vSTR2-","v-STR3","v-STR2","vSTR3-","vSTR+1-","v-STR+4","v-STR+1","vSTR+4-","STR2+r-","STR3+l-","-STR2+r","-STR3+l","-STRr+1","-STRl+4","STRr+1-","STRl+4-","vBUE","vSKRZ-G2h","vBUE-","v-BUE","vSTRo","vSKRZ-G4h","vSBRÜCKE","hvSTR","hvSTRa@g~R","hvSTRa~R","hvSTRa@g~L","hvSTRa~L","hvSTRe~R","hvSTRe@f~R","hvSTRe~L","hvSTRe@f~L","hvSTR~L","hvSTR~R","vSTRu-","v-STRu","vENDEa","vENDEe","vENDExa","vENDExe","v-ENDEa","vENDEa-","vENDEe-","v-ENDEe","vENDEa-SHI1+r","vENDEe-SHI1r","vSHI1+l-ENDEa","vSHI1l-ENDEe","vENDEa-STR","vENDEe-STR","vSTR-ENDEa","vSTR-ENDEe","vENDE1","","vENDE3","","vCONTg@G","vCONTg","vCONTf","vCONTf@F","vCONTgq","vCONTg@Gq","vCONTf@Fq","vCONTfq","vCONT1","vCONT4","vCONT3","vCONT2","vCONTg-","v-CONTg","vCONTf-","v-CONTf","vCONTgfa","vCONTgfe","vCONTfa","vCONTga","vBHF","vKRZ","vSTR-BHF","vBHF-STR","vBHF(R)f-STR","vBHF(R)g-STR","vSTR-BHF(L)g","vSTR-BHF(L)f","hvSTRa","hvSTR","hvSTRe","hvSTRq","hvSTRa@g~L","hvSTR~L","hvSTRa~R","hvSTRa@g~R","hvSTRe@f~L","hvSTRe~L","hvSTR~R","hvSTRe@f~R"]},fasilitas:{title:"Lainnya",icons:["lENDE","BOOT","FLUG","PET","lBUEq","lvBUE","lvBUE-","lv-BUE","WASSER","WASSERq","vWASSER","vWASSERq","RD1","RP1","RP2","RP4","RD1q","RP1q","RP2q","RP4q","RD12+4","RD13+1","RP12+4","RP13+1","RP22+4","RP23+1","RP42+4","RP43+1","RP4c2","RP4c3","RP2c2","RP2c3","RP4c1","RP4c4","RP2c1","RP2c4","RP22+n","RP23+n","RP42+n","RP43+n","RP2s+1","RP2s+4","RP4s+1","RP4s+4","RP22+w","RP23+e","RP43+e","RP42+w","RP2w+1","RP2e+4","RP42+w","RP43+e","hRP2","hRP2q","hRP4","hRP4q","hRP2a","hRP2e","hRP2aq","hRP2eq","hRP4a","hRP4e","hRP4aq","hRP4eq","lDRH","lZOLL","PARKING","lNAT","GRZ","GRZq","GRZTl","GRZTr","GRZ+4","GRZ+1","GRZ3","GRZ2","GRZ2+4","GRZ3+1","GRZx","GRZ+q","SEP","SEP~L","SEP~R","SEPq","TRAIN2","BAHN","lDAMPF","SUBWAY-CHN","DELf","DELg","DELgq","DELfq","SIGNALf_red","SIGNALf_yellow","SIGNALf_green","SIGNALf_white","lENDE@G","lENDE@F","lENDE@Gq","lENDE@Fq","lENDE1","lENDE4","lENDE2","lENDE3","FOREST","BEACH","MOUNTAIN","FACTORY","XPLTq","--divider:Jembatan--","lMKRZo","lMKRZu","lMKRXo","lMKRXu","lKRZo+R","lKRZo+L","lKRZu+G","lKRZu+F","lMKRZ2+4u","lMKRZ3+1u","lMKRZq2+4u","lMKRZq3+1u","lhSTRae","lhSTRaeq","lhSTRae(r)","","lhSTRa(r)","lhSTRa","lhSTRa(l)","","lhSTR(r)","lhSTR","lhSTR(l)","","lhSTRe@f(r)","lhSTRe@f","lhSTRe@f(l)","","lhKRZW(Rr)","lhKRZW","lhKRZW(Ll)","","lhSTR(r)q","lhSTRq","lhSTR(l)q","","lhSTRa@g(l)q","lhSTRa@gq","lhSTRe@fq","lhSTRe@f(l)q","lhSTR2+4(r)","lhSTR2+4","lhSTR2+4(l)","","lhSTR3+1(r)","lhSTR3+1","lhSTR3+1(l)","","lhSTR2(r)","lhSTR2","lhSTR2(l)","","lhSTR3(r)","lhSTR3","lhSTR3(l)","","lhSTR+4(r)","lhSTR+4","lhSTR+4(l)","","lhSTR+1(r)","lhSTR+1","lhSTR+1(l)","","--divider:Mata Angin--","numNNNE","numNNNW","numNENE","numNWNW","numNSSE","numNSSW","numNESE","numNWSW","numN000","numN270","numN090","numN180"]},sudut:{title:"Sudut",icons:["STRc2","STRc3","vSTRc2","vSTRc3","STRc1","STRc4","vSTRc1","vSTRc4","ÜWu2","ÜWu3","tÜWu2","tÜWu3","ÜWu1","ÜWu4","tÜWu1","tÜWu4","tSTRc1","tSTRc4","tSTRc2","tSTRc3","STRc12","STRc34","STRc14","STRc23","STRc13","STRc24","STRc1234","","lMSTRc2o","lMSTRc3o","lhSTRa@fq","lhSTRe@gq","lMSTRc1o","lMSTRc4o","lhSTRa@f(l)q","lhSTRe@g(l)q"]},efek:{title:"Efek",icons:["MFADEf","MFADEg","MFADEfq","MFADEgq","MFADE1+3","MFADE3+1","MFADE2+4","MFADE4+2"]}};let currentPrefix="";const missingIconsCache=new Set;function handleIconError(e,t){if(!e)return;missingIconsCache.add(t);const n=e.closest(".icon-item");n&&n.remove()}function handleDroppedIconError(e,t){if(!e)return;missingIconsCache.add(t);const n=e.closest(".dropped-icon");n&&n.remove()}function assembleBSicon(e,t){return e?e.startsWith("--divider:")?"":/^num(\d+[lr]|N.*)$/i.test(e)?e:t&&""!==t&&"none"!==t&&"std"!==t?Array.isArray(t)?0===t.length?e:t[0]+assembleBSicon(e,t.slice(1)):"string"==typeof t?assembleBSicon(e,t.trim().split(/[\s,+]+/).filter(Boolean)):e:e:""}function assembleIconList(e,t,n=0){return!e||n>=e.length?[]:[assembleBSicon(e[n],t),...assembleIconList(e,t,n+1)]}function setPrefix(e){currentPrefix=e,document.querySelectorAll(".prefix-btn").forEach(t=>{t.dataset.prefix===e?t.classList.add("active"):t.classList.remove("active")});const t=document.getElementById("activePrefixBadge");if(t){const n={"":"Biasa (std)",u:"Tram (u)",t:"Terowongan (t)",ex:"Nonaktif (ex)",h:"Melayang (h)"};t.textContent=n[e]||(e?e.toUpperCase():"Biasa")}renderSidebar()}let currentCols=7,currentRows=10,pendingCols=7,pendingRows=10,hasSeenResizeWarning=!1;function getBSiconUrl(e){const t=`BSicon_${e}.svg`,n=md5(t);return`https://upload.wikimedia.org/wikipedia/commons/${n.substring(0,1)}/${n.substring(0,2)}/${encodeURIComponent(t)}`}function renderSidebar(){const e=document.getElementById("categoryAccordion"),t=e.querySelectorAll(".accordion-collapse"),n=new Set(Array.from(t).filter(e=>e.classList.contains("show")).map(e=>e.id)),o=t.length>0;e.innerHTML="";let l=!0;for(const[t,a]of Object.entries(iconDatabase)){const r=`collapse-${t}`,s=!!o&&n.has(r),c=s?"show":"",i=s?"":"collapsed",d=document.createElement("div");d.className="accordion-item",d.innerHTML=`\n                    <h2 class="accordion-header" id="heading-${t}">\n                        <button class="accordion-button py-2 ${i}" type="button" data-bs-toggle="collapse" data-bs-target="#${r}" aria-expanded="${s}" aria-controls="${r}">\n                            <strong>${a.title}</strong>\n                        </button>\n                    </h2>\n                    <div id="${r}" class="accordion-collapse collapse ${c}" aria-labelledby="heading-${t}">\n                        <div class="accordion-body p-0">\n                            <div class="icon-grid" id="grid-${t}">\n                            </div>\n                        </div>\n                    </div>\n                `,e.appendChild(d);const u=document.getElementById(`grid-${t}`);a.icons.forEach(e=>{if(e.startsWith("--divider:")){const t=e.replace(/^--divider:|--$/g,""),n=document.createElement("div");return n.className="icon-grid-divider",n.textContent=t,void u.appendChild(n)}const t=assembleBSicon(e,currentPrefix);if(missingIconsCache.has(t))return;const n=document.createElement("div");n.className="icon-item",n.draggable=!0,n.dataset.baseIcon=e,n.dataset.iconName=t.toLowerCase();const o=getBSiconUrl(t);n.innerHTML=`<img src="${o}" alt="${e}" loading="lazy" \n                                    onerror="handleIconError(this, '${t}')">`,n.addEventListener("dragstart",t=>{hideIconTooltip();const o=assembleBSicon(e,currentPrefix);t.dataTransfer.setData("text/plain",o),t.dataTransfer.effectAllowed="copy",setTimeout(()=>n.style.opacity="0.5",0)}),n.addEventListener("dragend",()=>{n.style.opacity="1"}),attachTouchDrag(n,e),u.appendChild(n)}),l=!1}const a=document.getElementById("searchInput");a&&a.value.trim().length>0&&searchIcons()}function attachTouchDrag(e,t){let n=null,o=!1,l=0,a=0,r=null,s=null;const c=(e,t)=>{const n=document.elementFromPoint(e,t);return n?n.closest(".canvas-cell"):null},i=()=>{clearTimeout(n),n=null,o=!1,e.style.opacity="1",r&&(r.remove(),r=null),s&&(s.classList.remove("drag-over"),s=null)};e.addEventListener("touchstart",t=>{if(1!==t.touches.length)return;const s=t.touches[0];l=s.clientX,a=s.clientY,n=setTimeout(()=>{if(o=!0,hideIconTooltip(),e.style.opacity="0.5",window.innerWidth<768){const e=document.getElementById("sidebar");e&&e.classList.add("collapsed")}const t=e.querySelector("img");if(r=document.createElement("div"),r.style.cssText="position:fixed;z-index:99999;pointer-events:none;width:56px;height:56px;transform:translate(-50%,-50%);opacity:0.85;background:#fff;border:1px solid #0d6efd;border-radius:6px;",t){const e=t.cloneNode();e.style.cssText="width:100%;height:100%;object-fit:contain;",r.appendChild(e)}r.style.left=l+"px",r.style.top=a+"px",document.body.appendChild(r),navigator.vibrate&&navigator.vibrate(15)},200)},{passive:!0}),e.addEventListener("touchmove",e=>{const t=e.touches[0];if(!o)return void((Math.abs(t.clientX-l)>10||Math.abs(t.clientY-a)>10)&&clearTimeout(n));e.preventDefault(),r.style.left=t.clientX+"px",r.style.top=t.clientY+"px";const i=c(t.clientX,t.clientY);i!==s&&(s&&s.classList.remove("drag-over"),i&&i.classList.add("drag-over"),s=i)},{passive:!1}),e.addEventListener("touchend",e=>{if(o){e.preventDefault();const n=e.changedTouches[0],o=c(n.clientX,n.clientY);o&&(pushHistory(),addIconToCell(o,assembleBSicon(t,currentPrefix)))}i()}),e.addEventListener("touchcancel",i),e.addEventListener("contextmenu",e=>e.preventDefault())}function dismissMobileHint(){const e=document.getElementById("mobileHint");e&&e.remove()}function toggleSidebar(){document.getElementById("sidebar").classList.toggle("collapsed")}function searchIcons(){const e=document.getElementById("searchInput").value.trim().toLowerCase(),t=document.querySelectorAll(".icon-item"),n=document.querySelectorAll(".accordion-collapse"),o=document.querySelectorAll(".icon-grid-divider");e.length>0?(n.forEach(e=>e.classList.add("show")),o.forEach(e=>e.style.display="none")):o.forEach(e=>e.style.display="flex"),t.forEach(t=>{const n=t.dataset.iconName||"",o=(t.dataset.baseIcon||"").toLowerCase();n.includes(e)||o.includes(e)?t.style.display="flex":t.style.display="none"})}function highlightCropArea(e,t){clearResizeHighlights();let n=0;return document.querySelectorAll(".canvas-cell").forEach(o=>{const l=parseInt(o.dataset.row),a=parseInt(o.dataset.col);if(l>=t||a>=e){const e=o.querySelectorAll(".dropped-icon").length;e>0?(o.classList.add("danger-crop-active"),n+=e):o.classList.add("danger-crop-empty")}}),n}function clearResizeHighlights(){document.querySelectorAll(".canvas-cell.danger-crop-active, .canvas-cell.danger-crop-empty").forEach(e=>{e.classList.remove("danger-crop-active","danger-crop-empty")})}function resizeCanvas(){if(pendingCols=parseInt(document.getElementById("gridCols").value)||1,pendingRows=parseInt(document.getElementById("gridRows").value)||1,pendingCols<1&&(pendingCols=1),pendingRows<1&&(pendingRows=1),pendingCols>50&&(pendingCols=50),pendingRows>100&&(pendingRows=100),document.getElementById("gridCols").value=pendingCols,document.getElementById("gridRows").value=pendingRows,pendingCols===currentCols&&pendingRows===currentRows)return void clearResizeHighlights();if(pendingCols>=currentCols&&pendingRows>=currentRows)return clearResizeHighlights(),void applyResize();const e=highlightCropArea(pendingCols,pendingRows),t=Math.max(0,currentCols-pendingCols),n=Math.max(0,currentRows-pendingRows);let o=[];t>0&&o.push(`<strong>${t} kolom paling kanan</strong>`),n>0&&o.push(`<strong>${n} baris paling bawah</strong>`);const l=document.getElementById("resizeModalBody");l&&(l.innerHTML=`\n                    <p class="mb-2">Ukuran kanvas akan diubah dari <strong>${currentCols}×${currentRows}</strong> menjadi <strong>${pendingCols}×${pendingRows}</strong>.</p>\n                    <p class="mb-2 text-secondary" style="font-size: 0.85rem;">Area yang dipotong: ${o.join(" dan ")}.</p>\n                    ${e>0?`<div class="alert alert-danger py-2 px-3 my-2 d-flex align-items-center gap-2">\n                            <i class="fa-solid fa-triangle-exclamation fs-5"></i>\n                            <div><strong>Perhatian:</strong> Ada <strong>${e} ikon</strong> di area merah yang akan ikut terhapus!</div>\n                           </div>`:'<div class="alert alert-info py-2 px-3 my-2 d-flex align-items-center gap-2">\n                            <i class="fa-solid fa-circle-info fs-5"></i>\n                            <div>Area yang disorot merah adalah sel kosong. Tidak ada ikon yang terhapus.</div>\n                           </div>'}\n                    <div class="text-muted small mt-2">\n                     Periksa sel berwarna merah pada kanvas di belakang untuk melihat area yang terdampak.\n                    </div>\n                `),bootstrap.Modal.getOrCreateInstance(document.getElementById("resizeConfirmModal")).show()}function confirmResize(){clearResizeHighlights();const e=bootstrap.Modal.getInstance(document.getElementById("resizeConfirmModal"));e&&e.hide(),applyResize()}function cancelResize(){clearResizeHighlights();const e=bootstrap.Modal.getInstance(document.getElementById("resizeConfirmModal"));e&&e.hide(),document.getElementById("gridCols").value=currentCols,document.getElementById("gridRows").value=currentRows,pendingCols=currentCols,pendingRows=currentRows}const undoStack=[],redoStack=[],MAX_HISTORY=40;function getCanvasState(){const e=[];for(let t=0;t<currentRows;t++)for(let n=0;n<currentCols;n++){const o=document.querySelector(`.canvas-cell[data-row="${t}"][data-col="${n}"]`);if(o){const l=Array.from(o.querySelectorAll(".dropped-icon")).map(e=>e.dataset.iconName);l.length>0&&e.push({r:t,c:n,icons:l})}}return{cols:currentCols,rows:currentRows,icons:e}}function pushHistory(){const e=getCanvasState();undoStack.push(JSON.stringify(e)),undoStack.length>MAX_HISTORY&&undoStack.shift(),redoStack.length=0,updateHistoryButtons()}function updateHistoryButtons(){const e=document.getElementById("undoBtn"),t=document.getElementById("redoBtn");e&&(e.disabled=0===undoStack.length),t&&(t.disabled=0===redoStack.length)}function restoreCanvasState(e){currentCols=e.cols,currentRows=e.rows,pendingCols=currentCols,pendingRows=currentRows;const t=document.getElementById("gridCols"),n=document.getElementById("gridRows");t&&(t.value=currentCols),n&&(n.value=currentRows),renderCanvas(),e.icons.forEach(e=>{const t=document.querySelector(`.canvas-cell[data-row="${e.r}"][data-col="${e.c}"]`);t&&e.icons.forEach(e=>addIconToCell(t,e))}),updateHistoryButtons()}function undo(){if(0===undoStack.length)return;const e=getCanvasState();redoStack.push(JSON.stringify(e));const t=undoStack.pop();restoreCanvasState(JSON.parse(t))}function redo(){if(0===redoStack.length)return;const e=getCanvasState();undoStack.push(JSON.stringify(e));const t=redoStack.pop();restoreCanvasState(JSON.parse(t))}function applyResize(){pushHistory();const e=[];for(let t=0;t<currentRows;t++)for(let n=0;n<currentCols;n++){const o=document.querySelector(`.canvas-cell[data-row="${t}"][data-col="${n}"]`);if(o){const l=Array.from(o.querySelectorAll(".dropped-icon")).map(e=>e.dataset.iconName);l.length>0&&e.push({r:t,c:n,icons:l})}}currentCols=pendingCols,currentRows=pendingRows,renderCanvas(),e.forEach(e=>{if(e.r<currentRows&&e.c<currentCols){const t=document.querySelector(`.canvas-cell[data-row="${e.r}"][data-col="${e.c}"]`);t&&e.icons.forEach(e=>addIconToCell(t,e))}})}const selectedCellCoords=new Set;let clipboardData=null,isMarqueeSelecting=!1,marqueeStart={x:0,y:0},marqueeBoxEl=null;function getCellKey(e,t){return`${e},${t}`}function getCellEl(e,t){return document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${t}"]`)}function getCellIcons(e){return e?Array.from(e.querySelectorAll(".dropped-icon")).map(e=>e.dataset.iconName):[]}function clearSelection(){selectedCellCoords.forEach(e=>{const[t,n]=e.split(",").map(Number),o=getCellEl(t,n);o&&o.classList.remove("is-selected")}),selectedCellCoords.clear()}function selectCell(e,t,n=!1){n||clearSelection();const o=getCellKey(e,t);selectedCellCoords.add(o);const l=getCellEl(e,t);l&&l.classList.add("is-selected")}function deselectCell(e,t){const n=getCellKey(e,t);selectedCellCoords.delete(n);const o=getCellEl(e,t);o&&o.classList.remove("is-selected")}function isCellSelected(e,t){return selectedCellCoords.has(getCellKey(e,t))}function updateCellDraggable(e){const t=e.querySelectorAll(".dropped-icon").length>0;e.draggable=t}function clearCutHighlights(){document.querySelectorAll(".canvas-cell.is-cut").forEach(e=>{e.classList.remove("is-cut")})}function initCanvasSelection(){const e=document.getElementById("route-canvas");if(!e)return;marqueeBoxEl||(marqueeBoxEl=document.createElement("div"),marqueeBoxEl.className="selection-marquee",e.appendChild(marqueeBoxEl)),e.addEventListener("mousedown",t=>{if(0!==t.button)return;const n=t.target.closest(".canvas-cell"),o=e.getBoundingClientRect(),l=t.clientX-o.left,a=t.clientY-o.top;if(n){const e=parseInt(n.dataset.row),o=parseInt(n.dataset.col),l=isCellSelected(e,o),a=n.querySelectorAll(".dropped-icon").length>0;if(t.ctrlKey||t.shiftKey||t.metaKey)return void(l?deselectCell(e,o):selectCell(e,o,!0));if(a)return void(l||selectCell(e,o,!1))}t.ctrlKey||t.shiftKey||t.metaKey||clearSelection(),isMarqueeSelecting=!0,marqueeStart={x:l,y:a},marqueeBoxEl.style.left=`${l}px`,marqueeBoxEl.style.top=`${a}px`,marqueeBoxEl.style.width="0px",marqueeBoxEl.style.height="0px",marqueeBoxEl.style.display="block";const r=t=>{if(!isMarqueeSelecting)return;const n=t.clientX-o.left,l=t.clientY-o.top,a=Math.max(0,Math.min(marqueeStart.x,n)),r=Math.max(0,Math.min(marqueeStart.y,l)),s=Math.min(o.width-a,Math.abs(n-marqueeStart.x)),c=Math.min(o.height-r,Math.abs(l-marqueeStart.y));marqueeBoxEl.style.left=`${a}px`,marqueeBoxEl.style.top=`${r}px`,marqueeBoxEl.style.width=`${s}px`,marqueeBoxEl.style.height=`${c}px`;const i=a+s,d=r+c;e.querySelectorAll(".canvas-cell").forEach(e=>{const n=e.offsetLeft,o=e.offsetTop,l=n+e.offsetWidth,s=o+e.offsetHeight,c=!(l<a||n>i||s<r||o>d),u=parseInt(e.dataset.row),g=parseInt(e.dataset.col);c?selectCell(u,g,!0):t.ctrlKey||t.shiftKey||t.metaKey||deselectCell(u,g)})},s=()=>{isMarqueeSelecting=!1,marqueeBoxEl&&(marqueeBoxEl.style.display="none"),window.removeEventListener("mousemove",r),window.removeEventListener("mouseup",s)};window.addEventListener("mousemove",r),window.addEventListener("mouseup",s)});const t=document.getElementById("canvas-scroll-area");t&&t.addEventListener("mousedown",e=>{e.target===t&&(clearSelection(),clearCutHighlights())})}function copySelection(){if(0===selectedCellCoords.size)return;let e=1/0,t=1/0;const n=[];selectedCellCoords.forEach(n=>{const[o,l]=n.split(",").map(Number);o<e&&(e=o),l<t&&(t=l)}),selectedCellCoords.forEach(o=>{const[l,a]=o.split(",").map(Number),r=getCellIcons(getCellEl(l,a));n.push({dr:l-e,dc:a-t,icons:r})}),clipboardData={mode:"copy",origin:{r:e,c:t},cells:n},clearCutHighlights()}function cutSelection(){0!==selectedCellCoords.size&&(copySelection(),clipboardData&&(clipboardData.mode="cut",clearCutHighlights(),selectedCellCoords.forEach(e=>{const[t,n]=e.split(",").map(Number),o=getCellEl(t,n);o&&o.classList.add("is-cut")})))}function pasteSelection(e=null,t=null){if(clipboardData&&clipboardData.cells&&0!==clipboardData.cells.length){if(null===e||null===t)if(selectedCellCoords.size>0){let n=1/0,o=1/0;selectedCellCoords.forEach(e=>{const[t,l]=e.split(",").map(Number);(t<n||t===n&&l<o)&&(n=t,o=l)}),e=n,t=o}else e=clipboardData.origin.r,t=clipboardData.origin.c;if(pushHistory(),"cut"===clipboardData.mode){const e=clipboardData.origin.r,t=clipboardData.origin.c;clipboardData.cells.forEach(n=>{const o=getCellEl(e+n.dr,t+n.dc);o&&(o.innerHTML="",updateCellDraggable(o))}),clearCutHighlights(),clipboardData.mode="copy"}clearSelection(),clipboardData.cells.forEach(n=>{const o=e+n.dr,l=t+n.dc;if(o>=0&&o<currentRows&&l>=0&&l<currentCols){const e=getCellEl(o,l);e&&(e.innerHTML="",n.icons.forEach(t=>addIconToCell(e,t)),updateCellDraggable(e),selectCell(o,l,!0))}})}}function deleteSelection(){if(0===selectedCellCoords.size)return;let e=!1;selectedCellCoords.forEach(t=>{const[n,o]=t.split(",").map(Number),l=getCellEl(n,o);l&&l.querySelectorAll(".dropped-icon").length>0&&(e=!0)}),e&&(pushHistory(),selectedCellCoords.forEach(e=>{const[t,n]=e.split(",").map(Number),o=getCellEl(t,n);o&&(o.innerHTML="",updateCellDraggable(o))})),clearCutHighlights()}let isTrashZoneActive=!1;function showTrashZone(){const e=document.getElementById("canvasTrashZone");e&&(isTrashZoneActive=!0,e.classList.remove("is-dropping","drag-hover"),e.classList.add("is-visible"))}function hideTrashZone(){const e=document.getElementById("canvasTrashZone");e&&(isTrashZoneActive=!1,e.classList.remove("is-visible","drag-hover"))}function initCanvasTrashZone(){const e=document.getElementById("canvasTrashZone");e&&(e.addEventListener("dragover",t=>{t.preventDefault(),t.dataTransfer.dropEffect="move",e.classList.add("drag-hover")}),e.addEventListener("dragenter",t=>{t.preventDefault(),e.classList.add("drag-hover")}),e.addEventListener("dragleave",t=>{e.contains(t.relatedTarget)||e.classList.remove("drag-hover")}),e.addEventListener("drop",t=>{t.preventDefault(),e.classList.remove("drag-hover");const n=t.dataTransfer.getData("application/json");if(n)try{const t=JSON.parse(n);if("canvas-move"===t.type&&t.cells)return pushHistory(),t.cells.forEach(e=>{const n=getCellEl(t.origin.r+e.dr,t.origin.c+e.dc);n&&(n.innerHTML="",updateCellDraggable(n))}),clearSelection(),clearCutHighlights(),e.classList.add("is-dropping"),void setTimeout(()=>{e.classList.remove("is-dropping"),hideTrashZone()},500)}catch(e){console.error("Error handling trash drop payload:",e)}hideTrashZone()}),e.addEventListener("click",()=>{selectedCellCoords.size>0&&(deleteSelection(),e.classList.add("is-dropping"),setTimeout(()=>{e.classList.remove("is-dropping"),hideTrashZone()},500))}))}function renderCanvas(){const e=document.getElementById("route-canvas");e.innerHTML="",e.style.gridTemplateColumns=`repeat(${currentCols}, var(--cell-size))`,marqueeBoxEl=document.createElement("div"),marqueeBoxEl.className="selection-marquee",e.appendChild(marqueeBoxEl);const t=new Set;selectedCellCoords.forEach(e=>{const[n,o]=e.split(",").map(Number);n<currentRows&&o<currentCols&&t.add(e)}),selectedCellCoords.clear(),t.forEach(e=>selectedCellCoords.add(e));const n=currentCols*currentRows;for(let t=0;t<n;t++){const n=document.createElement("div");n.className="canvas-cell";const o=Math.floor(t/currentCols),l=t%currentCols;n.dataset.row=o,n.dataset.col=l,selectedCellCoords.has(getCellKey(o,l))&&n.classList.add("is-selected"),l===currentCols-1&&(n.style.borderRight="none"),o===currentRows-1&&(n.style.borderBottom="none"),n.addEventListener("dragstart",e=>{if(!(n.querySelectorAll(".dropped-icon").length>0||isCellSelected(o,l)))return void e.preventDefault();isCellSelected(o,l)||selectCell(o,l,!1);const t=[];selectedCellCoords.forEach(e=>{const[n,a]=e.split(",").map(Number),r=getCellIcons(getCellEl(n,a));r.length>0&&t.push({dr:n-o,dc:a-l,icons:r})});const a={type:"canvas-move",origin:{r:o,c:l},cells:t};e.dataTransfer.setData("application/json",JSON.stringify(a)),e.dataTransfer.effectAllowed="move",showTrashZone()}),n.addEventListener("dragend",()=>{hideTrashZone()}),n.addEventListener("dragover",e=>{e.preventDefault(),e.dataTransfer.types.includes("application/json")?e.dataTransfer.dropEffect="move":e.dataTransfer.dropEffect="copy",n.classList.add("drag-over")}),n.addEventListener("dragenter",e=>{e.preventDefault(),n.classList.add("drag-over")}),n.addEventListener("dragleave",()=>{n.classList.remove("drag-over")}),n.addEventListener("drop",e=>{e.preventDefault(),n.classList.remove("drag-over");const t=e.dataTransfer.getData("application/json");if(t)try{const e=JSON.parse(t);if("canvas-move"===e.type){const t=o,n=l;if(t===e.origin.r&&n===e.origin.c)return;return pushHistory(),e.cells.forEach(t=>{const n=getCellEl(e.origin.r+t.dr,e.origin.c+t.dc);n&&(n.innerHTML="",updateCellDraggable(n))}),clearSelection(),void e.cells.forEach(e=>{const o=t+e.dr,l=n+e.dc;if(o>=0&&o<currentRows&&l>=0&&l<currentCols){const t=getCellEl(o,l);t&&(t.innerHTML="",e.icons.forEach(e=>addIconToCell(t,e)),updateCellDraggable(t),selectCell(o,l,!0))}})}}catch(e){console.error("Error parsing canvas drag payload:",e)}const a=e.dataTransfer.getData("text/plain");a&&(pushHistory(),addIconToCell(n,a),updateCellDraggable(n),selectCell(o,l,!1))}),n.addEventListener("dblclick",()=>{n.querySelectorAll(".dropped-icon").length>0&&(pushHistory(),n.innerHTML="",updateCellDraggable(n))}),e.appendChild(n)}}function addIconToCell(e,t){if(missingIconsCache.has(t))return;const n=document.createElement("div");n.className="dropped-icon",n.dataset.iconName=t;const o=getBSiconUrl(t);n.innerHTML=`<img src="${o}" alt="${t}" \n                                   onerror="handleDroppedIconError(this, '${t}')">`,e.appendChild(n),updateCellDraggable(e)}function clearCanvas(){bootstrap.Modal.getOrCreateInstance(document.getElementById("clearConfirmModal")).show()}function executeClearCanvas(){document.querySelectorAll(".canvas-cell .dropped-icon").length>0&&pushHistory(),document.querySelectorAll(".canvas-cell").forEach(e=>{e.innerHTML="",updateCellDraggable(e)}),clearSelection(),clearCutHighlights();const e=bootstrap.Modal.getInstance(document.getElementById("clearConfirmModal"));e&&e.hide()}function exportData(){let e="{{routemap\n|title=Isi Nama Stasiun di sini\n|map=\n",t=-1;for(let e=currentRows-1;e>=0;e--){let n=!1;for(let t=0;t<currentCols;t++){const o=document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${t}"]`);if(o&&o.querySelectorAll(".dropped-icon").length>0){n=!0;break}}if(n){t=e;break}}const n=t>=0?t+1:currentRows,o=[];let l=1/0,a=-1;for(let e=0;e<n;e++){const t=[];for(let n=0;n<currentCols;n++){const o=document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${n}"]`),r=o?o.querySelectorAll(".dropped-icon"):[];0===r.length?t.push(""):(t.push(Array.from(r).map(e=>e.dataset.iconName).join("!~")),n<l&&(l=n),n>a&&(a=n))}o.push(t)}a<0&&(l=0,a=currentCols-1),o.forEach(t=>{e+=t.slice(l,a+1).join("\\")+"\n"}),e+="}}",document.getElementById("exportTextarea").value=e,new bootstrap.Modal(document.getElementById("exportModal")).show()}function copyExport(){document.getElementById("exportTextarea").select(),document.execCommand("copy");const e=document.getElementById("copyBtn"),t=e.innerHTML;e.innerHTML='<i class="fa-solid fa-check"></i> Tersalin!',e.classList.replace("btn-primary","btn-success"),setTimeout(()=>{e.innerHTML=t,e.classList.replace("btn-success","btn-primary")},2e3)}function chooseStartNew(){const e=bootstrap.Modal.getInstance(document.getElementById("welcomePromptModal"));e&&e.hide()}function chooseImportExisting(){const e=bootstrap.Modal.getInstance(document.getElementById("welcomePromptModal"));e&&e.hide(),setTimeout(()=>{openImportModal()},300)}function openImportModal(){const e=document.getElementById("importFeedback");e&&(e.style.display="none",e.innerHTML=""),bootstrap.Modal.getOrCreateInstance(document.getElementById("importModal")).show()}let customIconDebounceTimer=null,activeCustomIcon=null;function openCustomIconModal(){const e=document.getElementById("customIconInput");e&&(e.value=""),clearCustomIconInput(),bootstrap.Modal.getOrCreateInstance(document.getElementById("customIconModal")).show(),setTimeout(()=>{e&&e.focus()},400)}function clearCustomIconInput(){const e=document.getElementById("customIconInput");e&&(e.value=""),activeCustomIcon=null;const t=document.getElementById("customIconStatusArea"),n=document.getElementById("customIconPreviewWrapper"),o=document.getElementById("customIconPreviewBox");t&&(t.classList.remove("d-none"),t.innerHTML='<div class="text-muted small">Ketik nama ikon untuk melihat pratinjau...</div>'),n&&n.classList.add("d-none"),o&&(o.innerHTML="")}function handleCustomIconInput(e){clearTimeout(customIconDebounceTimer);let t=e.trim();t.startsWith("BSicon_")&&(t=t.substring(7)),t.endsWith(".svg")&&(t=t.slice(0,-4));const n=document.getElementById("customIconStatusArea"),o=document.getElementById("customIconPreviewWrapper");document.getElementById("customIconPreviewBox"),document.getElementById("customIconPreviewName"),t?(n&&(n.classList.remove("d-none"),n.innerHTML='\n                    <div class="d-flex align-items-center justify-content-center gap-2 text-primary py-2">\n                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>\n                        <span class="small fw-semibold">Memeriksa endpoint...</span>\n                    </div>\n                '),o&&o.classList.add("d-none"),customIconDebounceTimer=setTimeout(()=>{loadCustomIconPreview(t)},350)):clearCustomIconInput()}function loadCustomIconPreview(e){const t=document.getElementById("customIconStatusArea"),n=document.getElementById("customIconPreviewWrapper"),o=document.getElementById("customIconPreviewBox"),l=document.getElementById("customIconPreviewName"),a=getBSiconUrl(e),r=new Image;r.onload=function(){activeCustomIcon=e,t&&t.classList.add("d-none"),l&&(l.textContent=e),o&&(o.innerHTML=`<img src="${a}" alt="${e}">`,o.setAttribute("draggable","true"),o.ondragstart=t=>{t.dataTransfer.setData("text/plain",e),t.dataTransfer.effectAllowed="copy",setTimeout(()=>{const e=bootstrap.Modal.getInstance(document.getElementById("customIconModal"));e&&e.hide()},50)},attachTouchDrag(o,e)),n&&(n.classList.remove("d-none"),n.classList.add("d-flex"))},r.onerror=function(){activeCustomIcon=null,t&&(t.classList.remove("d-none"),t.innerHTML=`\n                        <div class="alert alert-warning py-2 px-3 small my-1 d-inline-flex align-items-center gap-2">\n                            <i class="fa-solid fa-triangle-exclamation"></i>\n                            <div>Ikon <strong>BSicon_${e}.svg</strong> tidak ditemukan di CDN BSicons.</div>\n                        </div>\n                    `),n&&n.classList.add("d-none"),o&&(o.innerHTML="")},r.src=a}function parseRoutemapWikitext(e){if(!e||!e.trim())return null;let t=e.trim();const n=t.match(/\|\s*map\s*=\s*([\s\S]*)/i);n&&(t=n[1]),t=t.replace(/\}\}\s*$/,"");const o=t.split(/\r?\n/),l=[];for(let e=0;e<o.length;e++){let t=o[e].trim();if(t&&(!t.startsWith("|")||t.includes("\\"))&&!t.startsWith("}}")){for(;t.endsWith("-")&&e+1<o.length;){const n=t.split("\\").pop().split("!~").pop().trim(),l=o[e+1].trim(),a=/^(?:[a-z]*SKRZ|KRZW|TUNNEL)-$/i.test(n),r=/^[A-Za-z0-9(]/.test(l)&&!l.startsWith("{{");if(!a||!r)break;e++,t+=l}l.push(t)}}const a=[];for(let e of l){let t=e;const n=t.match(/!\s*!/);n?t=t.substring(t.indexOf(n[0])+n[0].length).trim():(t.startsWith("!")||t.startsWith("|"))&&(t=t.substring(1).trim()),t.includes("~~")&&(t=t.split("~~")[0]);const o=t.split("\\"),l=[];for(let e of o){const t=e.trim();if(t){const e=t.split("!~").map(e=>e.trim()).filter(e=>e.length>0);l.push(e)}else l.push([])}l.length>0&&a.push(l)}if(0===a.length)return null;let r=0;return a.forEach(e=>{e.length>r&&(r=e.length)}),a.forEach(e=>{const t=r-e.length;if(t<=0)return;const n=Math.floor(t/2),o=t-n;for(let t=0;t<n;t++)e.unshift([]);for(let t=0;t<o;t++)e.push([])}),{grid:a,rows:a.length,cols:r}}function executeImport(){const e=document.getElementById("importTextarea"),t=document.getElementById("importFeedback"),n=parseRoutemapWikitext(e?e.value:"");if(!n||0===n.rows||0===n.cols)return void(t&&(t.style.display="block",t.className="alert alert-danger py-2 px-3 small mt-2",t.innerHTML='<i class="fa-solid fa-triangle-exclamation me-1"></i> Tidak ditemukan pola sintaks BSicon atau routemap yang valid. Pastikan format menggunakan pemisah backslash (\\).'));pushHistory(),currentCols=Math.max(1,n.cols),currentRows=Math.max(1,n.rows),pendingCols=currentCols,pendingRows=currentRows;const o=document.getElementById("gridCols"),l=document.getElementById("gridRows");o&&(o.value=currentCols),l&&(l.value=currentRows),renderCanvas();for(let e=0;e<n.rows;e++)for(let t=0;t<n.cols;t++){const o=n.grid[e][t];if(o&&o.length>0){const n=document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${t}"]`);n&&o.forEach(e=>{addIconToCell(n,e)})}}const a=bootstrap.Modal.getInstance(document.getElementById("importModal"));a&&a.hide(),e&&(e.value=""),t&&(t.style.display="none")}async function saveAsPNG(){const e=document.getElementById("route-canvas");if(!e)return;const t=document.getElementById("savePngBtn"),n=t?t.innerHTML:"";t&&(t.disabled=!0,t.innerHTML='<i class="fa-solid fa-spinner fa-spin"></i><span>Proses...</span>');const o=selectedCellCoords.size>0,l=new Set(selectedCellCoords);try{if("function"!=typeof html2canvas)throw new Error("Library html2canvas belum siap.");clearSelection(),clearCutHighlights(),e.classList.add("no-grid");const t=await html2canvas(e,{scale:2,useCORS:!0,allowTaint:!0,backgroundColor:"#ffffff",logging:!1,imageTimeout:15e3}),n=document.createElement("a"),o=new Date,l=e=>String(e).padStart(2,"0"),a=`${o.getFullYear()}${l(o.getMonth()+1)}${l(o.getDate())}_${l(o.getHours())}${l(o.getMinutes())}`;n.download=`spoorwiki_route_${a}.png`,n.href=t.toDataURL("image/png"),document.body.appendChild(n),n.click(),document.body.removeChild(n)}catch(e){console.error("Gagal mengekspor PNG:",e),alert("Gagal menyimpan gambar PNG: "+(e.message||"Terjadi kesalahan saat merender kanvas."))}finally{e.classList.remove("no-grid"),o&&l.forEach(e=>{const[t,n]=e.split(",").map(Number);selectCell(t,n,!0)}),t&&(t.disabled=!1,t.innerHTML=n)}}let iconTooltipTimeout=null;function showIconTooltip(e){const t=e.dataset.baseIcon;if(!t)return;const n=document.getElementById("iconHoverTooltip");if(!n)return;iconTooltipTimeout&&(clearTimeout(iconTooltipTimeout),iconTooltipTimeout=null),n.textContent=t;const o=e.getBoundingClientRect(),l=o.left+o.width/2;let a=o.top;a<50?(a=o.bottom+10,n.style.transform="translate(-50%, 0)"):n.style.transform="",n.style.left=`${l}px`,n.style.top=`${a}px`,n.classList.add("active")}function hideIconTooltip(){iconTooltipTimeout&&(clearTimeout(iconTooltipTimeout),iconTooltipTimeout=null);const e=document.getElementById("iconHoverTooltip");e&&e.classList.remove("active")}function initIconTooltipListeners(){const e=document.querySelector(".accordion-wrapper");e&&(e.addEventListener("mouseover",e=>{const t=e.target.closest(".icon-item");t&&showIconTooltip(t)}),e.addEventListener("mouseout",e=>{const t=e.target.closest(".icon-item");t&&!t.contains(e.relatedTarget)&&hideIconTooltip()}),e.addEventListener("click",e=>{const t=e.target.closest(".icon-item");t&&(showIconTooltip(t),iconTooltipTimeout=setTimeout(()=>{hideIconTooltip()},2500))}),document.addEventListener("click",e=>{e.target.closest(".icon-item")||hideIconTooltip()}),e.addEventListener("scroll",()=>{hideIconTooltip()}))}function initDimensionInputs(){["gridCols","gridRows"].forEach(e=>{const t=document.getElementById(e);t&&(t.addEventListener("keydown",e=>{["-","+","e","E"].includes(e.key)&&e.preventDefault()}),t.addEventListener("input",()=>{t.value=t.value.replace(/[^0-9]/g,"")}),t.addEventListener("blur",()=>{const e=parseInt(t.value);(isNaN(e)||e<1)&&(t.value=1,resizeCanvas())}))})}function initDynamicTips(){const e=document.getElementById("dynamicTipText");if(!e)return;const t=["Klik dua kali pada sel untuk menghapus atau geser ikon ke tempat sampah.","Seret beberapa ikon ke sel yang sama untuk menumpuk overlay (!~).","<strong>Ctrl + Z</strong> untuk Undo dan <strong>Ctrl + Y</strong> untuk Redo.","<strong>Ctrl + C</strong> untuk menyalin item dan <strong>Ctrl + V</strong> untuk menempelkan item.","Klik & seret mouse pada kanvas untuk memilih dan memindahkan banyak item sekaligus.","Gunakan Dekstop untuk pengalaman yang lebih baik."];let n=0;setInterval(()=>{e.classList.add("fade-out"),setTimeout(()=>{n=(n+1)%t.length,e.innerHTML=t[n],e.classList.remove("fade-out")},400)},3e4)}window.onload=function(){renderSidebar(),renderCanvas(),initCanvasSelection(),initCanvasTrashZone(),initIconTooltipListeners(),initDimensionInputs(),initDynamicTips();const e=document.getElementById("resizeConfirmModal");e&&e.addEventListener("hidden.bs.modal",()=>{clearResizeHighlights()}),window.innerWidth<768&&(document.getElementById("sidebar").classList.add("collapsed"),setTimeout(()=>{const e=document.getElementById("welcomePromptModal");e&&bootstrap.Modal.getOrCreateInstance(e).show()},400))},window.addEventListener("keydown",e=>{const t=(e.target.tagName||"").toLowerCase();if("input"!==t&&"textarea"!==t)if((navigator.platform.toUpperCase().indexOf("MAC")>=0?e.metaKey:e.ctrlKey)&&!e.altKey){const t=e.key.toLowerCase();"z"===t?(e.preventDefault(),e.shiftKey?redo():undo()):"y"===t?(e.preventDefault(),redo()):"c"===t?(e.preventDefault(),copySelection()):"x"===t?(e.preventDefault(),cutSelection()):"v"===t?(e.preventDefault(),pasteSelection()):"a"===t&&(e.preventDefault(),clearSelection(),document.querySelectorAll(".canvas-cell").forEach(e=>{e.querySelectorAll(".dropped-icon").length>0&&selectCell(parseInt(e.dataset.row),parseInt(e.dataset.col),!0)}))}else"Delete"===e.key||"Backspace"===e.key?(e.preventDefault(),deleteSelection()):"Escape"===e.key&&(clearSelection(),clearCutHighlights())}),window.addEventListener("resize",()=>{const e=document.getElementById("sidebar");window.innerWidth>=768?e.classList.remove("collapsed"):e.classList.add("collapsed")});</script>
+    <script>console.log("%c\n██████╗ ██████╗  █████╗ ██╗   ██╗███████╗\n██╔══██╗██╔══██╗██╔══██╗██║   ██║██╔════╝\n██████╔╝██████╔╝███████║██║   ██║█████╗  \n██╔══██╗██╔══██╗██╔══██║╚██╗ ██╔╝██╔══╝  \n██████╔╝██║  ██║██║  ██║ ╚████╔╝ ███████╗\n╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝  ╚═══╝  ╚══════╝\n\n██████╗ ██╗ ██████╗ ██╗   ██╗███████╗\n██╔══██╗██║██╔═══██╗██║   ██║██╔════╝\n██████╔╝██║██║   ██║██║   ██║███████╗\n██╔══██╗██║██║   ██║██║   ██║╚════██║\n██║  ██║██║╚██████╔╝╚██████╔╝███████║\n╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝\n","color: #0d6efd; font-family: monospace; font-weight: bold;"),console.log("%c🚀 SPOORWIKI Tools Build v5.0 | Made by Braverious","color: #198754; font-weight: bold; font-size: 13px;");const iconDatabase={"sepur-lurus":{title:"Sepur Lurus",icons:["STR","STRq","STR2+4","STR3+1","STRg","STRf","CONTge","CONTfa","CONTg@G","CONTf@F","CONTg","CONTf","CONT1+f","CONT4+f","CONT2+g","CONT3+g","ENDE@G","ENDE@F","ENDEa","ENDEe","CONTg@Gq","CONTgq","CONTfq","CONTf@Fq","ENDE@Gq","ENDEaq","ENDEeq","ENDE@Fq","ENDE2@F","ENDE3@F","ENDE2","ENDE3","ENDE1@G","ENDE4@G","ENDE1","ENDE4","ENDE2@G","ENDE3@G","ENDE2+4xe","ENDE3+1xe","ENDE1@F","ENDE4@F","ENDE3+1xa","ENDE2+4xa","CONT2+4","CONT3+1","CONT4","CONT1","CONT1+3","CONT4+2","CONT3","CONT2","tSTR2+4a@f","tSTR3+1a@f","tSTR2+4a","tSTR3+1a","tSTR3+1e@g","tSTR2+4e@g","tSTR3+1e","tSTR2+4e","STRb","STRbl","STRbr","STRbm","SKRZ-GD","SKRZ-G1","SKRZ-G2","SKRZ-G4","SKRZ-GDq","SKRZ-G1q","SKRZ-G2q","SKRZ-G4q","SKRZ-GDBUE","SKRZ-G1BUE","SKRZ-G2BUE","SKRZ-G4BUE","BUE","eBUEq","BUE3+1","BUE2+4","SKRZ-G2o","SKRZ-G4o","SKRZ-G2u","SKRZ-G4u","SKRZ-G2oq","SKRZ-G4oq","SKRZ-G2uq","SKRZ-G4uq","STRuq","-STRu","STRu-","tSTRea","hSTRae","STRo","BRÜCKE2","eLFT","hSTRaeq","STRoq","BRÜCKE2q","LFTq","hSTR2+4ae","hSTR3+1ae","TUNNEL2+4","TUNNEL3+1","SBRÜCKEa","SBRÜCKEe","SBRÜCKE","SBRÜCKEm","SKRZ-G2h","SKRZ-G4h","SKRZ-G2o","SKRZ-G4o","htSTRaa","htSTRee","TUNNEL1","TUNNEL1-m","hSTRae(l)","hSTRae(r)","STRo(l)","STRo(r)","hSTRe@f","hSTRa@g","hSTR(r)","hSTR(l)","hSTR","hBHF","hHST","hKRZW","WVIADUKT1-R","WVIADUKT1-L","WBRÜCKE2","hKRZWae","WKRZ2+4u","WKRZ3+1u","WKRZq2+4u","WKRZq3+1u","WKRZ2+4o","KRZ3+1Wo","WKRZq2+4o","","PRSl","PRSr","NATl","NATr","ACC","INT","ACCq","INTq","DAMPF","TRAJEKT","lDAMPF","TRAJEKTq","DST","DST3+1","DST2+4","DSTq","BHF","BHF3+1","BHF2+4","BHFq","KDST2","KDST3","KBHF2","KBHF3","KDST1","KDST4","KBHF1","KBHF4","KDSTe","KDSTa","KDSTaq","KDSTeq","KBHFa","KBHFe","KBHFaq","KBHFeq"]},"sepur-belok":{title:"Sepur Belok",icons:["STR2","STR3","STR2+r","STR3+l","STR+1","STR+4","STRr+1","STRl+4","CONTf+4","CONTf+1","CONT2+r","CONT3+l","CONTg+3","CONTg+2","CONT1+r","CONT4+l","tSTR2a","tSTR3a","tSTR2e","tSTR3e","tSTR+1e","tSTR+4e","tSTR+1a","tSTR+4a","tSTR2a@f","tSTR3a@f","tSTR2e@f","tSTR3e@f","tSTR+1e@g","tSTR+4e@g","tSTR+1a@g","tSTR+4a@g","tSTR2+re","tSTR3+le","tSTR2+ra","tSTR3+la","tSTRr+1a","tSTRl+4a","tSTRr+1e","tSTRl+4e","SHI1+r","SHI1+l","SHI1r","SHI1l","STR2~RG","STR3~LG","STR2+4h","STR3+1h","STR+1~RF","STR+4~LF","STR3h+1","STR2h+4","v-STR+rg","vSTR+lg-","hv-STR+rg","hvSTR+lg-","v-STRrf","vSTRlf-","hv-STRrf","hvSTRlf-","vvSTRl~r~r~L","vvSTRr~l~l~R","vvSTRl~r~r~G","vvSTRr~l~l~G","vvSTR+l~r~r~L","vvSTR+r~l~l~R","vvSTR+l~r~r~F","vvSTR+r~l~l~F","STR2+1","STR3+4","STR1+4","STR2+3","lCONTf@G","lCONTg@G","lvCONTf@F","lvCONTg@G","vSTR+l","vSTR+r","hvSTR+l","hvSTR+r","vSTRl","vSTRr","hvSTRl","hvSTRr"]},wesel:{title:"Wesel",icons:["STRc2","STRc3","ABZg2","ABZg3","STRc1","STRc4","ABZg+1","ABZg+4","eABZg2","eABZg3","xABZg2","xABZg3","eABZg+1","eABZg+4","xABZg+1","xABZg+4","ABZ4+2f","ABZ1+3f","ABZ2+4r","ABZ3+1l","ABZ3+1g","ABZ2+4g","ABZ1+3r","ABZ4+2l","eABZ4+2f","eABZ1+3f","eABZ2+4r","eABZ3+1l","eABZ3+1g","eABZ2+4g","eABZ1+3r","eABZ4+2l","ABZ4+2xf","ABZ1+3xf","ABZ2+4xr","ABZ3+1xl","ABZ3+1xg","ABZ2+4xg","ABZ1+3xr","ABZ4+2xl","ABZ4+fx2","ABZ1+fx3","ABZ2+rx4","ABZ3+lx1","ABZ3+gx1","ABZ2+gx4","ABZ1+rx3","ABZ4+lx2","ABZq2","ABZq+3","ABZ2+gr","ABZ3+gl","ABZq1","ABZq+4","ABZ1+fr","ABZ4+fl","xABZq2","xABZq+3","eABZq2","eABZq+3","xABZq1","xABZq+4","eABZq1","eABZq+4","ABZ2+gxr","ABZ3+gxl","ABZ2+rxg","ABZ3+lxg","ABZ1+fxr","ABZ4+fxl","ABZ1+rxf","ABZ4+lxf","ABZ2l","ABZ3r","ABZr+2f","ABZl+3f","ABZ+1l","ABZ+4r","ABZr+1g","ABZl+4g","ABZ23","ABZ+14","ABZr+12","ABZl+34","ABZ2x3","ABZ3x2","ABZ+1x4","ABZ+4x1","ABZr+1x2","ABZl+4x3","ABZl+3x4","ABZr+2x1","ABZ1+fr","ABZ2+gr","ABZ3+gl","ABZ4+fl","WYE23","WYE+14","WYEr+12","WYEl+34","ABZg23","ABZg+14","ABZq12","ABZq+34","WYE1+rf","WYE2+rg","WYE3+lg","WYE4+lf","SHI4gr+rq","ABZg3+1","ABZq1+3","ABZq2+4","ABZ2+4gf","ABZ2+4lr","ABZ3+1gf","ABZ3+1lr","SPLa","SPLa.F","vSHI2gl-","v-SHI2gr","SPLe","SPLe.G","vSHI2g+l-","v-SHI2g+r","xSPLa","eSPLa","xSPLa.F","eSPLa.F","xSPLe","eSPLe","xSPLe.G","eSPLe.G","evSHI2gl-","ev-SHI2gr","xv-SHI2gr","xvSHI2gl-","evSHI2g+l-","ev-SHI2g+r","xv-SHI2g+r","xvSHI2g+l-","SPLaq","SPLeq","SPLa.Fq","","eSPLaq","eSPLeq","xSPLaq","xSPLeq","SHI2grq-","SHI2g+rq-","-SHI2glq","-SHI2g+lq","eSHI2grq-","eSHI2g+rq-","-eSHI2glq","-eSHI2g+lq","xSHI2grq-","xSHI2g+rq-","-xSHI2glq","-xSHI2g+lq","vSTR-ABZg+1","vSTR-ABZg2","vABZg+4-STR","vABZg3-STR","vSTR-eABZg+1","","","veABZg3-STR","vABZq+l","vABZq+r","vABZg+l","vABZg+r","vABZgl","vABZgr","vABZql","vABZqr","vABZg2-","v-ABZg3","v-ABZg2","vABZg3-","vABZg+1-","v-ABZg+4","v-ABZg+1","vABZg+4-","evABZg2-","ev-ABZg3","ev-ABZg2","evABZg3-","evABZg+1-","ev-ABZg+4","ev-ABZg+1","evABZg+4-","xvABZg2-","xv-ABZg3","xv-ABZg2","xvABZg3-","xvABZg+1-","xv-ABZg+4","xv-ABZg+1","xvABZg+4-","SPLg+2","SPLg+3","SPLr+2","SPLl+3","SPL+1","SPL+4","SPLr+1","SPLl+4","eSPLg+2","eSPLg+3","eSPLr+2","eSPLl+3","eSPL+1","eSPL+4","eSPLr+1","eSPLl+4","xSPLg+2","xSPLg+3","xSPLr+2","xSPLl+3","xSPL+1","xSPL+4","xSPLr+1","xSPLl+4","SHI1l;gl","SHI1l;gr","SHI1r;gl","SHI1r;gr","SHI1+l;g+l","SHI1+l;g+r","SHI1+r;g+l","SHI1+r;g+r","PSLle","PSLla","PSLra","PSLra","YRD","YRDa","YRDm","YRDe","YRDENDEa","YRDENDEe","YRDCONTg","YRDCONTf","KRWgl+l","KRWgr+r","SHI4gl+lq","SHI4gr+rq","--divider:Persilangan--","KRZ","KRX","KRZ2+4","KRZ3+1","ABZgl","ABZgr","ABZg+l","ABZg+r","KRZo","KRZu","KRXo","KRXu","KRZh","KRZqh","KRZ2+4h","KRZ3+1h","KRXh"]},stasiun:{title:"Bangunan & Stasiun",icons:["BHF","HST","KBHFa","KBHFe","PLT","dPLT","PLTmm","cPLT","BUILDING","PUMPHOUSE","WTURM","lHUT","PLTlr","PLTae","PSTR","PSTRq","PSTR(L)","PSTR(R)","PSTR(L)q","PSTR(R)q","PLTr","PLTl","PLTa","PLTe","PLT~R","PLT~L","PLTm~Lq","PLTm~Rq","PENDEa","PENDEe","PENDE@G","PENDE@F","vPLT-STR","vSTR-PLT","vPLT-ENDE@G","vPLT-ENDE@F","ELC-PT","ELC-KS","ELC","lELC","--divider:Nomor Peron--","num0l","num0r","num1l","num1r","num2l","num2r","num3l","num3r","num4l","num4r","num5l","num5r","num6l","num6r","num7l","num7r","num8l","num8r","num9l","num9r"]},paralel:{title:"Sepur Paralel",icons:["vSTR","vSTRfg","vSTR-","v-STR","vSTRq","vSTRgfq","vSTR2+4","vSTR3+1","vSTR2+4~r","vSTR2+4~l","vSTR3+1~r","vSTR3+1~l","vSTR2","vSTR3","vSTRc2","vSTRc3","vSTR+1","vSTR+4","vSTRc1","vSTRc4","vSTR2-","v-STR3","v-STR2","vSTR3-","vSTR+1-","v-STR+4","v-STR+1","vSTR+4-","STR2+r-","STR3+l-","-STR2+r","-STR3+l","-STRr+1","-STRl+4","STRr+1-","STRl+4-","vBUE","vSKRZ-G2h","vBUE-","v-BUE","vSTRo","vSKRZ-G4h","vSBRÜCKE","hvSTR","hvSTRa@g~R","hvSTRa~R","hvSTRa@g~L","hvSTRa~L","hvSTRe~R","hvSTRe@f~R","hvSTRe~L","hvSTRe@f~L","hvSTR~L","hvSTR~R","vSTRu-","v-STRu","vENDEa","vENDEe","vENDExa","vENDExe","v-ENDEa","vENDEa-","vENDEe-","v-ENDEe","vENDEa-SHI1+r","vENDEe-SHI1r","vSHI1+l-ENDEa","vSHI1l-ENDEe","vENDEa-STR","vENDEe-STR","vSTR-ENDEa","vSTR-ENDEe","vENDE1","","vENDE3","","vCONTg@G","vCONTg","vCONTf","vCONTf@F","vCONTgq","vCONTg@Gq","vCONTf@Fq","vCONTfq","vCONT1","vCONT4","vCONT3","vCONT2","vCONTg-","v-CONTg","vCONTf-","v-CONTf","vCONTgfa","vCONTgfe","vCONTfa","vCONTga","vBHF","vKRZ","vSTR-BHF","vBHF-STR","vBHF(R)f-STR","vBHF(R)g-STR","vSTR-BHF(L)g","vSTR-BHF(L)f","hvSTRa","hvSTR","hvSTRe","hvSTRq","hvSTRa@g~L","hvSTR~L","hvSTRa~R","hvSTRa@g~R","hvSTRe@f~L","hvSTRe~L","hvSTR~R","hvSTRe@f~R"]},fasilitas:{title:"Lainnya",icons:["lENDE","BOOT","FLUG","PET","lBUEq","lvBUE","lvBUE-","lv-BUE","WASSER","WASSERq","vWASSER","vWASSERq","RD1","RP1","RP2","RP4","RD1q","RP1q","RP2q","RP4q","RD12+4","RD13+1","RP12+4","RP13+1","RP22+4","RP23+1","RP42+4","RP43+1","RP4c2","RP4c3","RP2c2","RP2c3","RP4c1","RP4c4","RP2c1","RP2c4","RP22+n","RP23+n","RP42+n","RP43+n","RP2s+1","RP2s+4","RP4s+1","RP4s+4","RP22+w","RP23+e","RP42+w","RP43+e","RP2w+1","RP2e+4","RP4w+1","RP4e+4","hRP2","hRP2q","hRP4","hRP4q","hRP2a","hRP2e","hRP2aq","hRP2eq","hRP4a","hRP4e","hRP4aq","hRP4eq","lDRH","lZOLL","PARKING","lNAT","GRZ","GRZq","GRZTl","GRZTr","GRZ+4","GRZ+1","GRZ3","GRZ2","GRZ2+4","GRZ3+1","GRZx","GRZ+q","SEP","SEP~L","SEP~R","SEPq","TRAIN2","BAHN","lDAMPF","SUBWAY-CHN","DELf","DELg","DELgq","DELfq","SIGNALf_red","SIGNALf_yellow","SIGNALf_green","SIGNALf_white","lENDE@G","lENDE@F","lENDE@Gq","lENDE@Fq","lENDE1","lENDE4","lENDE2","lENDE3","FOREST","BEACH","MOUNTAIN","FACTORY","XPLTq","--divider:Jembatan--","lMKRZo","lMKRZu","lMKRXo","lMKRXu","lKRZo+R","lKRZo+L","lKRZu+G","lKRZu+F","lMKRZ2+4u","lMKRZ3+1u","lMKRZq2+4u","lMKRZq3+1u","lhSTRae","lhSTRaeq","lhSTRae(r)","","lhSTRa(r)","lhSTRa","lhSTRa(l)","","lhSTR(r)","lhSTR","lhSTR(l)","","lhSTRe@f(r)","lhSTRe@f","lhSTRe@f(l)","","lhKRZW(Rr)","lhKRZW","lhKRZW(Ll)","","lhSTR(r)q","lhSTRq","lhSTR(l)q","","lhSTRa@g(l)q","lhSTRa@gq","lhSTRe@fq","lhSTRe@f(l)q","lhSTR2+4(r)","lhSTR2+4","lhSTR2+4(l)","","lhSTR3+1(r)","lhSTR3+1","lhSTR3+1(l)","","lhSTR2(r)","lhSTR2","lhSTR2(l)","","lhSTR3(r)","lhSTR3","lhSTR3(l)","","lhSTR+4(r)","lhSTR+4","lhSTR+4(l)","","lhSTR+1(r)","lhSTR+1","lhSTR+1(l)","","--divider:Mata Angin--","numNNNE","numNNNW","numNENE","numNWNW","numNSSE","numNSSW","numNESE","numNWSW","numN000","numN270","numN090","numN180"]},sudut:{title:"Sudut",icons:["STRc2","STRc3","vSTRc2","vSTRc3","STRc1","STRc4","vSTRc1","vSTRc4","STR+c2","STR+c3","STR+c13","STR+c24","STR+c1","STR+c4","STR+c123","STR+c234","STR2+4+c13","STR2+4+c1","STR2+4+c3","","STR3+1+c24","STR3+1+c2","STR3+1+c4","","STR2+c3","STR3+c1","STR+1+c4","STR+4+c1","ÜWu2","ÜWu3","tÜWu2","tÜWu3","ÜWu1","ÜWu4","tÜWu1","tÜWu4","tSTRc1","tSTRc4","tSTRc2","tSTRc3","STRc12","STRc34","STRc14","STRc23","STRc13","STRc24","STRc1234","","lMSTRc2o","lMSTRc3o","lhSTRa@f(l)","lhSTRa@f(r)","lMSTRc1o","lMSTRc4o","lhSTRe@g(l)","lhSTRe@g(r)"]},efek:{title:"Efek",icons:["MFADEf","MFADEg","MFADEfq","MFADEgq","MFADE1+3","MFADE3+1","MFADE2+4","MFADE4+2"]}};let currentPrefix="";const missingIconsCache=new Set;function handleIconError(e,t){if(!e)return;missingIconsCache.add(t);const n=e.closest(".icon-item");n&&n.remove()}function handleDroppedIconError(e,t){if(!e)return;missingIconsCache.add(t);const n=e.closest(".dropped-icon");n&&n.remove()}function assembleBSicon(e,t){return e?e.startsWith("--divider:")?"":/^num(\d+[lr]|N.*)$/i.test(e)?e:t&&""!==t&&"none"!==t&&"std"!==t?Array.isArray(t)?0===t.length?e:t[0]+assembleBSicon(e,t.slice(1)):"string"==typeof t?assembleBSicon(e,t.trim().split(/[\s,+]+/).filter(Boolean)):e:e:""}function assembleIconList(e,t,n=0){return!e||n>=e.length?[]:[assembleBSicon(e[n],t),...assembleIconList(e,t,n+1)]}function setPrefix(e){currentPrefix=e,document.querySelectorAll(".prefix-btn").forEach(t=>{t.dataset.prefix===e?t.classList.add("active"):t.classList.remove("active")});const t=document.getElementById("activePrefixBadge");if(t){const n={"":"Biasa (std)",u:"Tram (u)",t:"Terowongan (t)",ex:"Nonaktif (ex)",h:"Melayang (h)"};t.textContent=n[e]||(e?e.toUpperCase():"Biasa")}renderSidebar()}let currentCols=7,currentRows=10,pendingCols=7,pendingRows=10,hasSeenResizeWarning=!1;function getBSiconUrl(e){const t=`BSicon_${e}.svg`,n=md5(t);return`https://upload.wikimedia.org/wikipedia/commons/${n.substring(0,1)}/${n.substring(0,2)}/${encodeURIComponent(t)}`}function renderSidebar(){const e=document.getElementById("categoryAccordion"),t=e.querySelectorAll(".accordion-collapse"),n=new Set(Array.from(t).filter(e=>e.classList.contains("show")).map(e=>e.id)),o=t.length>0;e.innerHTML="";let r=!0;for(const[t,a]of Object.entries(iconDatabase)){const l=`collapse-${t}`,s=!!o&&n.has(l),c=s?"show":"",i=s?"":"collapsed",d=document.createElement("div");d.className="accordion-item",d.innerHTML=`\n                    <h2 class="accordion-header" id="heading-${t}">\n                        <button class="accordion-button py-2 ${i}" type="button" data-bs-toggle="collapse" data-bs-target="#${l}" aria-expanded="${s}" aria-controls="${l}">\n                            <strong>${a.title}</strong>\n                        </button>\n                    </h2>\n                    <div id="${l}" class="accordion-collapse collapse ${c}" aria-labelledby="heading-${t}">\n                        <div class="accordion-body p-0">\n                            <div class="icon-grid" id="grid-${t}">\n                            </div>\n                        </div>\n                    </div>\n                `,e.appendChild(d);const u=document.getElementById(`grid-${t}`);a.icons.forEach(e=>{if(e.startsWith("--divider:")){const t=e.replace(/^--divider:|--$/g,""),n=document.createElement("div");return n.className="icon-grid-divider",n.textContent=t,void u.appendChild(n)}const t=assembleBSicon(e,currentPrefix);if(missingIconsCache.has(t))return;const n=document.createElement("div");n.className="icon-item",n.draggable=!0,n.dataset.baseIcon=e,n.dataset.iconName=t.toLowerCase();const o=getBSiconUrl(t);n.innerHTML=`<img src="${o}" alt="${e}" loading="lazy" \n                                    onerror="handleIconError(this, '${t}')">`,n.addEventListener("dragstart",t=>{hideIconTooltip();const o=assembleBSicon(e,currentPrefix);t.dataTransfer.setData("text/plain",o),t.dataTransfer.effectAllowed="copy",setTimeout(()=>n.style.opacity="0.5",0)}),n.addEventListener("dragend",()=>{n.style.opacity="1"}),attachTouchDrag(n,e),u.appendChild(n)}),r=!1}const a=document.getElementById("searchInput");a&&a.value.trim().length>0&&searchIcons()}function attachTouchDrag(e,t){let n=null,o=!1,r=0,a=0,l=null,s=null;const c=(e,t)=>{const n=document.elementFromPoint(e,t);return n?n.closest(".canvas-cell"):null},i=()=>{clearTimeout(n),n=null,o=!1,e.style.opacity="1",l&&(l.remove(),l=null),s&&(s.classList.remove("drag-over"),s=null)};e.addEventListener("touchstart",t=>{if(1!==t.touches.length)return;const s=t.touches[0];r=s.clientX,a=s.clientY,n=setTimeout(()=>{if(o=!0,hideIconTooltip(),e.style.opacity="0.5",window.innerWidth<768){const e=document.getElementById("sidebar");e&&e.classList.add("collapsed")}const t=e.querySelector("img");if(l=document.createElement("div"),l.style.cssText="position:fixed;z-index:99999;pointer-events:none;width:56px;height:56px;transform:translate(-50%,-50%);opacity:0.85;background:#fff;border:1px solid #0d6efd;border-radius:6px;",t){const e=t.cloneNode();e.style.cssText="width:100%;height:100%;object-fit:contain;",l.appendChild(e)}l.style.left=r+"px",l.style.top=a+"px",document.body.appendChild(l),navigator.vibrate&&navigator.vibrate(15)},200)},{passive:!0}),e.addEventListener("touchmove",e=>{const t=e.touches[0];if(!o)return void((Math.abs(t.clientX-r)>10||Math.abs(t.clientY-a)>10)&&clearTimeout(n));e.preventDefault(),l.style.left=t.clientX+"px",l.style.top=t.clientY+"px";const i=c(t.clientX,t.clientY);i!==s&&(s&&s.classList.remove("drag-over"),i&&i.classList.add("drag-over"),s=i)},{passive:!1}),e.addEventListener("touchend",e=>{if(o){e.preventDefault();const n=e.changedTouches[0],o=c(n.clientX,n.clientY);o&&(pushHistory(),addIconToCell(o,assembleBSicon(t,currentPrefix)))}i()}),e.addEventListener("touchcancel",i),e.addEventListener("contextmenu",e=>e.preventDefault())}function dismissMobileHint(){const e=document.getElementById("mobileHint");e&&e.remove()}function toggleSidebar(){document.getElementById("sidebar").classList.toggle("collapsed")}function searchIcons(){const e=document.getElementById("searchInput").value.trim().toLowerCase(),t=document.querySelectorAll(".icon-item"),n=document.querySelectorAll(".accordion-collapse"),o=document.querySelectorAll(".icon-grid-divider");e.length>0?(n.forEach(e=>e.classList.add("show")),o.forEach(e=>e.style.display="none")):o.forEach(e=>e.style.display="flex"),t.forEach(t=>{const n=t.dataset.iconName||"",o=(t.dataset.baseIcon||"").toLowerCase();n.includes(e)||o.includes(e)?t.style.display="flex":t.style.display="none"})}function highlightCropArea(e,t){clearResizeHighlights();let n=0;return document.querySelectorAll(".canvas-cell").forEach(o=>{const r=parseInt(o.dataset.row),a=parseInt(o.dataset.col);if(r>=t||a>=e){const e=o.querySelectorAll(".dropped-icon").length;e>0?(o.classList.add("danger-crop-active"),n+=e):o.classList.add("danger-crop-empty")}}),n}function clearResizeHighlights(){document.querySelectorAll(".canvas-cell.danger-crop-active, .canvas-cell.danger-crop-empty").forEach(e=>{e.classList.remove("danger-crop-active","danger-crop-empty")})}function resizeCanvas(){if(pendingCols=parseInt(document.getElementById("gridCols").value)||1,pendingRows=parseInt(document.getElementById("gridRows").value)||1,pendingCols<1&&(pendingCols=1),pendingRows<1&&(pendingRows=1),pendingCols>50&&(pendingCols=50),pendingRows>100&&(pendingRows=100),document.getElementById("gridCols").value=pendingCols,document.getElementById("gridRows").value=pendingRows,pendingCols===currentCols&&pendingRows===currentRows)return void clearResizeHighlights();if(pendingCols>=currentCols&&pendingRows>=currentRows)return clearResizeHighlights(),void applyResize();const e=highlightCropArea(pendingCols,pendingRows),t=Math.max(0,currentCols-pendingCols),n=Math.max(0,currentRows-pendingRows);let o=[];t>0&&o.push(`<strong>${t} kolom paling kanan</strong>`),n>0&&o.push(`<strong>${n} baris paling bawah</strong>`);const r=document.getElementById("resizeModalBody");r&&(r.innerHTML=`\n                    <p class="mb-2">Ukuran kanvas akan diubah dari <strong>${currentCols}×${currentRows}</strong> menjadi <strong>${pendingCols}×${pendingRows}</strong>.</p>\n                    <p class="mb-2 text-secondary" style="font-size: 0.85rem;">Area yang dipotong: ${o.join(" dan ")}.</p>\n                    ${e>0?`<div class="alert alert-danger py-2 px-3 my-2 d-flex align-items-center gap-2">\n                            <i class="fa-solid fa-triangle-exclamation fs-5"></i>\n                            <div><strong>Perhatian:</strong> Ada <strong>${e} ikon</strong> di area merah yang akan ikut terhapus!</div>\n                           </div>`:'<div class="alert alert-info py-2 px-3 my-2 d-flex align-items-center gap-2">\n                            <i class="fa-solid fa-circle-info fs-5"></i>\n                            <div>Area yang disorot merah adalah sel kosong. Tidak ada ikon yang terhapus.</div>\n                           </div>'}\n                    <div class="text-muted small mt-2">\n                     Periksa sel berwarna merah pada kanvas di belakang untuk melihat area yang terdampak.\n                    </div>\n                `),bootstrap.Modal.getOrCreateInstance(document.getElementById("resizeConfirmModal")).show()}function confirmResize(){clearResizeHighlights();const e=bootstrap.Modal.getInstance(document.getElementById("resizeConfirmModal"));e&&e.hide(),applyResize()}function cancelResize(){clearResizeHighlights();const e=bootstrap.Modal.getInstance(document.getElementById("resizeConfirmModal"));e&&e.hide(),document.getElementById("gridCols").value=currentCols,document.getElementById("gridRows").value=currentRows,pendingCols=currentCols,pendingRows=currentRows}const undoStack=[],redoStack=[],MAX_HISTORY=40;function getCanvasState(){const e=[];for(let t=0;t<currentRows;t++)for(let n=0;n<currentCols;n++){const o=document.querySelector(`.canvas-cell[data-row="${t}"][data-col="${n}"]`);if(o){const r=Array.from(o.querySelectorAll(".dropped-icon")).map(e=>e.dataset.iconName);r.length>0&&e.push({r:t,c:n,icons:r})}}return{cols:currentCols,rows:currentRows,icons:e}}function pushHistory(){const e=getCanvasState();undoStack.push(JSON.stringify(e)),undoStack.length>MAX_HISTORY&&undoStack.shift(),redoStack.length=0,updateHistoryButtons(),scheduleAutoSave()}function updateHistoryButtons(){const e=document.getElementById("undoBtn"),t=document.getElementById("redoBtn");e&&(e.disabled=0===undoStack.length),t&&(t.disabled=0===redoStack.length)}function restoreCanvasState(e){currentCols=e.cols,currentRows=e.rows,pendingCols=currentCols,pendingRows=currentRows;const t=document.getElementById("gridCols"),n=document.getElementById("gridRows");t&&(t.value=currentCols),n&&(n.value=currentRows),renderCanvas(),e.icons.forEach(e=>{const t=document.querySelector(`.canvas-cell[data-row="${e.r}"][data-col="${e.c}"]`);t&&e.icons.forEach(e=>addIconToCell(t,e))}),updateHistoryButtons(),scheduleAutoSave()}function undo(){if(0===undoStack.length)return;const e=getCanvasState();redoStack.push(JSON.stringify(e));const t=undoStack.pop();restoreCanvasState(JSON.parse(t))}function redo(){if(0===redoStack.length)return;const e=getCanvasState();undoStack.push(JSON.stringify(e));const t=redoStack.pop();restoreCanvasState(JSON.parse(t))}function applyResize(){pushHistory();const e=[];for(let t=0;t<currentRows;t++)for(let n=0;n<currentCols;n++){const o=document.querySelector(`.canvas-cell[data-row="${t}"][data-col="${n}"]`);if(o){const r=Array.from(o.querySelectorAll(".dropped-icon")).map(e=>e.dataset.iconName);r.length>0&&e.push({r:t,c:n,icons:r})}}currentCols=pendingCols,currentRows=pendingRows,renderCanvas(),e.forEach(e=>{if(e.r<currentRows&&e.c<currentCols){const t=document.querySelector(`.canvas-cell[data-row="${e.r}"][data-col="${e.c}"]`);t&&e.icons.forEach(e=>addIconToCell(t,e))}})}let contextTargetCoord={r:0,c:0};function getActiveSelectionRowCol(){if(selectedCellCoords.size>0){let e=1/0,t=1/0;return selectedCellCoords.forEach(n=>{const[o,r]=n.split(",").map(Number);o<e&&(e=o),r<t&&(t=r)}),{r:e,c:t}}return{r:contextTargetCoord.r||0,c:contextTargetCoord.c||0}}function insertRow(e){if(currentRows>=100)return void alert("Jumlah baris maksimum adalah 100.");pushHistory();const t=getCanvasState(),n=[];t.icons.forEach(t=>{t.r>=e?n.push({r:t.r+1,c:t.c,icons:t.icons}):n.push(t)}),currentRows++,pendingRows=currentRows;const o=document.getElementById("gridRows");o&&(o.value=currentRows),renderCanvas(),n.forEach(e=>{const t=getCellEl(e.r,e.c);t&&e.icons.forEach(e=>addIconToCell(t,e))}),clearSelection(),selectCell(e,contextTargetCoord.c<currentCols?contextTargetCoord.c:0,!1),scheduleAutoSave()}function insertCol(e){if(currentCols>=50)return void alert("Jumlah kolom maksimum adalah 50.");pushHistory();const t=getCanvasState(),n=[];t.icons.forEach(t=>{t.c>=e?n.push({r:t.r,c:t.c+1,icons:t.icons}):n.push(t)}),currentCols++,pendingCols=currentCols;const o=document.getElementById("gridCols");o&&(o.value=currentCols),renderCanvas(),n.forEach(e=>{const t=getCellEl(e.r,e.c);t&&e.icons.forEach(e=>addIconToCell(t,e))}),clearSelection(),selectCell(contextTargetCoord.r<currentRows?contextTargetCoord.r:0,e,!1),scheduleAutoSave()}function deleteRow(e,t=!1){if(currentRows<=1)return void alert("Kanvas harus memiliki minimal 1 baris.");const n=getCanvasState(),o=n.icons.filter(t=>t.r===e).reduce((e,t)=>e+t.icons.length,0);if(o>0&&!t)return void showDeleteRowColModal("baris",e,o,()=>deleteRow(e,!0));pushHistory();const r=[];n.icons.forEach(t=>{t.r<e?r.push(t):t.r>e&&r.push({r:t.r-1,c:t.c,icons:t.icons})}),currentRows--,pendingRows=currentRows;const a=document.getElementById("gridRows");a&&(a.value=currentRows),renderCanvas(),r.forEach(e=>{const t=getCellEl(e.r,e.c);t&&e.icons.forEach(e=>addIconToCell(t,e))}),clearSelection(),selectCell(Math.min(e,currentRows-1),Math.min(contextTargetCoord.c,currentCols-1),!1),scheduleAutoSave()}function deleteCol(e,t=!1){if(currentCols<=1)return void alert("Kanvas harus memiliki minimal 1 kolom.");const n=getCanvasState(),o=n.icons.filter(t=>t.c===e).reduce((e,t)=>e+t.icons.length,0);if(o>0&&!t)return void showDeleteRowColModal("kolom",e,o,()=>deleteCol(e,!0));pushHistory();const r=[];n.icons.forEach(t=>{t.c<e?r.push(t):t.c>e&&r.push({r:t.r,c:t.c-1,icons:t.icons})}),currentCols--,pendingCols=currentCols;const a=document.getElementById("gridCols");a&&(a.value=currentCols),renderCanvas(),r.forEach(e=>{const t=getCellEl(e.r,e.c);t&&e.icons.forEach(e=>addIconToCell(t,e))}),clearSelection(),selectCell(Math.min(contextTargetCoord.r,currentRows-1),Math.min(e,currentCols-1),!1),scheduleAutoSave()}function showDeleteRowColModal(e,t,n,o){const r=document.getElementById("deleteRowColConfirmTitle"),a=document.getElementById("deleteRowColConfirmBody"),l=document.getElementById("deleteRowColConfirmActionBtn");r&&(r.innerHTML=`<i class="fa-solid fa-triangle-exclamation me-2"></i>Hapus ${"baris"===e?"Baris":"Kolom"} ${t+1}`),a&&(a.innerHTML=`\n                    <p class="mb-2">Apakah Anda yakin ingin menghapus <strong>${e} ke-${t+1}</strong>?</p>\n                    <div class="alert alert-danger py-2 px-3 my-2 d-flex align-items-center gap-2">\n                        <i class="fa-solid fa-circle-exclamation fs-5"></i>\n                        <div>Ada <strong>${n} ikon</strong> di ${e} ini yang akan ikut terhapus!</div>\n                    </div>\n                    <div class="text-muted small">Tindakan ini dapat dibatalkan melalui fitur Undo (Ctrl+Z).</div>\n                `),l&&(l.onclick=()=>{const e=bootstrap.Modal.getInstance(document.getElementById("deleteRowColConfirmModal"));e&&e.hide(),o&&o()}),bootstrap.Modal.getOrCreateInstance(document.getElementById("deleteRowColConfirmModal")).show()}function showCanvasContextMenu(e,t,n,o){const r=document.getElementById("canvasContextMenu"),a=document.getElementById("ctxMenuHeader");if(!r)return;contextTargetCoord={r:n,c:o},a&&(a.textContent=`Sel Baris ${n+1}, Kolom ${o+1}`),r.style.display="block",r.style.left="0px",r.style.top="0px";const l=r.getBoundingClientRect();let s=e,c=t;s+l.width>window.innerWidth-10&&(s=window.innerWidth-l.width-10),c+l.height>window.innerHeight-10&&(c=window.innerHeight-l.height-10),r.style.left=`${s}px`,r.style.top=`${c}px`}function hideCanvasContextMenu(){const e=document.getElementById("canvasContextMenu");e&&(e.style.display="none")}function handleCtxAction(e){hideCanvasContextMenu();const{r:t,c:n}=contextTargetCoord;switch(e){case"insert-row-above":insertRow(t);break;case"insert-row-below":insertRow(t+1);break;case"insert-col-left":insertCol(n);break;case"insert-col-right":insertCol(n+1);break;case"delete-row":deleteRow(t);break;case"delete-col":deleteCol(n)}}function openStructureModal(){const e=getActiveSelectionRowCol();contextTargetCoord={r:e.r,c:e.c};const t=document.getElementById("structureActiveTargetText"),n=document.getElementById("structureRowCountBadge"),o=document.getElementById("structureColCountBadge");t&&(t.textContent=`Baris ${e.r+1}, Kolom ${e.c+1}`),n&&(n.textContent=`${currentRows} Baris`),o&&(o.textContent=`${currentCols} Kolom`),bootstrap.Modal.getOrCreateInstance(document.getElementById("structureModal")).show()}function executeStructureAction(e){const t=bootstrap.Modal.getInstance(document.getElementById("structureModal"));t&&t.hide(),handleCtxAction(e)}window.addEventListener("click",e=>{e.target.closest("#canvasContextMenu")||hideCanvasContextMenu()}),window.addEventListener("contextmenu",e=>{e.target.closest(".canvas-cell")||e.target.closest("#canvasContextMenu")||hideCanvasContextMenu()});const selectedCellCoords=new Set;let clipboardData=null,isMarqueeSelecting=!1,marqueeStart={x:0,y:0},marqueeBoxEl=null;function getCellKey(e,t){return`${e},${t}`}function getCellEl(e,t){return document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${t}"]`)}function getCellIcons(e){return e?Array.from(e.querySelectorAll(".dropped-icon")).map(e=>e.dataset.iconName):[]}function clearSelection(){selectedCellCoords.forEach(e=>{const[t,n]=e.split(",").map(Number),o=getCellEl(t,n);o&&o.classList.remove("is-selected")}),selectedCellCoords.clear()}function selectCell(e,t,n=!1){n||clearSelection();const o=getCellKey(e,t);selectedCellCoords.add(o);const r=getCellEl(e,t);r&&r.classList.add("is-selected")}function deselectCell(e,t){const n=getCellKey(e,t);selectedCellCoords.delete(n);const o=getCellEl(e,t);o&&o.classList.remove("is-selected")}function isCellSelected(e,t){return selectedCellCoords.has(getCellKey(e,t))}function updateCellDraggable(e){const t=e.querySelectorAll(".dropped-icon").length>0;e.draggable=t}function clearCutHighlights(){document.querySelectorAll(".canvas-cell.is-cut").forEach(e=>{e.classList.remove("is-cut")})}function initCanvasSelection(){const e=document.getElementById("route-canvas");if(!e)return;marqueeBoxEl||(marqueeBoxEl=document.createElement("div"),marqueeBoxEl.className="selection-marquee",e.appendChild(marqueeBoxEl)),e.addEventListener("mousedown",t=>{if(0!==t.button)return;const n=t.target.closest(".canvas-cell"),o=e.getBoundingClientRect(),r=t.clientX-o.left,a=t.clientY-o.top;if(n){const e=parseInt(n.dataset.row),o=parseInt(n.dataset.col),r=isCellSelected(e,o),a=n.querySelectorAll(".dropped-icon").length>0;if(t.ctrlKey||t.shiftKey||t.metaKey)return void(r?deselectCell(e,o):selectCell(e,o,!0));if(a)return void(r||selectCell(e,o,!1))}t.ctrlKey||t.shiftKey||t.metaKey||clearSelection(),isMarqueeSelecting=!0,marqueeStart={x:r,y:a},marqueeBoxEl.style.left=`${r}px`,marqueeBoxEl.style.top=`${a}px`,marqueeBoxEl.style.width="0px",marqueeBoxEl.style.height="0px",marqueeBoxEl.style.display="block";const l=t=>{if(!isMarqueeSelecting)return;const n=t.clientX-o.left,r=t.clientY-o.top,a=Math.max(0,Math.min(marqueeStart.x,n)),l=Math.max(0,Math.min(marqueeStart.y,r)),s=Math.min(o.width-a,Math.abs(n-marqueeStart.x)),c=Math.min(o.height-l,Math.abs(r-marqueeStart.y));marqueeBoxEl.style.left=`${a}px`,marqueeBoxEl.style.top=`${l}px`,marqueeBoxEl.style.width=`${s}px`,marqueeBoxEl.style.height=`${c}px`;const i=a+s,d=l+c;e.querySelectorAll(".canvas-cell").forEach(e=>{const n=e.offsetLeft,o=e.offsetTop,r=n+e.offsetWidth,s=o+e.offsetHeight,c=!(r<a||n>i||s<l||o>d),u=parseInt(e.dataset.row),g=parseInt(e.dataset.col);c?selectCell(u,g,!0):t.ctrlKey||t.shiftKey||t.metaKey||deselectCell(u,g)})},s=()=>{isMarqueeSelecting=!1,marqueeBoxEl&&(marqueeBoxEl.style.display="none"),window.removeEventListener("mousemove",l),window.removeEventListener("mouseup",s)};window.addEventListener("mousemove",l),window.addEventListener("mouseup",s)});const t=document.getElementById("canvas-scroll-area");t&&t.addEventListener("mousedown",e=>{e.target===t&&(clearSelection(),clearCutHighlights())})}function copySelection(){if(0===selectedCellCoords.size)return;let e=1/0,t=1/0;const n=[];selectedCellCoords.forEach(n=>{const[o,r]=n.split(",").map(Number);o<e&&(e=o),r<t&&(t=r)}),selectedCellCoords.forEach(o=>{const[r,a]=o.split(",").map(Number),l=getCellIcons(getCellEl(r,a));n.push({dr:r-e,dc:a-t,icons:l})}),clipboardData={mode:"copy",origin:{r:e,c:t},cells:n},clearCutHighlights()}function cutSelection(){0!==selectedCellCoords.size&&(copySelection(),clipboardData&&(clipboardData.mode="cut",clearCutHighlights(),selectedCellCoords.forEach(e=>{const[t,n]=e.split(",").map(Number),o=getCellEl(t,n);o&&o.classList.add("is-cut")})))}function pasteSelection(e=null,t=null){if(clipboardData&&clipboardData.cells&&0!==clipboardData.cells.length){if(null===e||null===t)if(selectedCellCoords.size>0){let n=1/0,o=1/0;selectedCellCoords.forEach(e=>{const[t,r]=e.split(",").map(Number);(t<n||t===n&&r<o)&&(n=t,o=r)}),e=n,t=o}else e=clipboardData.origin.r,t=clipboardData.origin.c;if(pushHistory(),"cut"===clipboardData.mode){const e=clipboardData.origin.r,t=clipboardData.origin.c;clipboardData.cells.forEach(n=>{const o=getCellEl(e+n.dr,t+n.dc);o&&(o.innerHTML="",updateCellDraggable(o))}),clearCutHighlights(),clipboardData.mode="copy"}clearSelection(),clipboardData.cells.forEach(n=>{const o=e+n.dr,r=t+n.dc;if(o>=0&&o<currentRows&&r>=0&&r<currentCols){const e=getCellEl(o,r);e&&(e.innerHTML="",n.icons.forEach(t=>addIconToCell(e,t)),updateCellDraggable(e),selectCell(o,r,!0))}})}}function deleteSelection(){if(0===selectedCellCoords.size)return;let e=!1;selectedCellCoords.forEach(t=>{const[n,o]=t.split(",").map(Number),r=getCellEl(n,o);r&&r.querySelectorAll(".dropped-icon").length>0&&(e=!0)}),e&&(pushHistory(),selectedCellCoords.forEach(e=>{const[t,n]=e.split(",").map(Number),o=getCellEl(t,n);o&&(o.innerHTML="",updateCellDraggable(o))})),clearCutHighlights()}let isTrashZoneActive=!1;function showTrashZone(){const e=document.getElementById("canvasTrashZone");e&&(isTrashZoneActive=!0,e.classList.remove("is-dropping","drag-hover"),e.classList.add("is-visible"))}function hideTrashZone(){const e=document.getElementById("canvasTrashZone");e&&(isTrashZoneActive=!1,e.classList.remove("is-visible","drag-hover"))}function initCanvasTrashZone(){const e=document.getElementById("canvasTrashZone");e&&(e.addEventListener("dragover",t=>{t.preventDefault(),t.dataTransfer.dropEffect="move",e.classList.add("drag-hover")}),e.addEventListener("dragenter",t=>{t.preventDefault(),e.classList.add("drag-hover")}),e.addEventListener("dragleave",t=>{e.contains(t.relatedTarget)||e.classList.remove("drag-hover")}),e.addEventListener("drop",t=>{t.preventDefault(),e.classList.remove("drag-hover");const n=t.dataTransfer.getData("application/json");if(n)try{const t=JSON.parse(n);if("canvas-move"===t.type&&t.cells)return pushHistory(),t.cells.forEach(e=>{const n=getCellEl(t.origin.r+e.dr,t.origin.c+e.dc);n&&(n.innerHTML="",updateCellDraggable(n))}),clearSelection(),clearCutHighlights(),e.classList.add("is-dropping"),void setTimeout(()=>{e.classList.remove("is-dropping"),hideTrashZone()},500)}catch(e){console.error("Error handling trash drop payload:",e)}hideTrashZone()}),e.addEventListener("click",()=>{selectedCellCoords.size>0&&(deleteSelection(),e.classList.add("is-dropping"),setTimeout(()=>{e.classList.remove("is-dropping"),hideTrashZone()},500))}))}function renderCanvas(){const e=document.getElementById("route-canvas");e.innerHTML="",e.style.gridTemplateColumns=`repeat(${currentCols}, var(--cell-size))`,marqueeBoxEl=document.createElement("div"),marqueeBoxEl.className="selection-marquee",e.appendChild(marqueeBoxEl);const t=new Set;selectedCellCoords.forEach(e=>{const[n,o]=e.split(",").map(Number);n<currentRows&&o<currentCols&&t.add(e)}),selectedCellCoords.clear(),t.forEach(e=>selectedCellCoords.add(e));const n=currentCols*currentRows;for(let t=0;t<n;t++){const n=document.createElement("div");n.className="canvas-cell";const o=Math.floor(t/currentCols),r=t%currentCols;n.dataset.row=o,n.dataset.col=r,selectedCellCoords.has(getCellKey(o,r))&&n.classList.add("is-selected"),r===currentCols-1&&(n.style.borderRight="none"),o===currentRows-1&&(n.style.borderBottom="none"),n.addEventListener("dragstart",e=>{if(!(n.querySelectorAll(".dropped-icon").length>0||isCellSelected(o,r)))return void e.preventDefault();isCellSelected(o,r)||selectCell(o,r,!1);const t=[];selectedCellCoords.forEach(e=>{const[n,a]=e.split(",").map(Number),l=getCellIcons(getCellEl(n,a));l.length>0&&t.push({dr:n-o,dc:a-r,icons:l})});const a={type:"canvas-move",origin:{r:o,c:r},cells:t};e.dataTransfer.setData("application/json",JSON.stringify(a)),e.dataTransfer.effectAllowed="move",showTrashZone()}),n.addEventListener("dragend",()=>{hideTrashZone()}),n.addEventListener("dragover",e=>{e.preventDefault(),e.dataTransfer.types.includes("application/json")?e.dataTransfer.dropEffect="move":e.dataTransfer.dropEffect="copy",n.classList.add("drag-over")}),n.addEventListener("dragenter",e=>{e.preventDefault(),n.classList.add("drag-over")}),n.addEventListener("dragleave",()=>{n.classList.remove("drag-over")}),n.addEventListener("drop",e=>{e.preventDefault(),n.classList.remove("drag-over");const t=e.dataTransfer.getData("application/json");if(t)try{const e=JSON.parse(t);if("canvas-move"===e.type){const t=o,n=r;if(t===e.origin.r&&n===e.origin.c)return;return pushHistory(),e.cells.forEach(t=>{const n=getCellEl(e.origin.r+t.dr,e.origin.c+t.dc);n&&(n.innerHTML="",updateCellDraggable(n))}),clearSelection(),void e.cells.forEach(e=>{const o=t+e.dr,r=n+e.dc;if(o>=0&&o<currentRows&&r>=0&&r<currentCols){const t=getCellEl(o,r);t&&(t.innerHTML="",e.icons.forEach(e=>addIconToCell(t,e)),updateCellDraggable(t),selectCell(o,r,!0))}})}}catch(e){console.error("Error parsing canvas drag payload:",e)}const a=e.dataTransfer.getData("text/plain");a&&(pushHistory(),addIconToCell(n,a),updateCellDraggable(n),selectCell(o,r,!1))}),n.addEventListener("dblclick",()=>{n.querySelectorAll(".dropped-icon").length>0&&(pushHistory(),n.innerHTML="",updateCellDraggable(n))}),n.addEventListener("contextmenu",e=>{e.preventDefault(),e.stopPropagation(),selectCell(o,r,!1),showCanvasContextMenu(e.clientX,e.clientY,o,r)}),e.appendChild(n)}}function addIconToCell(e,t){if(missingIconsCache.has(t))return;const n=document.createElement("div");n.className="dropped-icon",n.dataset.iconName=t;const o=getBSiconUrl(t);n.innerHTML=`<img src="${o}" alt="${t}" \n                                   onerror="handleDroppedIconError(this, '${t}')">`,e.appendChild(n),updateCellDraggable(e)}function clearCanvas(){bootstrap.Modal.getOrCreateInstance(document.getElementById("clearConfirmModal")).show()}function executeClearCanvas(){document.querySelectorAll(".canvas-cell .dropped-icon").length>0&&pushHistory(),document.querySelectorAll(".canvas-cell").forEach(e=>{e.innerHTML="",updateCellDraggable(e)}),clearSelection(),clearCutHighlights();const e=bootstrap.Modal.getInstance(document.getElementById("clearConfirmModal"));e&&e.hide()}function exportData(){let e="{{routemap\n|title=Isi Nama Stasiun di sini\n|map=\n",t=-1;for(let e=currentRows-1;e>=0;e--){let n=!1;for(let t=0;t<currentCols;t++){const o=document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${t}"]`);if(o&&o.querySelectorAll(".dropped-icon").length>0){n=!0;break}}if(n){t=e;break}}const n=t>=0?t+1:currentRows,o=[];let r=1/0,a=-1;for(let e=0;e<n;e++){const t=[];for(let n=0;n<currentCols;n++){const o=document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${n}"]`),l=o?o.querySelectorAll(".dropped-icon"):[];0===l.length?t.push(""):(t.push(Array.from(l).map(e=>e.dataset.iconName).join("!~")),n<r&&(r=n),n>a&&(a=n))}o.push(t)}a<0&&(r=0,a=currentCols-1),o.forEach(t=>{e+=t.slice(r,a+1).join("\\")+"\n"}),e+="}}",document.getElementById("exportTextarea").value=e,new bootstrap.Modal(document.getElementById("exportModal")).show()}function copyExport(){document.getElementById("exportTextarea").select(),document.execCommand("copy");const e=document.getElementById("copyBtn"),t=e.innerHTML;e.innerHTML='<i class="fa-solid fa-check"></i> Tersalin!',e.classList.replace("btn-primary","btn-success"),setTimeout(()=>{e.innerHTML=t,e.classList.replace("btn-success","btn-primary")},2e3)}function chooseStartNew(){const e=bootstrap.Modal.getInstance(document.getElementById("welcomePromptModal"));e&&e.hide()}function chooseImportExisting(){const e=bootstrap.Modal.getInstance(document.getElementById("welcomePromptModal"));e&&e.hide(),setTimeout(()=>{openImportModal()},300)}function openImportModal(){const e=document.getElementById("importFeedback");e&&(e.style.display="none",e.innerHTML=""),bootstrap.Modal.getOrCreateInstance(document.getElementById("importModal")).show()}let customIconDebounceTimer=null,activeCustomIcon=null;function openCustomIconModal(){const e=document.getElementById("customIconInput");e&&(e.value=""),clearCustomIconInput(),bootstrap.Modal.getOrCreateInstance(document.getElementById("customIconModal")).show(),setTimeout(()=>{e&&e.focus()},400)}function clearCustomIconInput(){const e=document.getElementById("customIconInput");e&&(e.value=""),activeCustomIcon=null;const t=document.getElementById("customIconStatusArea"),n=document.getElementById("customIconPreviewWrapper"),o=document.getElementById("customIconPreviewBox");t&&(t.classList.remove("d-none"),t.innerHTML='<div class="text-muted small">Ketik nama ikon untuk melihat pratinjau...</div>'),n&&n.classList.add("d-none"),o&&(o.innerHTML="")}function handleCustomIconInput(e){clearTimeout(customIconDebounceTimer);let t=e.trim();t.startsWith("BSicon_")&&(t=t.substring(7)),t.endsWith(".svg")&&(t=t.slice(0,-4));const n=document.getElementById("customIconStatusArea"),o=document.getElementById("customIconPreviewWrapper");document.getElementById("customIconPreviewBox"),document.getElementById("customIconPreviewName"),t?(n&&(n.classList.remove("d-none"),n.innerHTML='\n                    <div class="d-flex align-items-center justify-content-center gap-2 text-primary py-2">\n                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>\n                        <span class="small fw-semibold">Memeriksa endpoint...</span>\n                    </div>\n                '),o&&o.classList.add("d-none"),customIconDebounceTimer=setTimeout(()=>{loadCustomIconPreview(t)},350)):clearCustomIconInput()}function loadCustomIconPreview(e){const t=document.getElementById("customIconStatusArea"),n=document.getElementById("customIconPreviewWrapper"),o=document.getElementById("customIconPreviewBox"),r=document.getElementById("customIconPreviewName"),a=getBSiconUrl(e),l=new Image;l.onload=function(){activeCustomIcon=e,t&&t.classList.add("d-none"),r&&(r.textContent=e),o&&(o.innerHTML=`<img src="${a}" alt="${e}">`,o.setAttribute("draggable","true"),o.ondragstart=t=>{t.dataTransfer.setData("text/plain",e),t.dataTransfer.effectAllowed="copy",setTimeout(()=>{const e=bootstrap.Modal.getInstance(document.getElementById("customIconModal"));e&&e.hide()},50)},attachTouchDrag(o,e)),n&&(n.classList.remove("d-none"),n.classList.add("d-flex"))},l.onerror=function(){activeCustomIcon=null,t&&(t.classList.remove("d-none"),t.innerHTML=`\n                        <div class="alert alert-warning py-2 px-3 small my-1 d-inline-flex align-items-center gap-2">\n                            <i class="fa-solid fa-triangle-exclamation"></i>\n                            <div>Ikon <strong>BSicon_${e}.svg</strong> tidak ditemukan di CDN BSicons.</div>\n                        </div>\n                    `),n&&n.classList.add("d-none"),o&&(o.innerHTML="")},l.src=a}function parseRoutemapWikitext(e){if(!e||!e.trim())return null;let t=e.trim();const n=t.match(/\|\s*map\s*=\s*([\s\S]*)/i);n&&(t=n[1]),t=t.replace(/\}\}\s*$/,"");const o=t.split(/\r?\n/),r=[];for(let e=0;e<o.length;e++){let t=o[e].trim();if(t&&(!t.startsWith("|")||t.includes("\\"))&&!t.startsWith("}}")){for(;t.endsWith("-")&&e+1<o.length;){const n=t.split("\\").pop().split("!~").pop().trim(),r=o[e+1].trim(),a=/^(?:[a-z]*SKRZ|KRZW|TUNNEL)-$/i.test(n),l=/^[A-Za-z0-9(]/.test(r)&&!r.startsWith("{{");if(!a||!l)break;e++,t+=r}r.push(t)}}const a=[];for(let e of r){let t=e;const n=t.match(/!\s*!/);n?t=t.substring(t.indexOf(n[0])+n[0].length).trim():(t.startsWith("!")||t.startsWith("|"))&&(t=t.substring(1).trim()),t.includes("~~")&&(t=t.split("~~")[0]);const o=t.split("\\"),r=[];for(let e of o){const t=e.trim();if(t){const e=t.split("!~").map(e=>e.trim()).filter(e=>e.length>0);r.push(e)}else r.push([])}r.length>0&&a.push(r)}if(0===a.length)return null;let l=0;return a.forEach(e=>{e.length>l&&(l=e.length)}),a.forEach(e=>{const t=l-e.length;if(t<=0)return;const n=Math.floor(t/2),o=t-n;for(let t=0;t<n;t++)e.unshift([]);for(let t=0;t<o;t++)e.push([])}),{grid:a,rows:a.length,cols:l}}function executeImport(){const e=document.getElementById("importTextarea"),t=document.getElementById("importFeedback"),n=parseRoutemapWikitext(e?e.value:"");if(!n||0===n.rows||0===n.cols)return void(t&&(t.style.display="block",t.className="alert alert-danger py-2 px-3 small mt-2",t.innerHTML='<i class="fa-solid fa-triangle-exclamation me-1"></i> Tidak ditemukan pola sintaks BSicon atau routemap yang valid. Pastikan format menggunakan pemisah backslash (\\).'));pushHistory(),currentCols=Math.max(1,n.cols),currentRows=Math.max(1,n.rows),pendingCols=currentCols,pendingRows=currentRows;const o=document.getElementById("gridCols"),r=document.getElementById("gridRows");o&&(o.value=currentCols),r&&(r.value=currentRows),renderCanvas();for(let e=0;e<n.rows;e++)for(let t=0;t<n.cols;t++){const o=n.grid[e][t];if(o&&o.length>0){const n=document.querySelector(`.canvas-cell[data-row="${e}"][data-col="${t}"]`);n&&o.forEach(e=>{addIconToCell(n,e)})}}const a=bootstrap.Modal.getInstance(document.getElementById("importModal"));a&&a.hide(),e&&(e.value=""),t&&(t.style.display="none")}let exportAbortController=null,exportProgressHideTimer=null;function updateExportProgress(e,t,n=null){const o=document.getElementById("exportProgressToast"),r=document.getElementById("exportProgressPercent"),a=document.getElementById("exportProgressBarFill"),l=document.getElementById("exportProgressStatusText"),s=document.getElementById("exportProgressTitleText");exportProgressHideTimer&&(clearTimeout(exportProgressHideTimer),exportProgressHideTimer=null),o&&o.classList.add("is-visible"),r&&(r.textContent=`${Math.min(100,Math.round(e))}%`),a&&(a.style.width=`${Math.min(100,Math.round(e))}%`),l&&t&&(l.textContent=t),s&&n&&(s.textContent=n)}function resetExportButtonUI(){const e=document.getElementById("savePngBtn");e&&(e.disabled=!1,e.innerHTML='<i class="fa-solid fa-image"></i>')}function cancelExportProgress(){exportAbortController&&exportAbortController.abort(),hideExportProgress(0),resetExportButtonUI();const e=document.getElementById("route-canvas");e&&e.classList.remove("no-grid")}function hideExportProgress(e=1e3){const t=document.getElementById("exportProgressToast");t&&(exportProgressHideTimer&&clearTimeout(exportProgressHideTimer),exportProgressHideTimer=setTimeout(()=>{t.classList.remove("is-visible"),setTimeout(()=>{const e=document.getElementById("exportProgressPercent"),t=document.getElementById("exportProgressBarFill"),n=document.getElementById("exportProgressStatusText"),o=document.getElementById("exportProgressTitleText");e&&(e.textContent="0%"),t&&(t.style.width="0%"),n&&(n.textContent="Menyiapkan kanvas & font..."),o&&(o.textContent="Memproses Gambar...")},300)},e))}async function saveAsPNG(){const e=document.getElementById("route-canvas");if(!e)return;const t=document.getElementById("savePngBtn");t&&(t.disabled=!0,t.innerHTML='<i class="fa-solid fa-spinner fa-spin text-primary"></i>'),exportAbortController=new AbortController;const{signal:n}=exportAbortController,o=selectedCellCoords.size>0,r=new Set(selectedCellCoords);updateExportProgress(10,"Menyiapkan elemen kanvas...","Memproses Gambar...");let a=15;const l=setInterval(()=>{n.aborted?clearInterval(l):a<75&&(a+=8*Math.random()+4,updateExportProgress(a,a<40?"Memuat & memproses aset ikon BSicon...":a<65?"Merender resolusi tinggi 2x...":"Menghitung tata letak sel..."))},250);try{if("function"!=typeof html2canvas)throw new Error("Library html2canvas belum siap.");if(n.aborted)return;clearSelection(),clearCutHighlights(),e.classList.add("no-grid");const t=html2canvas(e,{scale:2,useCORS:!0,allowTaint:!0,backgroundColor:"#ffffff",logging:!1,imageTimeout:15e3,onclone:e=>{n.aborted||updateExportProgress(78,"Menghasilkan raster bitmap kanvas...")}}),o=new Promise((e,t)=>{n.aborted?t(new DOMException("Proses render dibatalkan.","AbortError")):n.addEventListener("abort",()=>{t(new DOMException("Proses render dibatalkan.","AbortError"))},{once:!0})}),r=await Promise.race([t,o]);if(n.aborted)return;clearInterval(l),updateExportProgress(90,"Mengonversi ke format berkas PNG...");const a=document.createElement("a"),s=new Date,c=e=>String(e).padStart(2,"0"),i=`${s.getFullYear()}${c(s.getMonth()+1)}${c(s.getDate())}_${c(s.getHours())}${c(s.getMinutes())}`;a.download=`spoorwiki_route_${i}.png`,a.href=r.toDataURL("image/png"),document.body.appendChild(a),a.click(),document.body.removeChild(a),updateExportProgress(100,"Gambar rute berhasil diunduh!","Selesai!")}catch(e){clearInterval(l),n&&n.aborted?console.log("Ekspor PNG dibatalkan oleh pengguna."):(console.error("Gagal mengekspor PNG:",e),updateExportProgress(100,"Gagal: "+(e.message||"Terjadi kesalahan render."),"Gagal Mengunduh"),alert("Gagal menyimpan gambar PNG: "+(e.message||"Terjadi kesalahan saat merender kanvas.")))}finally{clearInterval(l),n.aborted?hideExportProgress(0):hideExportProgress(1200),exportAbortController=null,e.classList.remove("no-grid"),o&&r.forEach(e=>{const[t,n]=e.split(",").map(Number);selectCell(t,n,!0)}),resetExportButtonUI()}}const AUTOSAVE_KEY="spoorwiki_canvas_draft_v1";let autoSaveDebounceTimer=null;function scheduleAutoSave(){clearTimeout(autoSaveDebounceTimer),autoSaveDebounceTimer=setTimeout(()=>{try{const e=getCanvasState();if(e&&e.icons&&e.icons.length>0){const t={version:"1.0",type:"spoorwiki-project",timestamp:Date.now(),data:e};localStorage.setItem(AUTOSAVE_KEY,JSON.stringify(t))}else localStorage.removeItem(AUTOSAVE_KEY)}catch(e){console.warn("Gagal menyimpan draft otomatis ke localStorage:",e)}},800)}function checkAutoSaveDraft(){try{const e=localStorage.getItem(AUTOSAVE_KEY);if(!e)return;const t=JSON.parse(e);if(!t||!t.data||!t.data.icons||0===t.data.icons.length)return;const n=document.getElementById("draftRestoreBanner"),o=document.getElementById("draftTimeAgo");if(n&&o){const e=Math.max(1,Math.round((Date.now()-(t.timestamp||Date.now()))/6e4));o.textContent=e<60?`${e} menit yang lalu`:`${Math.round(e/60)} jam yang lalu`,n.classList.remove("d-none")}}catch(e){console.warn("Gagal membaca draft auto-save:",e)}}function restoreDraftSession(){try{const e=localStorage.getItem(AUTOSAVE_KEY);if(!e)return;const t=JSON.parse(e);t&&t.data&&(pushHistory(),restoreCanvasState(t.data),dismissDraftBanner())}catch(e){alert("Gagal memulihkan draft: format data tidak valid.")}}function dismissDraftBanner(){const e=document.getElementById("draftRestoreBanner");e&&e.classList.add("d-none");try{localStorage.removeItem(AUTOSAVE_KEY)}catch(e){console.warn("Gagal menghapus draft dari localStorage:",e)}}function openProjectModal(){const e=document.getElementById("projectModal");e&&bootstrap.Modal.getOrCreateInstance(e).show()}function executeSaveSpoorFromModal(){const e=document.getElementById("projectModal");if(e){const t=bootstrap.Modal.getInstance(e);t&&t.hide()}saveSpoorProject()}function executeOpenSpoorFromModal(){const e=document.getElementById("projectModal");if(e){const t=bootstrap.Modal.getInstance(e);t&&t.hide()}openSpoorFileInput()}function saveSpoorProject(){const e=getCanvasState(),t={app:"SPOORWIKI Tools",version:"5.0",fileType:"spoorwiki-project",createdAt:(new Date).toISOString(),canvas:{cols:e.cols,rows:e.rows,icons:e.icons}},n=JSON.stringify(t,null,2),o=new Blob([n],{type:"application/json"}),r=URL.createObjectURL(o),a=new Date,l=e=>String(e).padStart(2,"0"),s=`${a.getFullYear()}${l(a.getMonth()+1)}${l(a.getDate())}_${l(a.getHours())}${l(a.getMinutes())}`,c=document.createElement("a");c.href=r,c.download=`rute_stasiun_${s}.spoor`,document.body.appendChild(c),c.click(),document.body.removeChild(c),URL.revokeObjectURL(r)}function openSpoorFileInput(){const e=document.getElementById("spoorFileInput");e&&(e.value="",e.click())}function handleSpoorFileSelected(e){const t=e.target.files&&e.target.files[0];if(!t)return;const n=new FileReader;n.onload=function(e){try{const t=JSON.parse(e.target.result),n=t.canvas||(t.data?t.data:t);if(!n||"number"!=typeof n.cols||"number"!=typeof n.rows||!Array.isArray(n.icons))throw new Error("Struktur berkas .spoor tidak dikenali atau rusak.");pushHistory(),restoreCanvasState(n),dismissDraftBanner()}catch(e){alert("Gagal memuat proyek: "+(e.message||"Format berkas tidak valid."))}},n.readAsText(t)}let iconTooltipTimeout=null;function showIconTooltip(e){const t=e.dataset.baseIcon;if(!t)return;const n=document.getElementById("iconHoverTooltip");if(!n)return;iconTooltipTimeout&&(clearTimeout(iconTooltipTimeout),iconTooltipTimeout=null),n.textContent=t;const o=e.getBoundingClientRect(),r=o.left+o.width/2;let a=o.top;a<50?(a=o.bottom+10,n.style.transform="translate(-50%, 0)"):n.style.transform="",n.style.left=`${r}px`,n.style.top=`${a}px`,n.classList.add("active")}function hideIconTooltip(){iconTooltipTimeout&&(clearTimeout(iconTooltipTimeout),iconTooltipTimeout=null);const e=document.getElementById("iconHoverTooltip");e&&e.classList.remove("active")}function initIconTooltipListeners(){const e=document.querySelector(".accordion-wrapper");e&&(e.addEventListener("mouseover",e=>{const t=e.target.closest(".icon-item");t&&showIconTooltip(t)}),e.addEventListener("mouseout",e=>{const t=e.target.closest(".icon-item");t&&!t.contains(e.relatedTarget)&&hideIconTooltip()}),e.addEventListener("click",e=>{const t=e.target.closest(".icon-item");t&&(showIconTooltip(t),iconTooltipTimeout=setTimeout(()=>{hideIconTooltip()},2500))}),document.addEventListener("click",e=>{e.target.closest(".icon-item")||hideIconTooltip()}),e.addEventListener("scroll",()=>{hideIconTooltip()}))}function initDimensionInputs(){["gridCols","gridRows"].forEach(e=>{const t=document.getElementById(e);t&&(t.addEventListener("keydown",e=>{["-","+","e","E"].includes(e.key)&&e.preventDefault()}),t.addEventListener("input",()=>{t.value=t.value.replace(/[^0-9]/g,"")}),t.addEventListener("blur",()=>{const e=parseInt(t.value);(isNaN(e)||e<1)&&(t.value=1,resizeCanvas())}))})}function initDynamicTips(){const e=document.getElementById("dynamicTipText");if(!e)return;const t=["Klik kanan pada sel manapun untuk sisip baris dan sisip kolom baru","Klik dua kali pada sel untuk menghapus atau geser ikon ke tempat sampah.","Seret beberapa ikon ke sel yang sama untuk menumpuk overlay (!~).","<strong>Ctrl + Z</strong> untuk Undo dan <strong>Ctrl + Y</strong> untuk Redo.","<strong>Ctrl + C</strong> untuk menyalin item dan <strong>Ctrl + V</strong> untuk menempelkan item.","Klik & seret mouse pada kanvas untuk memilih dan memindahkan banyak item sekaligus.","Gunakan Dekstop untuk pengalaman yang lebih baik."];let n=0;setInterval(()=>{e.classList.add("fade-out"),setTimeout(()=>{n=(n+1)%t.length,e.innerHTML=t[n],e.classList.remove("fade-out")},400)},3e4)}window.onload=function(){renderSidebar(),renderCanvas(),initCanvasSelection(),initCanvasTrashZone(),initIconTooltipListeners(),initDimensionInputs(),initDynamicTips(),checkAutoSaveDraft();const e=document.getElementById("resizeConfirmModal");e&&e.addEventListener("hidden.bs.modal",()=>{clearResizeHighlights()}),window.innerWidth<768&&(document.getElementById("sidebar").classList.add("collapsed"),setTimeout(()=>{const e=document.getElementById("welcomePromptModal");e&&bootstrap.Modal.getOrCreateInstance(e).show()},400))},window.addEventListener("keydown",e=>{const t=(e.target.tagName||"").toLowerCase();if("input"!==t&&"textarea"!==t)if((navigator.platform.toUpperCase().indexOf("MAC")>=0?e.metaKey:e.ctrlKey)&&!e.altKey){const t=e.key.toLowerCase();"z"===t?(e.preventDefault(),e.shiftKey?redo():undo()):"y"===t?(e.preventDefault(),redo()):"c"===t?(e.preventDefault(),copySelection()):"x"===t?(e.preventDefault(),cutSelection()):"v"===t?(e.preventDefault(),pasteSelection()):"a"===t&&(e.preventDefault(),clearSelection(),document.querySelectorAll(".canvas-cell").forEach(e=>{e.querySelectorAll(".dropped-icon").length>0&&selectCell(parseInt(e.dataset.row),parseInt(e.dataset.col),!0)}))}else"Delete"===e.key||"Backspace"===e.key?(e.preventDefault(),deleteSelection()):"Escape"===e.key&&(clearSelection(),clearCutHighlights())}),window.addEventListener("resize",()=>{const e=document.getElementById("sidebar");window.innerWidth>=768?e.classList.remove("collapsed"):e.classList.add("collapsed")});</script>
 
     <div id="iconHoverTooltip" class="icon-hover-tooltip"></div>
 </body>

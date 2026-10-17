@@ -322,84 +322,231 @@
         }
 
         .canvas-toolbar {
-            background-color: white;
-            padding: 10px 15px;
-            border-bottom: 1px solid #dee2e6;
+            background-color: #ffffff;
+            padding: 8px 16px;
+            border-bottom: 1px solid #e9ecef;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             overflow-x: auto;
             overflow-y: hidden;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
         .canvas-toolbar::-webkit-scrollbar {
-            height: 4px;
+            height: 3px;
         }
 
         .canvas-toolbar::-webkit-scrollbar-thumb {
-            background: #ced4da;
+            background: #dee2e6;
             border-radius: 4px;
         }
 
         .canvas-toolbar::-webkit-scrollbar-track {
-            background: #f8f9fa;
+            background: transparent;
         }
 
-        .toolbar-size,
+        /* Segmented Groups & Dock Controls */
+        .toolbar-size {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+            background: #f8f9fa;
+            border: 1px solid #e2e8f0;
+            padding: 3px 6px;
+            border-radius: 9px;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .toolbar-size-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-right: 6px;
+            padding-left: 4px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .toolbar-input {
+            width: 48px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid #cbd5e1;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #1e293b;
+            background: #ffffff;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+            padding: 0 4px;
+        }
+
+        .toolbar-input:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.15);
+        }
+
+        .toolbar-times {
+            margin: 0 5px;
+            color: #94a3b8;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
         .toolbar-actions {
             display: flex;
             align-items: center;
+            gap: 8px;
             flex-wrap: nowrap;
             flex-shrink: 0;
         }
 
-        .toolbar-actions {
-            gap: 8px;
+        /* Segmented Button Group (Studio Pill Bar) */
+        .toolbar-dock-group {
+            display: inline-flex;
+            align-items: center;
+            background-color: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 3px;
+            gap: 2px;
         }
 
-        .toolbar-input {
-            width: 60px;
-        }
-
-        .toolbar-times {
-            margin: 0 6px;
-            color: #6c757d;
-        }
-
-        .toolbar-btn {
+        /* Dock Icon Button */
+        .dock-btn {
+            position: relative;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            color: #475569;
+            border-radius: 7px;
+            font-size: 0.88rem;
+            cursor: pointer;
+            transition: all 0.16s ease;
+            text-decoration: none;
+        }
+
+        .dock-btn:hover:not(:disabled) {
+            background-color: #ffffff;
+            color: #0f172a;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transform: translateY(-1px);
+        }
+
+        .dock-btn:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .dock-btn:disabled {
+            color: #cbd5e1;
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        /* Varian Aksi Spesifik Dock */
+        .dock-btn.danger-action:hover:not(:disabled) {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .dock-btn.primary-action:hover:not(:disabled) {
+            background-color: #eff6ff;
+            color: #2563eb;
+        }
+
+        .dock-btn.accent-action:hover:not(:disabled) {
+            background-color: #f0fdf4;
+            color: #16a34a;
+        }
+
+        /* Primary Call-to-Action Pills */
+        .dock-pill-btn {
+            display: inline-flex;
+            align-items: center;
             gap: 6px;
+            padding: 5px 12px;
+            height: 32px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.16s ease;
             white-space: nowrap;
-            flex-shrink: 0;
+        }
+
+        .dock-pill-btn:hover {
+            border-color: #cbd5e1;
+            background: #f8fafc;
+            color: #0f172a;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+            transform: translateY(-1px);
+        }
+
+        .dock-pill-btn.pill-highlight {
+            background: #0f172a;
+            color: #ffffff;
+            border-color: #0f172a;
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.2);
+        }
+
+        .dock-pill-btn.pill-highlight:hover {
+            background: #1e293b;
+            color: #ffffff;
+            box-shadow: 0 4px 8px rgba(15, 23, 42, 0.25);
+        }
+
+        .dock-divider {
+            width: 1px;
+            height: 20px;
+            background-color: #e2e8f0;
+            margin: 0 2px;
         }
 
         @media (max-width: 575.98px) {
             .canvas-toolbar {
-                padding: 8px 10px;
+                padding: 6px 8px;
+                gap: 8px;
                 justify-content: flex-start;
+                scroll-behavior: smooth;
+            }
+
+            .toolbar-size {
+                padding: 2px 4px;
             }
 
             .toolbar-input {
-                width: 50px;
-            }
-
-            .toolbar-times {
-                margin: 0 4px;
-            }
-
-            .toolbar-actions {
-                gap: 5px;
-            }
-
-            .toolbar-btn {
-                padding: 0.3rem 0.5rem;
+                width: 38px;
+                height: 32px;
                 font-size: 0.8rem;
-                gap: 4px;
+            }
+
+            /* Ukuran tombol ramah sentuhan jari (Touch-friendly target) */
+            .dock-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 0.88rem;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .dock-pill-btn {
+                padding: 4px 10px;
+                height: 34px;
+                font-size: 0.78rem;
+                -webkit-tap-highlight-color: transparent;
             }
         }
 
@@ -578,6 +725,232 @@
             .trash-label {
                 font-size: 0.55rem;
             }
+        }
+
+        .draft-restore-banner {
+            background-color: #1a1d20;
+            color: #ffffff;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1045;
+            transition: all 0.3s ease;
+        }
+
+        .draft-restore-banner.d-none {
+            display: none !important;
+        }
+
+        .project-action-btn {
+            background-color: #ffffff;
+            border: 1px solid #dee2e6;
+            color: #212529;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .project-action-btn:hover {
+            background-color: #f8f9fa;
+            border-color: #adb5bd;
+            color: #000000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transform: translateY(-1px);
+        }
+
+        .project-action-btn:hover .text-muted {
+            color: #6c757d !important;
+        }
+
+        .project-action-btn:hover .project-action-icon {
+            background-color: rgba(33, 37, 41, 0.08) !important;
+            color: #000000 !important;
+        }
+
+        .project-action-btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+            background-color: #e9ecef;
+        }
+
+        /* Context Menu untuk Sisip / Hapus Baris & Kolom Kanvas */
+        .canvas-context-menu {
+            position: fixed;
+            z-index: 1070;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(0, 0, 0, 0.12);
+            padding: 6px 0;
+            min-width: 220px;
+            display: none;
+            user-select: none;
+            -webkit-user-select: none;
+            animation: ctxFadeIn 0.12s ease-out;
+        }
+
+        @keyframes ctxFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.96);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .canvas-context-menu .ctx-header {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+            padding: 4px 14px 2px;
+        }
+
+        .canvas-context-menu .ctx-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 7px 14px;
+            font-size: 0.82rem;
+            color: #212529;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.12s ease, color 0.12s ease;
+        }
+
+        .canvas-context-menu .ctx-item:hover {
+            background-color: #f1f3f5;
+            color: #0d6efd;
+        }
+
+        .canvas-context-menu .ctx-item.text-danger:hover {
+            background-color: #f8d7da;
+            color: #dc3545 !important;
+        }
+
+        .canvas-context-menu .ctx-item i {
+            width: 16px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .canvas-context-menu .ctx-divider {
+            height: 1px;
+            background-color: #e9ecef;
+            margin: 4px 0;
+        }
+
+        /* Toast / Banner Progress Simpan Gambar PNG */
+        .export-progress-toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 12px 32px rgba(15, 23, 42, 0.18), 0 2px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            padding: 14px 18px;
+            min-width: 310px;
+            max-width: 90vw;
+            z-index: 1080;
+            display: none;
+            flex-direction: column;
+            gap: 10px;
+            animation: toastSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        @keyframes toastSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .export-progress-toast.is-visible {
+            display: flex;
+        }
+
+        .export-progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .export-progress-title {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .export-progress-percent {
+            font-size: 0.8rem;
+            font-weight: 700;
+            font-family: monospace;
+            color: #2563eb;
+        }
+
+        .export-progress-close-btn {
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            padding: 2px 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            border-radius: 4px;
+            line-height: 1;
+            transition: color 0.15s ease, background 0.15s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .export-progress-close-btn:hover {
+            color: #0f172a;
+            background: #f1f5f9;
+        }
+
+        .export-progress-bar-bg {
+            width: 100%;
+            height: 6px;
+            background-color: #f1f5f9;
+            border-radius: 100px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .export-progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #2563eb, #3b82f6);
+            border-radius: 100px;
+            transition: width 0.25s ease-out;
+        }
+
+        .export-progress-status {
+            font-size: 0.73rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
         .tips-fading-text {
@@ -812,7 +1185,7 @@
         </button>
         <div class="kai-sign">
             <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
-            <p class="kai-sign-elev">v 4.1+</p>
+            <p class="kai-sign-elev">v 5.0+</p>
         </div>
     </header>
 
@@ -890,6 +1263,27 @@
         </div>
 
         <div class="panel-canvas">
+            <!-- Banner Pemulihan Draft Otomatis (jika ada sesi sebelumnya yang belum disimpan) -->
+            <div id="draftRestoreBanner" class="draft-restore-banner d-none">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left fs-5"></i>
+                    <div>
+                        <strong>Draft Ditemukan:</strong> Ada rancangan layout sebelumnya yang belom disimpan! (<span
+                            id="draftTimeAgo">beberapa saat lalu</span>).
+                    </div>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn btn-light btn-sm fw-bold px-3 py-1 text-dark"
+                        onclick="restoreDraftSession()">
+                        Pulihkan
+                    </button>
+                    <button type="button" class="btn btn-outline-light btn-sm px-2 py-1" onclick="dismissDraftBanner()"
+                        title="Abaikan">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+            </div>
+
             <div class="p-2 bg-white border-bottom text-center text-muted tips-banner-container"
                 style="font-size: 0.75rem; min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 4px;">
                 <strong>Tips:</strong>
@@ -897,46 +1291,76 @@
             </div>
 
             <div class="canvas-toolbar">
+                <!-- Ukuran Grid Kanvas -->
                 <div class="toolbar-size">
-                    <span class="fw-semibold me-2 d-none d-md-inline"><i class="fa-solid fa-border-all"></i>
-                        Ukuran:</span>
-                    <input type="number" id="gridCols" class="form-control form-control-sm text-center toolbar-input"
-                        value="7" min="1" max="50" onchange="resizeCanvas()"
+                    <span class="toolbar-size-label d-none d-sm-inline-flex">
+                        <i class="fa-solid fa-border-all"></i>
+                    </span>
+                    <input type="number" id="gridCols" class="toolbar-input text-center" value="7" min="1" max="50"
+                        onchange="resizeCanvas()"
                         onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
                         oninput="this.value = this.value.replace(/\D/g, ''); if(+this.value > 50) this.value = 50;"
                         title="Jumlah Kolom" aria-label="Jumlah Kolom">
                     <span class="toolbar-times">×</span>
-                    <input type="number" id="gridRows" class="form-control form-control-sm text-center toolbar-input"
-                        value="10" min="1" max="100" onchange="resizeCanvas()"
+                    <input type="number" id="gridRows" class="toolbar-input text-center" value="10" min="1" max="100"
+                        onchange="resizeCanvas()"
                         onkeydown="if(['-','+','e','E'].includes(event.key)) event.preventDefault();"
                         oninput="this.value = this.value.replace(/\D/g, ''); if(+this.value > 100) this.value = 100;"
                         title="Jumlah Baris" aria-label="Jumlah Baris">
                 </div>
+
                 <div class="toolbar-actions">
-                    <button class="btn btn-sm btn-outline-secondary toolbar-btn" id="undoBtn" onclick="undo()"
-                        title="Urungkan tindakan (Ctrl+Z)" aria-label="Undo" disabled>
-                        <i class="fa-solid fa-rotate-left"></i><span class="d-none d-sm-inline">Undo</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary toolbar-btn" id="redoBtn" onclick="redo()"
-                        title="Ulangi tindakan (Ctrl+Y atau Ctrl+Shift+Z)" aria-label="Redo" disabled>
-                        <i class="fa-solid fa-rotate-right"></i><span class="d-none d-sm-inline">Redo</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-danger toolbar-btn" onclick="clearCanvas()">
-                        <i class="fa-solid fa-trash-can"></i><span>Kosongkan</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-primary toolbar-btn" id="savePngBtn" onclick="saveAsPNG()"
-                        title="Simpan kanvas rute sebagai gambar PNG">
-                        <i class="fa-solid fa-image"></i><span>Simpan</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-dark toolbar-btn d-none d-md-inline-flex"
-                        onclick="openCustomIconModal()" title="Cari & Muat Ikon Kustom Manual">
-                        <i class="fa-solid fa-shapes"></i><span>Input</span>
-                    </button>
-                    <button class="btn btn-sm btn-outline-dark toolbar-btn d-none d-md-inline-flex"
-                        onclick="openImportModal()" title="Impor bagan rute dari sintaks Wikipedia / BSicon">
+                    <!-- Group 1: Undo & Redo -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn" id="undoBtn" onclick="undo()" title="Urungkan tindakan (Ctrl+Z)"
+                            aria-label="Undo" disabled>
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </button>
+                        <button class="dock-btn" id="redoBtn" onclick="redo()"
+                            title="Ulangi tindakan (Ctrl+Y atau Ctrl+Shift+Z)" aria-label="Redo" disabled>
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Group 2: Modifikasi Kanvas (Struktur & Kosongkan) -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn primary-action" type="button" onclick="openStructureModal()"
+                            title="Sisip / Hapus Baris & Kolom" aria-label="Kelola Struktur">
+                            <i class="fa-solid fa-table-cells-large"></i>
+                        </button>
+                        <button class="dock-btn danger-action" onclick="clearCanvas()"
+                            title="Kosongkan Semua Sel Kanvas" aria-label="Kosongkan Kanvas">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+
+                    <!-- Group 3: File, Proyek & Input -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn accent-action" type="button" id="projectModalBtn"
+                            onclick="openProjectModal()" title="Manajemen Berkas Proyek (.spoor)" aria-label="Proyek">
+                            <i class="fa-solid fa-folder-open"></i>
+                        </button>
+                        <input type="file" id="spoorFileInput" accept=".spoor,application/json" style="display: none;"
+                            onchange="handleSpoorFileSelected(event)">
+
+                        <button class="dock-btn primary-action" id="savePngBtn" onclick="saveAsPNG()"
+                            title="Simpan kanvas rute sebagai gambar PNG" aria-label="Simpan PNG">
+                            <i class="fa-solid fa-image"></i>
+                        </button>
+
+                        <button class="dock-btn d-none d-md-inline-flex" onclick="openCustomIconModal()"
+                            title="Cari & Muat Ikon Manual" aria-label="Input Ikon Kustom">
+                            <i class="fa-solid fa-shapes"></i>
+                        </button>
+                    </div>
+
+                    <!-- Tombol Utama: Impor & Ekspor Sintaks Wikipedia -->
+                    <button class="dock-pill-btn pill-highlight d-none d-md-inline-flex" onclick="openImportModal()"
+                        title="Impor bagan rute dari sintaks Wikipedia / BSicon" aria-label="Impor Sintaks">
                         <i class="fa-solid fa-file-import"></i><span>Impor</span>
                     </button>
-                    <button class="btn btn-sm btn-dark toolbar-btn" onclick="exportData()">
+                    <button class="dock-pill-btn pill-highlight" onclick="exportData()"
+                        title="Hasilkan sintaks templat {{routemap}} Wikipedia">
                         <i class="fa-solid fa-code"></i><span>Ekspor</span>
                     </button>
                 </div>
@@ -1045,11 +1469,12 @@
                 </div>
                 <div class="modal-body">
                     <p class="text-muted small mb-2">
-                        Tempelkan (<i>paste</i>) sintaks diagram lintasan Wikipedia (<code>{{routemap}}</code> atau
-                        baris
-                        BSicon
-                        dengan pemisah <code>\</code>). Hanya ikon di bagian marka BSicon yang akan dimuat ke kanvas;
-                        teks keterangan stasiun di sebelah kanan akan diabaikan secara otomatis.
+                        <strong>
+                            Tempelkan (<i>paste</i>) sintaks diagram lintasan Wikipedia (<code>{{routemap}}</code>
+                            atau baris BSicon dengan pemisah <code>\</code>).
+                        </strong><br>
+                        Hanya ikon di bagian marka BSicon yang akan dimuat ke kanvas; teks keterangan stasiun di sebelah
+                        kanan akan diabaikan secara otomatis.
                     </p>
                     <textarea id="importTextarea" class="form-control font-monospace" rows="12"
                         placeholder="Contoh:&#10;{{routemap&#10;|title=Nama Stasiun&#10;|map=&#10;STR\BHF\STR~~0.0~~Stasiun Utama&#10;STR\STR!~PORT\STR~~2.5~~Pelabuhan&#10;}}"
@@ -1061,6 +1486,58 @@
                     <button type="button" class="btn btn-success" id="importSubmitBtn" onclick="executeImport()">
                         <i class="fa-solid fa-upload"></i> Muat ke Kanvas
                     </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Proyek (.spoor) -->
+    <div class="modal fade" id="projectModal" tabindex="-1" aria-labelledby="projectModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="projectModalLabel">
+                        Simpan Proyek
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-4">
+                    <p class="text-secondary small mb-4">
+                        Format berkas <code>.spoor</code> khusus Spoorwiki menyimpan susunan seluruh kanvas, dimensi
+                        baris/kolom, dan
+                        tumpukan ikon secara utuh ke komputer Anda.
+                    </p>
+                    <div class="d-grid gap-3">
+                        <button type="button"
+                            class="btn project-action-btn py-3 d-flex align-items-center gap-3 text-start px-3"
+                            onclick="executeSaveSpoorFromModal()">
+                            <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-2 d-flex align-items-center justify-content-center project-action-icon"
+                                style="width: 44px; height: 44px; flex-shrink: 0;">
+                                <i class="fa-solid fa-file-arrow-down fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Simpan File (.spoor)</div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">Unduh kanvas rute saat ini
+                                    sebagai berkas proyek lokal</div>
+                            </div>
+                        </button>
+                        <button type="button"
+                            class="btn project-action-btn py-3 d-flex align-items-center gap-3 text-start px-3"
+                            onclick="executeOpenSpoorFromModal()">
+                            <div class="rounded-circle bg-secondary bg-opacity-10 text-secondary p-2 d-flex align-items-center justify-content-center project-action-icon"
+                                style="width: 44px; height: 44px; flex-shrink: 0;">
+                                <i class="fa-solid fa-file-arrow-up fs-5"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold">Buka File (.spoor)</div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">Muat dan lanjutkan pengerjaan
+                                    dari berkas proyek yang ada</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -1143,7 +1620,7 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-danger"><i class="fa-solid fa-trash-can"></i> Kosongkan Kanvas</h5>
+                    <h5 class="modal-title text-danger">Kosongkan Kanvas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -1154,6 +1631,183 @@
                     <button type="button" class="btn btn-danger" onclick="executeClearCanvas()">Ya, Kosongkan</button>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus Baris / Kolom yang Memiliki Ikon -->
+    <div class="modal fade" id="deleteRowColConfirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title fw-bold" id="deleteRowColConfirmTitle">
+                        <i class="fa-solid fa-triangle-exclamation me-2"></i>Konfirmasi Hapus
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3" id="deleteRowColConfirmBody">
+                    Apakah Anda yakin ingin menghapus?
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger btn-sm fw-bold" id="deleteRowColConfirmActionBtn">
+                        <i class="fa-solid fa-trash-can me-1"></i> Tetap Hapus
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Sisip / Hapus Baris & Kolom (Struktur Kanvas) -->
+    <div class="modal fade" id="structureModal" tabindex="-1" aria-labelledby="structureModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold" id="structureModalLabel">
+                        Kelola Struktur Kanvas
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3">
+                    <div class="alert alert-light border small text-muted mb-3 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-info text-primary fs-5"></i>
+                        <div>
+                            Target posisi aktif saat ini:
+                            <strong id="structureActiveTargetText" class="text-dark">Baris 1, Kolom 1</strong>.
+                            <div class="text-secondary" style="font-size: 0.72rem;">(Tip: Anda juga dapat langsung
+                                <strong>klik kanan</strong> pada sel manapun di kanvas)
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Operasi Baris -->
+                    <div class="card mb-3 border-light-subtle shadow-sm">
+                        <div
+                            class="card-header bg-body-tertiary py-2 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold small"><i class="fa-solid fa-grip-lines me-1 text-primary"></i> Operasi
+                                Baris (Row)</span>
+                            <span class="badge bg-secondary-subtle text-secondary" id="structureRowCountBadge">10
+                                Baris</span>
+                        </div>
+                        <div class="card-body p-2 d-grid gap-2">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-row-above')">
+                                        <i class="fa-solid fa-arrow-up text-primary"></i>
+                                        <span>Sisip di Atas</span>
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-row-below')">
+                                        <i class="fa-solid fa-arrow-down text-primary"></i>
+                                        <span>Sisip di Bawah</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button"
+                                class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                onclick="executeStructureAction('delete-row')">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Hapus Baris Ini</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Operasi Kolom -->
+                    <div class="card border-light-subtle shadow-sm">
+                        <div
+                            class="card-header bg-body-tertiary py-2 d-flex justify-content-between align-items-center">
+                            <span class="fw-bold small"><i
+                                    class="fa-solid fa-grip-lines-vertical me-1 text-success"></i> Operasi Kolom
+                                (Column)</span>
+                            <span class="badge bg-secondary-subtle text-secondary" id="structureColCountBadge">7
+                                Kolom</span>
+                        </div>
+                        <div class="card-body p-2 d-grid gap-2">
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-col-left')">
+                                        <i class="fa-solid fa-arrow-left text-success"></i>
+                                        <span>Sisip di Kiri</span>
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button type="button"
+                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                        onclick="executeStructureAction('insert-col-right')">
+                                        <i class="fa-solid fa-arrow-right text-success"></i>
+                                        <span>Sisip di Kanan</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <button type="button"
+                                class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
+                                onclick="executeStructureAction('delete-col')">
+                                <i class="fa-solid fa-trash-can"></i>
+                                <span>Hapus Kolom Ini</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu Kanvas (Klik Kanan pada Sel) -->
+    <div id="canvasContextMenu" class="canvas-context-menu">
+        <div class="ctx-header" id="ctxMenuHeader">Sel (0, 0)</div>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-row-above')">
+            <i class="fa-solid fa-arrow-up text-primary"></i> Sisip Baris di Atas
+        </a>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-row-below')">
+            <i class="fa-solid fa-arrow-down text-primary"></i> Sisip Baris di Bawah
+        </a>
+        <div class="ctx-divider"></div>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-col-left')">
+            <i class="fa-solid fa-arrow-left text-success"></i> Sisip Kolom di Kiri
+        </a>
+        <a class="ctx-item" href="javascript:void(0)" onclick="handleCtxAction('insert-col-right')">
+            <i class="fa-solid fa-arrow-right text-success"></i> Sisip Kolom di Kanan
+        </a>
+        <div class="ctx-divider"></div>
+        <a class="ctx-item text-danger" href="javascript:void(0)" onclick="handleCtxAction('delete-row')">
+            <i class="fa-solid fa-xmark"></i> Hapus Baris Ini
+        </a>
+        <a class="ctx-item text-danger" href="javascript:void(0)" onclick="handleCtxAction('delete-col')">
+            <i class="fa-solid fa-xmark"></i> Hapus Kolom Ini
+        </a>
+    </div>
+
+    <!-- Toast Progres Simpan Gambar PNG -->
+    <div id="exportProgressToast" class="export-progress-toast" role="status" aria-live="polite">
+        <div class="export-progress-header">
+            <div class="export-progress-title">
+                <i class="fa-solid fa-spinner fa-spin text-primary"></i>
+                <span id="exportProgressTitleText">Memproses Gambar...</span>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+                <span class="export-progress-percent" id="exportProgressPercent">0%</span>
+                <button type="button" class="export-progress-close-btn" onclick="cancelExportProgress()"
+                    title="Tutup / Batalkan" aria-label="Tutup progress">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+        <div class="export-progress-bar-bg">
+            <div class="export-progress-bar-fill" id="exportProgressBarFill"></div>
+        </div>
+        <div class="export-progress-status">
+            <span id="exportProgressStatusText">Menyiapkan kanvas & font...</span>
+            <span class="text-muted" style="font-size: 0.68rem;">Resolusi Tinggi (2x)</span>
         </div>
     </div>
 
@@ -1177,7 +1831,7 @@
 ██║  ██║██║╚██████╔╝╚██████╔╝███████║
 ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
 `, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
-        console.log('%c🚀 SPOORWIKI Tools Build v4.1 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
+        console.log('%c🚀 SPOORWIKI Tools Build v5.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
 
         const iconDatabase = {
             "sepur-lurus": {
@@ -1202,7 +1856,7 @@
                     'SKRZ-GD', 'SKRZ-G1', 'SKRZ-G2', 'SKRZ-G4',
                     'SKRZ-GDq', 'SKRZ-G1q', 'SKRZ-G2q', 'SKRZ-G4q',
                     'SKRZ-GDBUE', 'SKRZ-G1BUE', 'SKRZ-G2BUE', 'SKRZ-G4BUE',
-                    'BUE', '', 'BUE3+1', 'BUE2+4',
+                    'BUE', 'eBUEq', 'BUE3+1', 'BUE2+4',
                     'SKRZ-G2o', 'SKRZ-G4o', 'SKRZ-G2u', 'SKRZ-G4u',
                     'SKRZ-G2oq', 'SKRZ-G4oq', 'SKRZ-G2uq', 'SKRZ-G4uq',
                     'STRuq', '-STRu', 'STRu-', 'tSTRea',
@@ -1284,6 +1938,10 @@
                     'ABZr+1x2', 'ABZl+4x3', 'ABZl+3x4', 'ABZr+2x1',
                     'ABZ1+fr', 'ABZ2+gr', 'ABZ3+gl', 'ABZ4+fl',
                     'WYE23', 'WYE+14', 'WYEr+12', 'WYEl+34',
+                    'ABZg23', 'ABZg+14', 'ABZq12', 'ABZq+34',
+                    'WYE1+rf', 'WYE2+rg', 'WYE3+lg', 'WYE4+lf',
+                    'SHI4gr+rq', 'ABZg3+1', 'ABZq1+3', 'ABZq2+4',
+                    'ABZ2+4gf', 'ABZ2+4lr', 'ABZ3+1gf', 'ABZ3+1lr',
                     'SPLa', 'SPLa.F', 'vSHI2gl-', 'v-SHI2gr',
                     'SPLe', 'SPLe.G', 'vSHI2g+l-', 'v-SHI2g+r',
                     'xSPLa', 'eSPLa', 'xSPLa.F', 'eSPLa.F',
@@ -1316,6 +1974,7 @@
                     'PSLle', 'PSLla', 'PSLra', 'PSLra',
                     'YRD', 'YRDa', 'YRDm', 'YRDe',
                     'YRDENDEa', 'YRDENDEe', 'YRDCONTg', 'YRDCONTf',
+                    'KRWgl+l', 'KRWgr+r', 'SHI4gl+lq', 'SHI4gr+rq',
                     '--divider:Persilangan--',
                     'KRZ', 'KRX', 'KRZ2+4', 'KRZ3+1',
                     'ABZgl', 'ABZgr', 'ABZg+l', 'ABZg+r',
@@ -1394,8 +2053,8 @@
                     'RP4c1', 'RP4c4', 'RP2c1', 'RP2c4',
                     'RP22+n', 'RP23+n', 'RP42+n', 'RP43+n',
                     'RP2s+1', 'RP2s+4', 'RP4s+1', 'RP4s+4',
-                    'RP22+w', 'RP23+e', 'RP43+e', 'RP42+w',
-                    'RP2w+1', 'RP2e+4', 'RP42+w', 'RP43+e',
+                    'RP22+w', 'RP23+e', 'RP42+w', 'RP43+e',
+                    'RP2w+1', 'RP2e+4', 'RP4w+1', 'RP4e+4',
                     'hRP2', 'hRP2q', 'hRP4', 'hRP4q',
                     'hRP2a', 'hRP2e', 'hRP2aq', 'hRP2eq',
                     'hRP4a', 'hRP4e', 'hRP4aq', 'hRP4eq',
@@ -1439,13 +2098,18 @@
                 icons: [
                     'STRc2', 'STRc3', 'vSTRc2', 'vSTRc3',
                     'STRc1', 'STRc4', 'vSTRc1', 'vSTRc4',
+                    'STR+c2', 'STR+c3', 'STR+c13', 'STR+c24',
+                    'STR+c1', 'STR+c4', 'STR+c123', 'STR+c234',
+                    'STR2+4+c13', 'STR2+4+c1', 'STR2+4+c3', '',
+                    'STR3+1+c24', 'STR3+1+c2', 'STR3+1+c4', '',
+                    'STR2+c3', 'STR3+c1', 'STR+1+c4', 'STR+4+c1',
                     'ÜWu2', 'ÜWu3', 'tÜWu2', 'tÜWu3',
                     'ÜWu1', 'ÜWu4', 'tÜWu1', 'tÜWu4',
                     'tSTRc1', 'tSTRc4', 'tSTRc2', 'tSTRc3',
                     'STRc12', 'STRc34', 'STRc14', 'STRc23',
                     'STRc13', 'STRc24', 'STRc1234', '',
-                    'lMSTRc2o', 'lMSTRc3o', 'lhSTRa@fq', 'lhSTRe@gq',
-                    'lMSTRc1o', 'lMSTRc4o', 'lhSTRa@f(l)q', 'lhSTRe@g(l)q',
+                    'lMSTRc2o', 'lMSTRc3o', 'lhSTRa@f(l)', 'lhSTRa@f(r)',
+                    'lMSTRc1o', 'lMSTRc4o', 'lhSTRe@g(l)', 'lhSTRe@g(r)',
                 ]
             },
             "efek": {
@@ -1965,6 +2629,7 @@
             // Kosongkan redoStack saat ada tindakan baru
             redoStack.length = 0;
             updateHistoryButtons();
+            scheduleAutoSave();
         }
 
         function updateHistoryButtons() {
@@ -1994,6 +2659,7 @@
                 }
             });
             updateHistoryButtons();
+            scheduleAutoSave();
         }
 
         function undo() {
@@ -2045,6 +2711,312 @@
                 }
             });
         }
+
+        /**
+         * --- FITUR SISIP & HAPUS BARIS / KOLOM KANVAS ---
+         */
+        let contextTargetCoord = { r: 0, c: 0 };
+
+        function getActiveSelectionRowCol() {
+            if (selectedCellCoords.size > 0) {
+                let minR = Infinity;
+                let minC = Infinity;
+                selectedCellCoords.forEach(key => {
+                    const [r, c] = key.split(',').map(Number);
+                    if (r < minR) minR = r;
+                    if (c < minC) minC = c;
+                });
+                return { r: minR, c: minC };
+            }
+            return { r: contextTargetCoord.r || 0, c: contextTargetCoord.c || 0 };
+        }
+
+        function insertRow(atIndex) {
+            if (currentRows >= 100) {
+                alert('Jumlah baris maksimum adalah 100.');
+                return;
+            }
+            pushHistory();
+            const state = getCanvasState();
+            const newIcons = [];
+            state.icons.forEach(item => {
+                if (item.r >= atIndex) {
+                    newIcons.push({ r: item.r + 1, c: item.c, icons: item.icons });
+                } else {
+                    newIcons.push(item);
+                }
+            });
+
+            currentRows++;
+            pendingRows = currentRows;
+            const gridRowsEl = document.getElementById('gridRows');
+            if (gridRowsEl) gridRowsEl.value = currentRows;
+
+            renderCanvas();
+            newIcons.forEach(item => {
+                const cell = getCellEl(item.r, item.c);
+                if (cell) item.icons.forEach(name => addIconToCell(cell, name));
+            });
+
+            // Pindahkan seleksi ke baris baru yang disisipkan
+            clearSelection();
+            selectCell(atIndex, contextTargetCoord.c < currentCols ? contextTargetCoord.c : 0, false);
+            scheduleAutoSave();
+        }
+
+        function insertCol(atIndex) {
+            if (currentCols >= 50) {
+                alert('Jumlah kolom maksimum adalah 50.');
+                return;
+            }
+            pushHistory();
+            const state = getCanvasState();
+            const newIcons = [];
+            state.icons.forEach(item => {
+                if (item.c >= atIndex) {
+                    newIcons.push({ r: item.r, c: item.c + 1, icons: item.icons });
+                } else {
+                    newIcons.push(item);
+                }
+            });
+
+            currentCols++;
+            pendingCols = currentCols;
+            const gridColsEl = document.getElementById('gridCols');
+            if (gridColsEl) gridColsEl.value = currentCols;
+
+            renderCanvas();
+            newIcons.forEach(item => {
+                const cell = getCellEl(item.r, item.c);
+                if (cell) item.icons.forEach(name => addIconToCell(cell, name));
+            });
+
+            clearSelection();
+            selectCell(contextTargetCoord.r < currentRows ? contextTargetCoord.r : 0, atIndex, false);
+            scheduleAutoSave();
+        }
+
+        function deleteRow(atIndex, force = false) {
+            if (currentRows <= 1) {
+                alert('Kanvas harus memiliki minimal 1 baris.');
+                return;
+            }
+
+            // Hitung apakah ada ikon di baris ini
+            const state = getCanvasState();
+            const iconsInRow = state.icons.filter(item => item.r === atIndex);
+            const countIcons = iconsInRow.reduce((sum, item) => sum + item.icons.length, 0);
+
+            if (countIcons > 0 && !force) {
+                showDeleteRowColModal('baris', atIndex, countIcons, () => deleteRow(atIndex, true));
+                return;
+            }
+
+            pushHistory();
+            const newIcons = [];
+            state.icons.forEach(item => {
+                if (item.r < atIndex) {
+                    newIcons.push(item);
+                } else if (item.r > atIndex) {
+                    newIcons.push({ r: item.r - 1, c: item.c, icons: item.icons });
+                }
+            });
+
+            currentRows--;
+            pendingRows = currentRows;
+            const gridRowsEl = document.getElementById('gridRows');
+            if (gridRowsEl) gridRowsEl.value = currentRows;
+
+            renderCanvas();
+            newIcons.forEach(item => {
+                const cell = getCellEl(item.r, item.c);
+                if (cell) item.icons.forEach(name => addIconToCell(cell, name));
+            });
+
+            clearSelection();
+            const targetR = Math.min(atIndex, currentRows - 1);
+            const targetC = Math.min(contextTargetCoord.c, currentCols - 1);
+            selectCell(targetR, targetC, false);
+            scheduleAutoSave();
+        }
+
+        function deleteCol(atIndex, force = false) {
+            if (currentCols <= 1) {
+                alert('Kanvas harus memiliki minimal 1 kolom.');
+                return;
+            }
+
+            const state = getCanvasState();
+            const iconsInCol = state.icons.filter(item => item.c === atIndex);
+            const countIcons = iconsInCol.reduce((sum, item) => sum + item.icons.length, 0);
+
+            if (countIcons > 0 && !force) {
+                showDeleteRowColModal('kolom', atIndex, countIcons, () => deleteCol(atIndex, true));
+                return;
+            }
+
+            pushHistory();
+            const newIcons = [];
+            state.icons.forEach(item => {
+                if (item.c < atIndex) {
+                    newIcons.push(item);
+                } else if (item.c > atIndex) {
+                    newIcons.push({ r: item.r, c: item.c - 1, icons: item.icons });
+                }
+            });
+
+            currentCols--;
+            pendingCols = currentCols;
+            const gridColsEl = document.getElementById('gridCols');
+            if (gridColsEl) gridColsEl.value = currentCols;
+
+            renderCanvas();
+            newIcons.forEach(item => {
+                const cell = getCellEl(item.r, item.c);
+                if (cell) item.icons.forEach(name => addIconToCell(cell, name));
+            });
+
+            clearSelection();
+            const targetR = Math.min(contextTargetCoord.r, currentRows - 1);
+            const targetC = Math.min(atIndex, currentCols - 1);
+            selectCell(targetR, targetC, false);
+            scheduleAutoSave();
+        }
+
+        function showDeleteRowColModal(type, index, iconCount, onConfirm) {
+            const titleEl = document.getElementById('deleteRowColConfirmTitle');
+            const bodyEl = document.getElementById('deleteRowColConfirmBody');
+            const btnEl = document.getElementById('deleteRowColConfirmActionBtn');
+
+            if (titleEl) {
+                titleEl.innerHTML = `<i class="fa-solid fa-triangle-exclamation me-2"></i>Hapus ${type === 'baris' ? 'Baris' : 'Kolom'} ${index + 1}`;
+            }
+            if (bodyEl) {
+                bodyEl.innerHTML = `
+                    <p class="mb-2">Apakah Anda yakin ingin menghapus <strong>${type} ke-${index + 1}</strong>?</p>
+                    <div class="alert alert-danger py-2 px-3 my-2 d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-circle-exclamation fs-5"></i>
+                        <div>Ada <strong>${iconCount} ikon</strong> di ${type} ini yang akan ikut terhapus!</div>
+                    </div>
+                    <div class="text-muted small">Tindakan ini dapat dibatalkan melalui fitur Undo (Ctrl+Z).</div>
+                `;
+            }
+
+            if (btnEl) {
+                btnEl.onclick = () => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('deleteRowColConfirmModal'));
+                    if (modal) modal.hide();
+                    if (onConfirm) onConfirm();
+                };
+            }
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('deleteRowColConfirmModal'));
+            modal.show();
+        }
+
+        // Context Menu Management
+        function showCanvasContextMenu(x, y, r, c) {
+            const menu = document.getElementById('canvasContextMenu');
+            const header = document.getElementById('ctxMenuHeader');
+            if (!menu) return;
+
+            contextTargetCoord = { r, c };
+            if (header) {
+                header.textContent = `Sel Baris ${r + 1}, Kolom ${c + 1}`;
+            }
+
+            menu.style.display = 'block';
+            menu.style.left = '0px';
+            menu.style.top = '0px';
+
+            const menuRect = menu.getBoundingClientRect();
+            let posX = x;
+            let posY = y;
+
+            if (posX + menuRect.width > window.innerWidth - 10) {
+                posX = window.innerWidth - menuRect.width - 10;
+            }
+            if (posY + menuRect.height > window.innerHeight - 10) {
+                posY = window.innerHeight - menuRect.height - 10;
+            }
+
+            menu.style.left = `${posX}px`;
+            menu.style.top = `${posY}px`;
+        }
+
+        function hideCanvasContextMenu() {
+            const menu = document.getElementById('canvasContextMenu');
+            if (menu) menu.style.display = 'none';
+        }
+
+        function handleCtxAction(action) {
+            hideCanvasContextMenu();
+            const { r, c } = contextTargetCoord;
+
+            switch (action) {
+                case 'insert-row-above':
+                    insertRow(r);
+                    break;
+                case 'insert-row-below':
+                    insertRow(r + 1);
+                    break;
+                case 'insert-col-left':
+                    insertCol(c);
+                    break;
+                case 'insert-col-right':
+                    insertCol(c + 1);
+                    break;
+                case 'delete-row':
+                    deleteRow(r);
+                    break;
+                case 'delete-col':
+                    deleteCol(c);
+                    break;
+            }
+        }
+
+        /**
+         * Pengontrol Modal Struktur Kanvas (UI Toolbar)
+         */
+        function openStructureModal() {
+            const activeCoord = getActiveSelectionRowCol();
+            contextTargetCoord = { r: activeCoord.r, c: activeCoord.c };
+
+            const targetTextEl = document.getElementById('structureActiveTargetText');
+            const rowBadgeEl = document.getElementById('structureRowCountBadge');
+            const colBadgeEl = document.getElementById('structureColCountBadge');
+
+            if (targetTextEl) {
+                targetTextEl.textContent = `Baris ${activeCoord.r + 1}, Kolom ${activeCoord.c + 1}`;
+            }
+            if (rowBadgeEl) {
+                rowBadgeEl.textContent = `${currentRows} Baris`;
+            }
+            if (colBadgeEl) {
+                colBadgeEl.textContent = `${currentCols} Kolom`;
+            }
+
+            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('structureModal'));
+            modal.show();
+        }
+
+        function executeStructureAction(action) {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('structureModal'));
+            if (modal) modal.hide();
+            handleCtxAction(action);
+        }
+
+        // Tutup context menu saat klik sembarang di luar
+        window.addEventListener('click', (e) => {
+            if (!e.target.closest('#canvasContextMenu')) {
+                hideCanvasContextMenu();
+            }
+        });
+        window.addEventListener('contextmenu', (e) => {
+            if (!e.target.closest('.canvas-cell') && !e.target.closest('#canvasContextMenu')) {
+                hideCanvasContextMenu();
+            }
+        });
 
         // State seleksi kanvas dan clipboard
         const selectedCellCoords = new Set(); // Format string: "r,c"
@@ -2615,6 +3587,14 @@
                     }
                 });
 
+                // Klik Kanan pada Sel untuk memunculkan Context Menu Sisip/Hapus
+                cell.addEventListener('contextmenu', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    selectCell(r, c, false);
+                    showCanvasContextMenu(e.clientX, e.clientY, r, c);
+                });
+
                 canvas.appendChild(cell);
             }
         }
@@ -3067,29 +4047,119 @@
         }
 
         /**
-         * Fitur Simpan ke PNG menggunakan html2canvas (Pendekatan A)
-         * Mengambil screenshot elemen #route-canvas dengan resolusi tinggi (scale: 2)
-         * dan mengunduhnya secara otomatis ke perangkat pengguna.
+         * Fitur Simpan ke PNG menggunakan html2canvas dengan Visual Progress Loading Bar
          */
+        let exportAbortController = null;
+        let exportProgressHideTimer = null;
+
+        function updateExportProgress(percent, statusText, titleText = null) {
+            const toast = document.getElementById('exportProgressToast');
+            const percentEl = document.getElementById('exportProgressPercent');
+            const barFillEl = document.getElementById('exportProgressBarFill');
+            const statusEl = document.getElementById('exportProgressStatusText');
+            const titleEl = document.getElementById('exportProgressTitleText');
+
+            if (exportProgressHideTimer) {
+                clearTimeout(exportProgressHideTimer);
+                exportProgressHideTimer = null;
+            }
+
+            if (toast) toast.classList.add('is-visible');
+            if (percentEl) percentEl.textContent = `${Math.min(100, Math.round(percent))}%`;
+            if (barFillEl) barFillEl.style.width = `${Math.min(100, Math.round(percent))}%`;
+            if (statusEl && statusText) statusEl.textContent = statusText;
+            if (titleEl && titleText) titleEl.textContent = titleText;
+        }
+
+        function resetExportButtonUI() {
+            const btn = document.getElementById('savePngBtn');
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa-solid fa-image"></i>';
+            }
+        }
+
+        function cancelExportProgress() {
+            if (exportAbortController) {
+                exportAbortController.abort();
+            }
+            hideExportProgress(0);
+            resetExportButtonUI();
+
+            // Kembalikan border kanvas & pembersihan kelas visual jika sedang diekspor
+            const canvasEl = document.getElementById('route-canvas');
+            if (canvasEl) canvasEl.classList.remove('no-grid');
+        }
+
+        function hideExportProgress(delay = 1000) {
+            const toast = document.getElementById('exportProgressToast');
+            if (!toast) return;
+
+            if (exportProgressHideTimer) {
+                clearTimeout(exportProgressHideTimer);
+            }
+
+            exportProgressHideTimer = setTimeout(() => {
+                toast.classList.remove('is-visible');
+                // Reset nilai tampilan secara manual tanpa memanggil updateExportProgress agar tidak memicu is-visible kembali
+                setTimeout(() => {
+                    const percentEl = document.getElementById('exportProgressPercent');
+                    const barFillEl = document.getElementById('exportProgressBarFill');
+                    const statusEl = document.getElementById('exportProgressStatusText');
+                    const titleEl = document.getElementById('exportProgressTitleText');
+
+                    if (percentEl) percentEl.textContent = '0%';
+                    if (barFillEl) barFillEl.style.width = '0%';
+                    if (statusEl) statusEl.textContent = 'Menyiapkan kanvas & font...';
+                    if (titleEl) titleEl.textContent = 'Memproses Gambar...';
+                }, 300);
+            }, delay);
+        }
+
         async function saveAsPNG() {
             const canvasEl = document.getElementById('route-canvas');
             if (!canvasEl) return;
 
             const btn = document.getElementById('savePngBtn');
-            const originalContent = btn ? btn.innerHTML : '';
+            const originalContent = '<i class="fa-solid fa-image"></i>';
             if (btn) {
                 btn.disabled = true;
-                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i><span>Proses...</span>';
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-primary"></i>';
             }
+
+            // Siapkan AbortController untuk membatalkan proses jika pengguna menekan tombol X
+            exportAbortController = new AbortController();
+            const { signal } = exportAbortController;
 
             // Simpan status seleksi bila ada agar tidak ikut terpotret
             const hadSelection = selectedCellCoords.size > 0;
             const savedSelected = new Set(selectedCellCoords);
 
+            // Inisialisasi progress bar
+            updateExportProgress(10, 'Menyiapkan elemen kanvas...', 'Memproses Gambar...');
+
+            // Timer interval simulasi progres halus agar pengguna yakin proses tidak macet
+            let currentPct = 15;
+            const progressTimer = setInterval(() => {
+                if (signal.aborted) {
+                    clearInterval(progressTimer);
+                    return;
+                }
+                if (currentPct < 75) {
+                    currentPct += Math.random() * 8 + 4;
+                    const statusMsg = currentPct < 40
+                        ? 'Memuat & memproses aset ikon BSicon...'
+                        : (currentPct < 65 ? 'Merender resolusi tinggi 2x...' : 'Menghitung tata letak sel...');
+                    updateExportProgress(currentPct, statusMsg);
+                }
+            }, 250);
+
             try {
                 if (typeof html2canvas !== 'function') {
                     throw new Error('Library html2canvas belum siap.');
                 }
+
+                if (signal.aborted) return;
 
                 // Bersihkan seleksi/highlight visual dan hilangkan border sel kanvas
                 clearSelection();
@@ -3097,14 +4167,37 @@
                 canvasEl.classList.add('no-grid');
 
                 // Render kanvas dengan skala 2x agar hasil PNG jernih dan tajam
-                const renderedCanvas = await html2canvas(canvasEl, {
+                // Menggunakan Promise.race bersama abort signal agar proses await langsung terputus jika dibatalkan
+                const html2canvasPromise = html2canvas(canvasEl, {
                     scale: 2,
                     useCORS: true,
                     allowTaint: true,
                     backgroundColor: '#ffffff',
                     logging: false,
-                    imageTimeout: 15000
+                    imageTimeout: 15000,
+                    onclone: (clonedDoc) => {
+                        if (!signal.aborted) {
+                            updateExportProgress(78, 'Menghasilkan raster bitmap kanvas...');
+                        }
+                    }
                 });
+
+                const abortPromise = new Promise((_, reject) => {
+                    if (signal.aborted) {
+                        reject(new DOMException('Proses render dibatalkan.', 'AbortError'));
+                    } else {
+                        signal.addEventListener('abort', () => {
+                            reject(new DOMException('Proses render dibatalkan.', 'AbortError'));
+                        }, { once: true });
+                    }
+                });
+
+                const renderedCanvas = await Promise.race([html2canvasPromise, abortPromise]);
+
+                if (signal.aborted) return;
+
+                clearInterval(progressTimer);
+                updateExportProgress(90, 'Mengonversi ke format berkas PNG...');
 
                 // Buat tautan unduhan otomatis
                 const link = document.createElement('a');
@@ -3116,10 +4209,27 @@
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
+
+                updateExportProgress(100, 'Gambar rute berhasil diunduh!', 'Selesai!');
             } catch (err) {
-                console.error('Gagal mengekspor PNG:', err);
-                alert('Gagal menyimpan gambar PNG: ' + (err.message || 'Terjadi kesalahan saat merender kanvas.'));
+                clearInterval(progressTimer);
+                if (signal && signal.aborted) {
+                    // Dibatalkan oleh pengguna, tidak perlu alert error
+                    console.log('Ekspor PNG dibatalkan oleh pengguna.');
+                } else {
+                    console.error('Gagal mengekspor PNG:', err);
+                    updateExportProgress(100, 'Gagal: ' + (err.message || 'Terjadi kesalahan render.'), 'Gagal Mengunduh');
+                    alert('Gagal menyimpan gambar PNG: ' + (err.message || 'Terjadi kesalahan saat merender kanvas.'));
+                }
             } finally {
+                clearInterval(progressTimer);
+                if (!signal.aborted) {
+                    hideExportProgress(1200);
+                } else {
+                    hideExportProgress(0);
+                }
+                exportAbortController = null;
+
                 // Kembalikan border kanvas & sel
                 canvasEl.classList.remove('no-grid');
 
@@ -3131,11 +4241,186 @@
                     });
                 }
 
-                if (btn) {
-                    btn.disabled = false;
-                    btn.innerHTML = originalContent;
-                }
+                resetExportButtonUI();
             }
+        }
+
+        /**
+         * --- FITUR MANAJEMEN DRAFT AUTO-SAVE & FILE PROYEK (.SPOOR) ---
+         */
+        const AUTOSAVE_KEY = 'spoorwiki_canvas_draft_v1';
+        let autoSaveDebounceTimer = null;
+
+        /**
+         * Debounced auto-save ke localStorage (non-blocking, interval 1 detik setelah aksi terakhir)
+         */
+        function scheduleAutoSave() {
+            clearTimeout(autoSaveDebounceTimer);
+            autoSaveDebounceTimer = setTimeout(() => {
+                try {
+                    const state = getCanvasState();
+                    // Hanya simpan jika kanvas memiliki ikon
+                    if (state && state.icons && state.icons.length > 0) {
+                        const payload = {
+                            version: '1.0',
+                            type: 'spoorwiki-project',
+                            timestamp: Date.now(),
+                            data: state
+                        };
+                        localStorage.setItem(AUTOSAVE_KEY, JSON.stringify(payload));
+                    } else {
+                        // Jika kanvas dikosongkan secara manual, hapus draft
+                        localStorage.removeItem(AUTOSAVE_KEY);
+                    }
+                } catch (e) {
+                    console.warn('Gagal menyimpan draft otomatis ke localStorage:', e);
+                }
+            }, 800);
+        }
+
+        /**
+         * Cek apakah ada draft tersimpan saat pertama kali halaman dimuat
+         */
+        function checkAutoSaveDraft() {
+            try {
+                const raw = localStorage.getItem(AUTOSAVE_KEY);
+                if (!raw) return;
+                const draft = JSON.parse(raw);
+                if (!draft || !draft.data || !draft.data.icons || draft.data.icons.length === 0) return;
+
+                const banner = document.getElementById('draftRestoreBanner');
+                const timeAgoEl = document.getElementById('draftTimeAgo');
+                if (banner && timeAgoEl) {
+                    const minutesAgo = Math.max(1, Math.round((Date.now() - (draft.timestamp || Date.now())) / 60000));
+                    timeAgoEl.textContent = minutesAgo < 60 ? `${minutesAgo} menit yang lalu` : `${Math.round(minutesAgo / 60)} jam yang lalu`;
+                    banner.classList.remove('d-none');
+                }
+            } catch (e) {
+                console.warn('Gagal membaca draft auto-save:', e);
+            }
+        }
+
+        function restoreDraftSession() {
+            try {
+                const raw = localStorage.getItem(AUTOSAVE_KEY);
+                if (!raw) return;
+                const draft = JSON.parse(raw);
+                if (draft && draft.data) {
+                    pushHistory();
+                    restoreCanvasState(draft.data);
+                    dismissDraftBanner();
+                }
+            } catch (e) {
+                alert('Gagal memulihkan draft: format data tidak valid.');
+            }
+        }
+
+        function dismissDraftBanner() {
+            const banner = document.getElementById('draftRestoreBanner');
+            if (banner) banner.classList.add('d-none');
+            try {
+                localStorage.removeItem(AUTOSAVE_KEY);
+            } catch (e) {
+                console.warn('Gagal menghapus draft dari localStorage:', e);
+            }
+        }
+
+        /**
+         * Pengontrol Modal Proyek (.spoor)
+         */
+        function openProjectModal() {
+            const modalEl = document.getElementById('projectModal');
+            if (modalEl) {
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+                modal.show();
+            }
+        }
+
+        function executeSaveSpoorFromModal() {
+            const modalEl = document.getElementById('projectModal');
+            if (modalEl) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+            saveSpoorProject();
+        }
+
+        function executeOpenSpoorFromModal() {
+            const modalEl = document.getElementById('projectModal');
+            if (modalEl) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+            openSpoorFileInput();
+        }
+
+        /**
+         * Unduh proyek saat ini sebagai berkas `.spoor` lokal (format JSON terstruktur)
+         */
+        function saveSpoorProject() {
+            const state = getCanvasState();
+            const projectData = {
+                app: 'SPOORWIKI Tools',
+                version: '5.0',
+                fileType: 'spoorwiki-project',
+                createdAt: new Date().toISOString(),
+                canvas: {
+                    cols: state.cols,
+                    rows: state.rows,
+                    icons: state.icons
+                }
+            };
+
+            const jsonStr = JSON.stringify(projectData, null, 2);
+            const blob = new Blob([jsonStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            const now = new Date();
+            const pad = (n) => String(n).padStart(2, '0');
+            const dateStr = `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}_${pad(now.getHours())}${pad(now.getMinutes())}`;
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rute_stasiun_${dateStr}.spoor`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        /**
+         * Buka dialog file input untuk memuat berkas `.spoor`
+         */
+        function openSpoorFileInput() {
+            const fileInput = document.getElementById('spoorFileInput');
+            if (fileInput) {
+                fileInput.value = '';
+                fileInput.click();
+            }
+        }
+
+        function handleSpoorFileSelected(e) {
+            const file = e.target.files && e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function (event) {
+                try {
+                    const parsed = JSON.parse(event.target.result);
+                    // Validasi berkas .spoor
+                    const canvasData = parsed.canvas || (parsed.data ? parsed.data : parsed);
+                    if (!canvasData || typeof canvasData.cols !== 'number' || typeof canvasData.rows !== 'number' || !Array.isArray(canvasData.icons)) {
+                        throw new Error('Struktur berkas .spoor tidak dikenali atau rusak.');
+                    }
+
+                    pushHistory();
+                    restoreCanvasState(canvasData);
+                    dismissDraftBanner();
+                } catch (err) {
+                    alert('Gagal memuat proyek: ' + (err.message || 'Format berkas tidak valid.'));
+                }
+            };
+            reader.readAsText(file);
         }
 
         let iconTooltipTimeout = null;
@@ -3249,6 +4534,7 @@
             if (!tipEl) return;
 
             const tips = [
+                'Klik kanan pada sel manapun untuk sisip baris dan sisip kolom baru',
                 'Klik dua kali pada sel untuk menghapus atau geser ikon ke tempat sampah.',
                 'Seret beberapa ikon ke sel yang sama untuk menumpuk overlay (!~).',
                 '<strong>Ctrl + Z</strong> untuk Undo dan <strong>Ctrl + Y</strong> untuk Redo.',
@@ -3280,6 +4566,7 @@
             initIconTooltipListeners();
             initDimensionInputs();
             initDynamicTips();
+            checkAutoSaveDraft();
 
             const resizeModalEl = document.getElementById('resizeConfirmModal');
             if (resizeModalEl) {
