@@ -52,15 +52,15 @@
         .app-header {
             background-color: #1a1d20;
             color: white;
-            padding: 0.75rem 1rem;
+            padding: 0.5rem 0.85rem;
             z-index: 1050;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .kai-sign {
             background-color: transparent;
-            border: 2px solid #ffffff;
-            padding: 8px 75px 8px 15px;
+            border: 1.5px solid #ffffff;
+            padding: 5px 60px 5px 12px;
             position: relative;
             display: inline-flex;
             flex-direction: column;
@@ -76,8 +76,8 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 80px;
-            height: 60px;
+            width: 65px;
+            height: 48px;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 80 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M 0 60 L 80 20 L 80 30 L 20 60 Z' fill='%23ffffff'/%3E%3Cpath d='M 35 60 L 80 37.5 L 80 42.5 L 45 60 Z' fill='%23ffffff'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
             background-size: cover;
@@ -87,7 +87,7 @@
         .kai-sign-title {
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #ffffff;
-            font-size: 1.25rem;
+            font-size: 1.05rem;
             font-weight: 800;
             text-transform: uppercase;
             line-height: 1;
@@ -98,25 +98,25 @@
         .kai-sign-elev {
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #ffffff;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 700;
-            margin: 4px 0 0 0;
+            margin: 3px 0 0 0;
             line-height: 1;
             letter-spacing: 0.5px;
         }
 
         @media (max-width: 576px) {
             .kai-sign-title {
-                font-size: 1.05rem;
+                font-size: 0.92rem;
             }
 
             .kai-sign {
-                padding: 6px 65px 6px 12px;
+                padding: 4px 50px 4px 10px;
             }
 
             .kai-sign::after {
-                width: 65px;
-                height: 50px;
+                width: 52px;
+                height: 40px;
             }
         }
 
@@ -1251,6 +1251,29 @@
             outline-offset: 2px;
         }
 
+        /* Status aktif untuk tombol toggle di toolbar (Toggle Grid & Stamp Mode) */
+        .dock-btn.is-active {
+            background-color: #2563eb;
+            color: #ffffff;
+            box-shadow: 0 2px 5px rgba(37, 99, 235, 0.35);
+        }
+
+        .dock-btn.is-active:hover:not(:disabled) {
+            background-color: #1d4ed8;
+            color: #ffffff;
+        }
+
+        /* Indikator ikon aktif pada sidebar saat Stamp Mode menyala */
+        .icon-item.is-stamp-source {
+            border: 2px solid #2563eb;
+            background-color: #dbeafe;
+            box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+        }
+
+        .route-canvas.stamp-cursor .canvas-cell {
+            cursor: crosshair;
+        }
+
         /* Zona sampah: pojok kanan bawah agar tidak menutupi kanvas */
         .canvas-trash-zone {
             top: auto;
@@ -1337,7 +1360,6 @@
                 gap: 8px;
             }
         }
-
     </style>
 </head>
 
@@ -1366,11 +1388,9 @@
         </button>
         <div class="kai-sign">
             <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
-            <p class="kai-sign-elev">v 5.0+</p>
+            <p class="kai-sign-elev">v 5.1+</p>
         </div>
         <nav class="header-links ms-auto d-none d-md-flex align-items-center gap-3" aria-label="Tautan">
-            <a href="https://commons.wikimedia.org/wiki/Category:Icons_for_railway_descriptions" target="_blank"
-                rel="noopener noreferrer"><i class="fa-solid fa-book-open"></i> Katalog BSicon</a>
             <span class="header-credit">Dev by Braverious</span>
             <a href="https://id.wikipedia.org/wiki/Pembicaraan_Pengguna:Braverious" target="_blank"
                 rel="noopener noreferrer"><i class="fa-solid fa-comments"></i> Bicara</a>
@@ -1474,7 +1494,8 @@
 
             <div class="tips-banner-container" id="tipsBanner">
                 <i class="fa-solid fa-lightbulb text-warning"></i>
-                <span id="dynamicTipText" class="tips-fading-text">Klik dua kali pada sel untuk menghapus.</span>
+                <span id="dynamicTipText" class="tips-fading-text">Klik kanan untuk menyisipkan, menambah, atau
+                    menghapus baris atau kolom tertentu.</span>
                 <button type="button" class="tips-close-btn" aria-label="Sembunyikan tips" title="Sembunyikan tips"
                     onclick="document.getElementById('tipsBanner').remove()"><i class="fa-solid fa-xmark"></i></button>
             </div>
@@ -1498,19 +1519,26 @@
                         title="Jumlah Baris" aria-label="Jumlah Baris">
                 </div>
 
-                <!-- Zoom Kanvas -->
-                <div class="toolbar-dock-group" role="group" aria-label="Zoom kanvas">
-                    <button class="dock-btn" type="button" onclick="zoomCanvas(-1)" title="Perkecil (Ctrl + scroll)"
-                        aria-label="Perkecil"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
-                    <button class="dock-btn zoom-level" type="button" id="zoomLevelBtn" onclick="zoomCanvas(0)"
-                        title="Reset ke 100%">100%</button>
-                    <button class="dock-btn" type="button" onclick="zoomCanvas(1)" title="Perbesar (Ctrl + scroll)"
-                        aria-label="Perbesar"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
-                    <button class="dock-btn" type="button" onclick="zoomCanvas('fit')" title="Sesuaikan dengan layar"
-                        aria-label="Sesuaikan dengan layar"><i class="fa-solid fa-expand"></i></button>
-                </div>
-
                 <div class="toolbar-actions">
+                    <!-- Zoom & Tampilan Kanvas -->
+                    <div class="toolbar-dock-group" role="group" aria-label="Zoom dan tampilan kanvas">
+                        <button class="dock-btn" type="button" onclick="zoomCanvas(-1)" title="Perkecil (Ctrl + scroll)"
+                            aria-label="Perkecil"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                        <button class="dock-btn zoom-level" type="button" id="zoomLevelBtn" onclick="zoomCanvas(0)"
+                            title="Reset ke 100%">100%</button>
+                        <button class="dock-btn" type="button" onclick="zoomCanvas(1)" title="Perbesar (Ctrl + scroll)"
+                            aria-label="Perbesar"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                        <button class="dock-btn" type="button" onclick="zoomCanvas('fit')"
+                            title="Sesuaikan dengan layar" aria-label="Sesuaikan dengan layar"><i
+                                class="fa-solid fa-expand"></i></button>
+                        <span class="dock-divider" aria-hidden="true"></span>
+                        <button class="dock-btn" type="button" id="toggleGridBtn" onclick="toggleGridLines()"
+                            title="Sembunyikan/Tampilkan Garis Bantu Grid (Mode Pratinjau)"
+                            aria-label="Toggle Garis Grid" aria-pressed="false">
+                            <i class="fa-solid fa-border-none"></i>
+                        </button>
+                    </div>
+
                     <!-- Group 1: Undo & Redo -->
                     <div class="toolbar-dock-group">
                         <button class="dock-btn" id="undoBtn" onclick="undo()" title="Urungkan tindakan (Ctrl+Z)"
@@ -1523,11 +1551,30 @@
                         </button>
                     </div>
 
-                    <!-- Group 2: Struktur, File & Proyek -->
+                    <!-- Group 2: Modifikasi Kanvas (Mode Stempel, Struktur & Pangkas) -->
                     <div class="toolbar-dock-group">
+                        <button class="dock-btn primary-action" type="button" id="stampModeBtn"
+                            onclick="toggleStampMode()"
+                            title="Mode Stempel (Klik ikon di sidebar lalu klik/usap sel kanvas)"
+                            aria-label="Mode Stempel" aria-pressed="false">
+                            <i class="fa-solid fa-stamp"></i>
+                        </button>
                         <button class="dock-btn primary-action" type="button" onclick="openStructureModal()"
                             title="Sisip / Hapus Baris & Kolom" aria-label="Kelola Struktur">
                             <i class="fa-solid fa-table-cells-large"></i>
+                        </button>
+                        <button class="dock-btn primary-action" type="button" id="autoTrimBtn"
+                            onclick="openAutoTrimModal()" title="Pangkas Otomatis Tepi Kanvas yang Kosong"
+                            aria-label="Pangkas Otomatis">
+                            <i class="fa-solid fa-crop-simple"></i>
+                        </button>
+                    </div>
+
+                    <!-- Group 3: File, Proyek & Aset -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn d-none d-md-inline-flex" onclick="openCustomIconModal()"
+                            title="Cari &amp; Muat Ikon Manual" aria-label="Input Ikon Kustom">
+                            <i class="fa-solid fa-shapes"></i>
                         </button>
                         <button class="dock-btn accent-action" type="button" id="projectModalBtn"
                             onclick="openProjectModal()" title="Manajemen Berkas Proyek (.spoor)" aria-label="Proyek">
@@ -1542,7 +1589,7 @@
                         </button>
                     </div>
 
-<!-- Impor (sekunder) & Ekspor (aksi utama) -->
+                    <!-- Impor (sekunder) & Ekspor (aksi utama) -->
                     <button class="dock-pill-btn d-none d-md-inline-flex" onclick="openImportModal()"
                         title="Impor bagan rute dari sintaks Wikipedia / BSicon" aria-label="Impor Sintaks">
                         <i class="fa-solid fa-file-import"></i><span>Impor</span>
@@ -1813,6 +1860,31 @@
         </div>
     </div>
 
+    <!-- Modal Konfirmasi Pangkas Otomatis (Auto-Trim) -->
+    <div class="modal fade" id="autoTrimConfirmModal" tabindex="-1" aria-labelledby="autoTrimConfirmLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-dialog-centered">
+            <div class="modal-content shadow border-0">
+                <div class="modal-header py-2 px-3">
+                    <h6 class="modal-title fw-bold mb-0" id="autoTrimConfirmLabel">
+                        <i class="fa-solid fa-crop-simple text-primary me-1"></i> Hapus Tepi Kosong
+                    </h6>
+                    <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body py-3 px-3 small" id="autoTrimModalBody">
+                    Sel/tile terluar yang tidak berisi ikon akan dihapus agar ukuran kanvas pas dengan diagram.
+                </div>
+                <div class="modal-footer bg-light py-2 px-3" id="autoTrimModalFooter">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary btn-sm fw-semibold" id="autoTrimConfirmBtn"
+                        onclick="executeAutoTrimCanvas()">
+                        <i class="fa-solid fa-crop-simple me-1"></i> Ya, Pangkas
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="modal fade" id="clearConfirmModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -2028,7 +2100,7 @@
 ██║  ██║██║╚██████╔╝╚██████╔╝███████║
 ╚═╝  ╚═╝╚═╝ ╚═════╝  ╚═════╝ ╚══════╝
 `, 'color: #0d6efd; font-family: monospace; font-weight: bold;');
-        console.log('%c🚀 SPOORWIKI Tools Build v5.0 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
+        console.log('%c🚀 SPOORWIKI Tools Build v5.1 | Made by Braverious', 'color: #198754; font-weight: bold; font-size: 13px;');
 
         const iconDatabase = {
             "sepur-lurus": {
@@ -2447,6 +2519,7 @@
             }
 
             renderSidebar();
+            updateStampVisuals();
         }
 
         let currentCols = 7;
@@ -2533,12 +2606,21 @@
                     el.dataset.baseIcon = baseIconName;
                     el.dataset.iconName = assembledIconName.toLowerCase();
 
+                    if (activeStampBaseIcon === baseIconName && !activeStampCustomIcon) {
+                        el.classList.add('is-stamp-source');
+                    }
+
                     const imgUrl = getBSiconUrl(assembledIconName);
                     el.innerHTML = `<img src="${imgUrl}" alt="${baseIconName}" loading="lazy" 
                                     onerror="handleIconError(this, '${assembledIconName}')">`;
 
+                    el.addEventListener('click', () => {
+                        setStampIcon(baseIconName, false);
+                    });
+
                     el.addEventListener('dragstart', (e) => {
                         hideIconTooltip();
+                        setStampIcon(baseIconName, false);
                         const activeAssembled = assembleBSicon(baseIconName, currentPrefix);
                         e.dataTransfer.setData('text/plain', activeAssembled);
                         e.dataTransfer.effectAllowed = 'copy';
@@ -2712,6 +2794,192 @@
                 zoomCanvas(e.deltaY < 0 ? 1 : -1);
             }, { passive: false });
         });
+
+        // ===== 1. Toggle Garis Grid / Mode Pratinjau =====
+        let isGridHidden = false;
+
+        function toggleGridLines() {
+            const canvas = document.getElementById('route-canvas');
+            const btn = document.getElementById('toggleGridBtn');
+            if (!canvas) return;
+
+            isGridHidden = !isGridHidden;
+            canvas.classList.toggle('no-grid', isGridHidden);
+
+            if (btn) {
+                btn.classList.toggle('is-active', isGridHidden);
+                btn.setAttribute('aria-pressed', String(isGridHidden));
+            }
+        }
+
+        // ===== 2. Pangkas Otomatis Tepi Kosong (Auto-Trim Empty Edges) =====
+        let pendingAutoTrimState = null;
+
+        function computeAutoTrimBounds() {
+            let minR = Infinity, maxR = -1, minC = Infinity, maxC = -1;
+            const nonEmptyCells = [];
+
+            for (let r = 0; r < currentRows; r++) {
+                for (let c = 0; c < currentCols; c++) {
+                    const cell = getCellEl(r, c);
+                    const icons = getCellIcons(cell);
+                    if (icons.length > 0) {
+                        if (r < minR) minR = r;
+                        if (r > maxR) maxR = r;
+                        if (c < minC) minC = c;
+                        if (c > maxC) maxC = c;
+                        nonEmptyCells.push({ r, c, icons });
+                    }
+                }
+            }
+
+            return { minR, maxR, minC, maxC, nonEmptyCells };
+        }
+
+        function highlightAutoTrimArea(minR, maxR, minC, maxC) {
+            clearResizeHighlights();
+            document.querySelectorAll('.canvas-cell').forEach(cell => {
+                const r = parseInt(cell.dataset.row);
+                const c = parseInt(cell.dataset.col);
+                if (r < minR || r > maxR || c < minC || c > maxC) {
+                    cell.classList.add('danger-crop-empty');
+                }
+            });
+        }
+
+        function openAutoTrimModal() {
+            const { minR, maxR, minC, maxC, nonEmptyCells } = computeAutoTrimBounds();
+            const bodyEl = document.getElementById('autoTrimModalBody');
+            const confirmBtn = document.getElementById('autoTrimConfirmBtn');
+            const modalEl = document.getElementById('autoTrimConfirmModal');
+            if (!modalEl) return;
+
+            if (nonEmptyCells.length === 0) {
+                pendingAutoTrimState = null;
+                if (bodyEl) {
+                    bodyEl.innerHTML = 'Kanvas masih kosong. Tambahkan ikon terlebih dahulu sebelum memangkas tepi kanvas.';
+                }
+                if (confirmBtn) confirmBtn.classList.add('d-none');
+            } else {
+                const newCols = maxC - minC + 1;
+                const newRows = maxR - minR + 1;
+
+                if (minR === 0 && minC === 0 && newCols === currentCols && newRows === currentRows) {
+                    pendingAutoTrimState = null;
+                    if (bodyEl) {
+                        bodyEl.innerHTML = 'Ukuran kanvas (<strong>' + currentCols + ' × ' + currentRows + '</strong>) sudah rapat dan tidak memiliki baris/kolom terluar yang kosong.';
+                    }
+                    if (confirmBtn) confirmBtn.classList.add('d-none');
+                } else {
+                    const shiftedIcons = nonEmptyCells.map(item => ({
+                        r: item.r - minR,
+                        c: item.c - minC,
+                        icons: item.icons
+                    }));
+                    pendingAutoTrimState = {
+                        cols: newCols,
+                        rows: newRows,
+                        icons: shiftedIcons
+                    };
+                    highlightAutoTrimArea(minR, maxR, minC, maxC);
+                    if (bodyEl) {
+                        bodyEl.innerHTML =
+                            'Sel/tile terluar yang tidak berisi ikon akan dihapus.<br>' +
+                            '<div class="mt-2 p-2 bg-light rounded border text-center fw-semibold">' +
+                            currentCols + ' × ' + currentRows + ' &rarr; <span class="text-primary">' + newCols + ' × ' + newRows + '</span>' +
+                            '</div>';
+                    }
+                    if (confirmBtn) confirmBtn.classList.remove('d-none');
+                }
+            }
+
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
+        }
+
+        function executeAutoTrimCanvas() {
+            const modalEl = document.getElementById('autoTrimConfirmModal');
+            if (modalEl) {
+                const modal = bootstrap.Modal.getInstance(modalEl);
+                if (modal) modal.hide();
+            }
+
+            clearResizeHighlights();
+            if (!pendingAutoTrimState) return;
+
+            pushHistory();
+            clearSelection();
+            clearCutHighlights();
+            restoreCanvasState(pendingAutoTrimState);
+            pendingAutoTrimState = null;
+        }
+
+        // ===== 3. Stamp Mode (Mode Kuas / Stempel Ikon) =====
+        let isStampMode = false;
+        let activeStampBaseIcon = 'STR';
+        let activeStampCustomIcon = null;
+
+        function getActiveStampIconName() {
+            if (activeStampCustomIcon) return activeStampCustomIcon;
+            return assembleBSicon(activeStampBaseIcon || 'STR', currentPrefix);
+        }
+
+        function setStampIcon(iconName, isCustom = false) {
+            if (isCustom) {
+                activeStampCustomIcon = iconName;
+            } else {
+                activeStampBaseIcon = iconName;
+                activeStampCustomIcon = null;
+            }
+            updateStampVisuals();
+        }
+
+        function updateStampVisuals() {
+            const btn = document.getElementById('stampModeBtn');
+            const canvas = document.getElementById('route-canvas');
+
+            if (btn) {
+                btn.classList.toggle('is-active', isStampMode);
+                btn.setAttribute('aria-pressed', String(isStampMode));
+                const activeName = getActiveStampIconName();
+                btn.title = isStampMode
+                    ? `Mode Stempel Aktif: [${activeName}] — Klik untuk mematikan (Esc)`
+                    : `Mode Stempel (Ikon terpilih: ${activeName})`;
+            }
+
+            if (canvas) {
+                canvas.classList.toggle('stamp-cursor', isStampMode);
+            }
+
+            document.querySelectorAll('.icon-item').forEach(el => {
+                const isMatch = !activeStampCustomIcon && el.dataset.baseIcon === activeStampBaseIcon;
+                el.classList.toggle('is-stamp-source', isMatch);
+            });
+        }
+
+        function toggleStampMode(forceState) {
+            isStampMode = typeof forceState === 'boolean' ? forceState : !isStampMode;
+            if (isStampMode) {
+                clearSelection();
+            }
+            updateStampVisuals();
+        }
+
+        function stampCell(cell) {
+            if (!cell) return false;
+            const iconName = getActiveStampIconName();
+            if (!iconName) return false;
+
+            const existingIcons = getCellIcons(cell);
+            // Hindari menumpuk ikon yang persis sama berulang kali saat kuas digeser di sel yang sama
+            if (existingIcons[existingIcons.length - 1] === iconName) {
+                return false;
+            }
+
+            addIconToCell(cell, iconName);
+            updateCellDraggable(cell);
+            return true;
+        }
 
         function searchIcons() {
             const input = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -3335,6 +3603,44 @@
                 if (e.button !== 0) return;
 
                 const targetCell = e.target.closest('.canvas-cell');
+
+                // Jika Mode Stempel aktif: klik atau seret langsung melukis ikon ke sel kanvas
+                if (isStampMode) {
+                    if (!targetCell) return;
+                    e.preventDefault();
+
+                    let hasPushedHistory = false;
+                    const paintCell = (cellEl) => {
+                        if (!cellEl) return;
+                        const iconName = getActiveStampIconName();
+                        const existing = getCellIcons(cellEl);
+                        if (existing[existing.length - 1] === iconName) return;
+
+                        if (!hasPushedHistory) {
+                            pushHistory();
+                            hasPushedHistory = true;
+                        }
+                        stampCell(cellEl);
+                    };
+
+                    paintCell(targetCell);
+
+                    const onStampMove = (moveEvent) => {
+                        const elUnder = document.elementFromPoint(moveEvent.clientX, moveEvent.clientY);
+                        const cellUnder = elUnder ? elUnder.closest('.canvas-cell') : null;
+                        if (cellUnder) paintCell(cellUnder);
+                    };
+
+                    const onStampUp = () => {
+                        window.removeEventListener('mousemove', onStampMove);
+                        window.removeEventListener('mouseup', onStampUp);
+                    };
+
+                    window.addEventListener('mousemove', onStampMove);
+                    window.addEventListener('mouseup', onStampUp);
+                    return;
+                }
+
                 const canvasRect = canvas.getBoundingClientRect();
                 const mouseX = e.clientX - canvasRect.left;
                 const mouseY = e.clientY - canvasRect.top;
@@ -3839,6 +4145,7 @@
 
                 canvas.appendChild(cell);
             }
+            if (isStampMode) canvas.classList.add('stamp-cursor');
         }
 
         function addIconToCell(cell, iconName) {
@@ -4072,6 +4379,7 @@
 
             testImg.onload = function () {
                 activeCustomIcon = iconName;
+                setStampIcon(iconName, true);
                 if (statusArea) statusArea.classList.add('d-none');
                 if (previewName) previewName.textContent = iconName;
                 if (previewBox) {
@@ -4475,8 +4783,10 @@
                 }
                 exportAbortController = null;
 
-                // Kembalikan border kanvas & sel
-                canvasEl.classList.remove('no-grid');
+                // Kembalikan border kanvas & sel (kecuali jika pengguna memang sedang mematikan grid)
+                if (!isGridHidden) {
+                    canvasEl.classList.remove('no-grid');
+                }
                 if (zoomBeforeExport !== undefined) applyCellSize(zoomBeforeExport);
                 // Kembalikan seleksi jika sebelumnya ada
                 if (hadSelection) {
@@ -4606,7 +4916,7 @@
             const state = getCanvasState();
             const projectData = {
                 app: 'SPOORWIKI Tools',
-                version: '5.0',
+                version: '5.1',
                 fileType: 'spoorwiki-project',
                 createdAt: new Date().toISOString(),
                 canvas: {
@@ -4820,6 +5130,14 @@
                 });
             }
 
+            const autoTrimModalEl = document.getElementById('autoTrimConfirmModal');
+            if (autoTrimModalEl) {
+                autoTrimModalEl.addEventListener('hidden.bs.modal', () => {
+                    clearResizeHighlights();
+                    pendingAutoTrimState = null;
+                });
+            }
+
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('collapsed');
                 // Tampilkan dialog pilihan Buat Baru atau Impor saat pertama kali landing di versi mobile
@@ -4882,6 +5200,7 @@
             } else if (e.key === 'Escape') {
                 clearSelection();
                 clearCutHighlights();
+                if (isStampMode) toggleStampMode(false);
             }
         });
 
