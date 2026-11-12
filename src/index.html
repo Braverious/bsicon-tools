@@ -1274,6 +1274,230 @@
             cursor: crosshair;
         }
 
+        /* Badge jumlah layer pada tombol Inspektur Tumpukan */
+        .dock-btn .layer-count-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            min-width: 15px;
+            height: 15px;
+            padding: 0 3px;
+            border-radius: 999px;
+            background-color: #2563eb;
+            color: #ffffff;
+            font-size: 0.62rem;
+            font-weight: 700;
+            line-height: 15px;
+            text-align: center;
+            box-shadow: 0 0 0 1.5px #ffffff;
+            pointer-events: none;
+        }
+
+        .dock-btn.is-active .layer-count-badge {
+            background-color: #0f172a;
+        }
+
+        /* Popover Inspektur Tumpukan (Layer Stack Inspector) */
+        .layer-stack-popover {
+            position: fixed;
+            z-index: 1075;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 14px 32px rgba(15, 23, 42, 0.2), 0 2px 6px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            width: 280px;
+            max-width: calc(100vw - 20px);
+            display: none;
+            flex-direction: column;
+            user-select: none;
+            -webkit-user-select: none;
+            animation: ctxFadeIn 0.14s ease-out;
+            overflow: hidden;
+        }
+
+        .layer-stack-popover.is-open {
+            display: flex;
+        }
+
+        .layer-popover-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 9px 12px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .layer-popover-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .layer-popover-coord {
+            font-size: 0.68rem;
+            font-weight: 600;
+            color: #64748b;
+            background: #e2e8f0;
+            padding: 1px 6px;
+            border-radius: 4px;
+        }
+
+        .layer-popover-list {
+            max-height: 240px;
+            overflow-y: auto;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .layer-item-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 7px;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            transition: background 0.12s ease, border-color 0.12s ease;
+        }
+
+        .layer-item-row:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+        }
+
+        .layer-item-thumb {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 2px;
+        }
+
+        .layer-item-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .layer-item-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+
+        .layer-item-code {
+            font-family: monospace;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: #1e293b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .layer-item-pos {
+            font-size: 0.65rem;
+            color: #64748b;
+            line-height: 1.1;
+        }
+
+        .layer-item-actions {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            flex-shrink: 0;
+        }
+
+        .layer-act-btn {
+            width: 24px;
+            height: 24px;
+            border: 1px solid transparent;
+            border-radius: 5px;
+            background: transparent;
+            color: #475569;
+            font-size: 0.72rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.12s ease;
+        }
+
+        .layer-act-btn:hover:not(:disabled) {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .layer-act-btn.danger:hover:not(:disabled) {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .layer-act-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .layer-popover-footer {
+            padding: 6px 10px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.68rem;
+            color: #64748b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* Gaya Keycap (kbd) pada Modal Bantuan Pintasan */
+        .shortcut-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: #334155;
+        }
+
+        .shortcut-row:nth-child(odd) {
+            background-color: #f8fafc;
+        }
+
+        .shortcut-keys {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            flex-shrink: 0;
+        }
+
+        .kbd-key {
+            display: inline-block;
+            padding: 2px 6px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.7rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #1e293b;
+            background-color: #ffffff;
+            border: 1px solid #cbd5e1;
+            border-bottom-width: 2px;
+            border-radius: 5px;
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+            white-space: nowrap;
+        }
+
         /* Zona sampah: pojok kanan bawah agar tidak menutupi kanvas */
         .canvas-trash-zone {
             top: auto;
@@ -1551,6 +1775,32 @@
                         </button>
                     </div>
 
+                    <!-- Group Seleksi & Layer: Inspektur Tumpukan, Salin, Tempel & Hapus Seleksi -->
+                    <div class="toolbar-dock-group" role="group" aria-label="Manipulasi sel dan lapisan">
+                        <button class="dock-btn primary-action" type="button" id="layerInspectorBtn"
+                            onclick="toggleLayerPopover(event)"
+                            title="Inspektur Tumpukan Layer (!~) — Pilih 1 sel berisi ikon"
+                            aria-label="Inspektur Tumpukan Layer" aria-expanded="false" disabled>
+                            <i class="fa-solid fa-layer-group"></i>
+                            <span class="layer-count-badge d-none" id="layerCountBadge">0</span>
+                        </button>
+                        <span class="dock-divider" aria-hidden="true"></span>
+                        <button class="dock-btn primary-action" type="button" id="copySelBtn" onclick="copySelection()"
+                            title="Salin sel terpilih (Ctrl+C)" aria-label="Salin Seleksi" disabled>
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                        <button class="dock-btn primary-action" type="button" id="pasteSelBtn"
+                            onclick="pasteSelection()" title="Tempel ke sel terpilih (Ctrl+V)"
+                            aria-label="Tempel Seleksi" disabled>
+                            <i class="fa-solid fa-paste"></i>
+                        </button>
+                        <button class="dock-btn danger-action" type="button" id="deleteSelBtn"
+                            onclick="deleteSelection()" title="Bersihkan isi sel terpilih (Delete)"
+                            aria-label="Hapus Isi Seleksi" disabled>
+                            <i class="fa-solid fa-eraser"></i>
+                        </button>
+                    </div>
+
                     <!-- Group 2: Modifikasi Kanvas (Mode Stempel, Struktur & Pangkas) -->
                     <div class="toolbar-dock-group">
                         <button class="dock-btn primary-action" type="button" id="stampModeBtn"
@@ -1559,13 +1809,14 @@
                             aria-label="Mode Stempel" aria-pressed="false">
                             <i class="fa-solid fa-stamp"></i>
                         </button>
-                        <button class="dock-btn primary-action" type="button" onclick="openStructureModal()"
-                            title="Sisip / Hapus Baris & Kolom" aria-label="Kelola Struktur">
+                        <button class="dock-btn primary-action" type="button" id="structureBtn"
+                            onclick="toggleStructurePopover(event)" title="Sisip / Hapus Baris & Kolom"
+                            aria-label="Kelola Struktur" aria-expanded="false">
                             <i class="fa-solid fa-table-cells-large"></i>
                         </button>
                         <button class="dock-btn primary-action" type="button" id="autoTrimBtn"
-                            onclick="openAutoTrimModal()" title="Pangkas Otomatis Tepi Kanvas yang Kosong"
-                            aria-label="Pangkas Otomatis">
+                            onclick="toggleAutoTrimPopover(event)" title="Hapus Otomatis Tepi Kanvas yang Kosong"
+                            aria-label="Hapus Tepi Kosong" aria-expanded="false">
                             <i class="fa-solid fa-crop-simple"></i>
                         </button>
                     </div>
@@ -1586,6 +1837,14 @@
                         <button class="dock-btn primary-action" id="savePngBtn" onclick="saveAsPNG()"
                             title="Simpan kanvas rute sebagai gambar PNG" aria-label="Simpan PNG">
                             <i class="fa-solid fa-image"></i>
+                        </button>
+                    </div>
+
+                    <!-- Bantuan Pintasan Keyboard & Mouse -->
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn primary-action" type="button" onclick="openShortcutsModal()"
+                            title="Panduan Pintasan Keyboard &amp; Mouse (?)" aria-label="Pintasan Keyboard">
+                            <i class="fa-solid fa-circle-question"></i>
                         </button>
                     </div>
 
@@ -1860,26 +2119,108 @@
         </div>
     </div>
 
-    <!-- Modal Konfirmasi Pangkas Otomatis (Auto-Trim) -->
-    <div class="modal fade" id="autoTrimConfirmModal" tabindex="-1" aria-labelledby="autoTrimConfirmLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-sm modal-dialog-centered">
+    <!-- Modal Bantuan Pintasan Keyboard & Mouse -->
+    <div class="modal fade" id="shortcutsModal" tabindex="-1" aria-labelledby="shortcutsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content shadow border-0">
                 <div class="modal-header py-2 px-3">
-                    <h6 class="modal-title fw-bold mb-0" id="autoTrimConfirmLabel">
-                        <i class="fa-solid fa-crop-simple text-primary me-1"></i> Hapus Tepi Kosong
+                    <h6 class="modal-title fw-bold mb-0" id="shortcutsModalLabel">
+                        <i class="fa-solid fa-keyboard text-primary me-2"></i>Pintasan Keyboard &amp; Mouse
                     </h6>
                     <button type="button" class="btn-close btn-sm" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body py-3 px-3 small" id="autoTrimModalBody">
-                    Sel/tile terluar yang tidak berisi ikon akan dihapus agar ukuran kanvas pas dengan diagram.
+                <div class="modal-body py-3 px-3">
+                    <!-- Kategori 1: Pintasan Keyboard -->
+                    <div class="fw-bold text-uppercase text-secondary mb-2"
+                        style="font-size: 0.68rem; letter-spacing: 0.5px;">
+                        <i class="fa-regular fa-keyboard me-1"></i> Pintasan Papan Ketik
+                    </div>
+                    <div class="d-flex flex-column mb-3 border rounded p-1">
+                        <div class="shortcut-row">
+                            <span>Urungkan tindakan (Undo)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">Z</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Ulangi tindakan (Redo)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">Y</span><span class="text-muted mx-1">/</span><span
+                                    class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">Shift</span><span>+</span><span class="kbd-key">Z</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Salin sel terpilih (Copy)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">C</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Potong sel terpilih (Cut)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">X</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Tempel sel ke posisi aktif (Paste)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">V</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Pilih semua sel berisi ikon</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">A</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Hapus isi sel terpilih</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Delete</span><span
+                                    class="text-muted mx-1">/</span><span class="kbd-key">Backspace</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Batalkan seleksi / Tutup Popover &amp; Mode Stempel</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Esc</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Buka panduan pintasan ini</span>
+                            <div class="shortcut-keys"><span class="kbd-key">?</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Kategori 2: Gestur Mouse & Kanvas -->
+                    <div class="fw-bold text-uppercase text-secondary mb-2"
+                        style="font-size: 0.68rem; letter-spacing: 0.5px;">
+                        <i class="fa-solid fa-computer-mouse me-1"></i> Gestur Tetikus &amp; Kanvas
+                    </div>
+                    <div class="d-flex flex-column border rounded p-1">
+                        <div class="shortcut-row">
+                            <span>Perbesar / Perkecil tampilan kanvas (Zoom)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>+</span><span
+                                    class="kbd-key">Scroll</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Pilih beberapa sel satu per satu (Multi-select)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Ctrl</span><span>/</span><span
+                                    class="kbd-key">Shift</span><span>+</span><span class="kbd-key">Klik</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Seleksi kotak area (Marquee)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Klik &amp; Seret Area Kosong</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Tumpuk beberapa ikon (Overlay <code>!~</code>)</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Seret ke Sel yang Sama</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Kosongkan isi 1 sel secara cepat</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Klik 2× pada Sel</span></div>
+                        </div>
+                        <div class="shortcut-row">
+                            <span>Menu cepat sisip / hapus baris &amp; kolom</span>
+                            <div class="shortcut-keys"><span class="kbd-key">Klik Kanan pada Sel</span></div>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer bg-light py-2 px-3" id="autoTrimModalFooter">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Batal</button>
-                    <button type="button" class="btn btn-primary btn-sm fw-semibold" id="autoTrimConfirmBtn"
-                        onclick="executeAutoTrimCanvas()">
-                        <i class="fa-solid fa-crop-simple me-1"></i> Ya, Pangkas
-                    </button>
+                <div class="modal-footer bg-light py-2 px-3 justify-content-between">
+                    <span class="text-muted" style="font-size: 0.72rem;">Pengguna Mac dapat menggunakan tombol <span
+                            class="kbd-key">⌘ Cmd</span></span>
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
                 </div>
             </div>
         </div>
@@ -1927,107 +2268,144 @@
         </div>
     </div>
 
-    <!-- Modal Sisip / Hapus Baris & Kolom (Struktur Kanvas) -->
-    <div class="modal fade" id="structureModal" tabindex="-1" aria-labelledby="structureModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content shadow border-0">
-                <div class="modal-header">
-                    <h5 class="modal-title fw-bold" id="structureModalLabel">
-                        Kelola Struktur Kanvas
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body py-3">
-                    <div class="alert alert-light border small text-muted mb-3 d-flex align-items-center gap-2">
-                        <i class="fa-solid fa-circle-info text-primary fs-5"></i>
-                        <div>
-                            Target posisi aktif saat ini:
-                            <strong id="structureActiveTargetText" class="text-dark">Baris 1, Kolom 1</strong>.
-                            <div class="text-secondary" style="font-size: 0.72rem;">(Tip: Anda juga dapat langsung
-                                <strong>klik kanan</strong> pada sel manapun di kanvas)
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Operasi Baris -->
-                    <div class="card mb-3 border-light-subtle shadow-sm">
-                        <div
-                            class="card-header bg-body-tertiary py-2 d-flex justify-content-between align-items-center">
-                            <span class="fw-bold small"><i class="fa-solid fa-grip-lines me-1 text-primary"></i> Operasi
-                                Baris (Row)</span>
-                            <span class="badge bg-secondary-subtle text-secondary" id="structureRowCountBadge">10
-                                Baris</span>
-                        </div>
-                        <div class="card-body p-2 d-grid gap-2">
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-                                        onclick="executeStructureAction('insert-row-above')">
-                                        <i class="fa-solid fa-arrow-up text-primary"></i>
-                                        <span>Sisip di Atas</span>
-                                    </button>
-                                </div>
-                                <div class="col-6">
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-                                        onclick="executeStructureAction('insert-row-below')">
-                                        <i class="fa-solid fa-arrow-down text-primary"></i>
-                                        <span>Sisip di Bawah</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <button type="button"
-                                class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-                                onclick="executeStructureAction('delete-row')">
-                                <i class="fa-solid fa-trash-can"></i>
-                                <span>Hapus Baris Ini</span>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Operasi Kolom -->
-                    <div class="card border-light-subtle shadow-sm">
-                        <div
-                            class="card-header bg-body-tertiary py-2 d-flex justify-content-between align-items-center">
-                            <span class="fw-bold small"><i
-                                    class="fa-solid fa-grip-lines-vertical me-1 text-success"></i> Operasi Kolom
-                                (Column)</span>
-                            <span class="badge bg-secondary-subtle text-secondary" id="structureColCountBadge">7
-                                Kolom</span>
-                        </div>
-                        <div class="card-body p-2 d-grid gap-2">
-                            <div class="row g-2">
-                                <div class="col-6">
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-                                        onclick="executeStructureAction('insert-col-left')">
-                                        <i class="fa-solid fa-arrow-left text-success"></i>
-                                        <span>Sisip di Kiri</span>
-                                    </button>
-                                </div>
-                                <div class="col-6">
-                                    <button type="button"
-                                        class="btn btn-outline-secondary btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-                                        onclick="executeStructureAction('insert-col-right')">
-                                        <i class="fa-solid fa-arrow-right text-success"></i>
-                                        <span>Sisip di Kanan</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <button type="button"
-                                class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2"
-                                onclick="executeStructureAction('delete-col')">
-                                <i class="fa-solid fa-trash-can"></i>
-                                <span>Hapus Kolom Ini</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer bg-light py-2">
-                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Tutup</button>
-                </div>
+    <!-- Popover Kelola Struktur Kanvas (Sisip / Hapus Baris & Kolom) -->
+    <div id="structurePopover" class="layer-stack-popover" style="width: 300px;" role="dialog"
+        aria-label="Kelola Struktur Kanvas">
+        <div class="layer-popover-header">
+            <div class="layer-popover-title">
+                <i class="fa-solid fa-table-cells-large text-primary"></i>
+                <span>Kelola Struktur Kanvas</span>
             </div>
+            <button type="button" class="export-progress-close-btn" onclick="closeStructurePopover()" title="Tutup"
+                aria-label="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="p-2 d-flex flex-column gap-2">
+            <div class="px-2 py-1 bg-light rounded border small d-flex align-items-center justify-content-between">
+                <span class="text-muted" style="font-size: 0.72rem;">Target aktif:</span>
+                <strong id="structureActiveTargetText" class="text-dark" style="font-size: 0.75rem;">Baris 1, Kolom
+                    1</strong>
+            </div>
+
+            <!-- Operasi Baris -->
+            <div class="border rounded p-2 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold" style="font-size: 0.74rem;"><i
+                            class="fa-solid fa-grip-lines me-1 text-primary"></i> Operasi Baris</span>
+                    <span class="badge bg-secondary-subtle text-secondary" id="structureRowCountBadge"
+                        style="font-size: 0.65rem;">10 Baris</span>
+                </div>
+                <div class="row g-1 mb-1">
+                    <div class="col-6">
+                        <button type="button"
+                            class="btn btn-outline-secondary btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1"
+                            style="font-size: 0.73rem;" onclick="executeStructureAction('insert-row-above')">
+                            <i class="fa-solid fa-arrow-up text-primary"></i>
+                            <span>Sisip Atas</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button"
+                            class="btn btn-outline-secondary btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1"
+                            style="font-size: 0.73rem;" onclick="executeStructureAction('insert-row-below')">
+                            <i class="fa-solid fa-arrow-down text-primary"></i>
+                            <span>Sisip Bawah</span>
+                        </button>
+                    </div>
+                </div>
+                <button type="button"
+                    class="btn btn-outline-danger btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1"
+                    style="font-size: 0.73rem;" onclick="executeStructureAction('delete-row')">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>Hapus Baris Ini</span>
+                </button>
+            </div>
+
+            <!-- Operasi Kolom -->
+            <div class="border rounded p-2 bg-white">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                    <span class="fw-bold" style="font-size: 0.74rem;"><i
+                            class="fa-solid fa-grip-lines-vertical me-1 text-success"></i> Operasi Kolom</span>
+                    <span class="badge bg-secondary-subtle text-secondary" id="structureColCountBadge"
+                        style="font-size: 0.65rem;">7 Kolom</span>
+                </div>
+                <div class="row g-1 mb-1">
+                    <div class="col-6">
+                        <button type="button"
+                            class="btn btn-outline-secondary btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1"
+                            style="font-size: 0.73rem;" onclick="executeStructureAction('insert-col-left')">
+                            <i class="fa-solid fa-arrow-left text-success"></i>
+                            <span>Sisip Kiri</span>
+                        </button>
+                    </div>
+                    <div class="col-6">
+                        <button type="button"
+                            class="btn btn-outline-secondary btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1"
+                            style="font-size: 0.73rem;" onclick="executeStructureAction('insert-col-right')">
+                            <i class="fa-solid fa-arrow-right text-success"></i>
+                            <span>Sisip Kanan</span>
+                        </button>
+                    </div>
+                </div>
+                <button type="button"
+                    class="btn btn-outline-danger btn-sm w-100 py-1 d-flex align-items-center justify-content-center gap-1"
+                    style="font-size: 0.73rem;" onclick="executeStructureAction('delete-col')">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span>Hapus Kolom Ini</span>
+                </button>
+            </div>
+        </div>
+        <div class="layer-popover-footer">
+            <span>Tip: Klik kanan sel untuk menu cepat</span>
+        </div>
+    </div>
+
+    <!-- Popover Konfirmasi Hapus Tepi Kosong (Auto-Trim) -->
+    <div id="autoTrimPopover" class="layer-stack-popover" style="width: 270px;" role="dialog"
+        aria-label="Hapus Tepi Kosong">
+        <div class="layer-popover-header">
+            <div class="layer-popover-title">
+                <i class="fa-solid fa-crop-simple text-primary"></i>
+                <span>Hapus Tepi Kosong</span>
+            </div>
+            <button type="button" class="export-progress-close-btn" onclick="closeAutoTrimPopover()" title="Tutup"
+                aria-label="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="p-3 small" id="autoTrimModalBody" style="font-size: 0.78rem; color: #334155;">
+            Sel/tile terluar yang tidak berisi ikon akan dihapus agar ukuran kanvas pas dengan diagram.
+        </div>
+        <div class="layer-popover-footer justify-content-end gap-2">
+            <button type="button" class="btn btn-secondary btn-sm py-1 px-2" style="font-size: 0.74rem;"
+                onclick="closeAutoTrimPopover()">Batal</button>
+            <button type="button" class="btn btn-primary btn-sm py-1 px-2 fw-semibold" style="font-size: 0.74rem;"
+                id="autoTrimConfirmBtn" onclick="executeAutoTrimCanvas()">
+                <i class="fa-solid fa-crop-simple me-1"></i> Ya, Pangkas
+            </button>
+        </div>
+    </div>
+
+    <!-- Popover Inspektur Tumpukan (Layer Stack Inspector) -->
+    <div id="layerStackPopover" class="layer-stack-popover" role="dialog" aria-label="Inspektur Tumpukan Layer">
+        <div class="layer-popover-header">
+            <div class="layer-popover-title">
+                <i class="fa-solid fa-layer-group text-primary"></i>
+                <span>Tumpukan Ikon</span>
+                <span class="layer-popover-coord" id="layerPopoverCoord">B1, K1</span>
+            </div>
+            <button type="button" class="export-progress-close-btn" onclick="closeLayerPopover()" title="Tutup"
+                aria-label="Tutup">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <div class="layer-popover-list" id="layerPopoverList">
+        </div>
+        <div class="layer-popover-footer">
+            <span>Atas = paling depan (<code>!~</code>)</span>
+            <button type="button" class="btn btn-link btn-sm p-0 text-danger text-decoration-none"
+                style="font-size: 0.7rem;" onclick="clearInspectedCellLayers()">Hapus Semua</button>
         </div>
     </div>
 
@@ -2814,6 +3192,32 @@
 
         // ===== 2. Pangkas Otomatis Tepi Kosong (Auto-Trim Empty Edges) =====
         let pendingAutoTrimState = null;
+        let isAutoTrimPopoverOpen = false;
+        let isStructurePopoverOpen = false;
+
+        function positionToolbarPopover(popoverId, btnId) {
+            const popover = document.getElementById(popoverId);
+            const btn = document.getElementById(btnId);
+            if (!popover || !btn) return;
+
+            const btnRect = btn.getBoundingClientRect();
+            const popRect = popover.getBoundingClientRect();
+            const margin = 10;
+
+            let left = btnRect.left + (btnRect.width / 2) - (popRect.width / 2);
+            if (left < margin) left = margin;
+            if (left + popRect.width > window.innerWidth - margin) {
+                left = window.innerWidth - popRect.width - margin;
+            }
+
+            let top = btnRect.bottom + 8;
+            if (top + popRect.height > window.innerHeight - margin) {
+                top = Math.max(margin, btnRect.top - popRect.height - 8);
+            }
+
+            popover.style.left = `${Math.round(left)}px`;
+            popover.style.top = `${Math.round(top)}px`;
+        }
 
         function computeAutoTrimBounds() {
             let minR = Infinity, maxR = -1, minC = Infinity, maxC = -1;
@@ -2847,12 +3251,25 @@
             });
         }
 
-        function openAutoTrimModal() {
+        function toggleAutoTrimPopover(e) {
+            if (e) e.stopPropagation();
+            if (isAutoTrimPopoverOpen) {
+                closeAutoTrimPopover();
+            } else {
+                openAutoTrimPopover();
+            }
+        }
+
+        function openAutoTrimPopover() {
+            closeStructurePopover();
+            closeLayerPopover();
+
             const { minR, maxR, minC, maxC, nonEmptyCells } = computeAutoTrimBounds();
             const bodyEl = document.getElementById('autoTrimModalBody');
             const confirmBtn = document.getElementById('autoTrimConfirmBtn');
-            const modalEl = document.getElementById('autoTrimConfirmModal');
-            if (!modalEl) return;
+            const popover = document.getElementById('autoTrimPopover');
+            const btn = document.getElementById('autoTrimBtn');
+            if (!popover || !btn) return;
 
             if (nonEmptyCells.length === 0) {
                 pendingAutoTrimState = null;
@@ -2893,25 +3310,35 @@
                 }
             }
 
-            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-            modal.show();
+            isAutoTrimPopoverOpen = true;
+            btn.classList.add('is-active');
+            btn.setAttribute('aria-expanded', 'true');
+            popover.classList.add('is-open');
+            positionToolbarPopover('autoTrimPopover', 'autoTrimBtn');
+        }
+
+        function closeAutoTrimPopover() {
+            const popover = document.getElementById('autoTrimPopover');
+            const btn = document.getElementById('autoTrimBtn');
+            isAutoTrimPopoverOpen = false;
+            if (popover) popover.classList.remove('is-open');
+            if (btn) {
+                btn.classList.remove('is-active');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+            clearResizeHighlights();
+            pendingAutoTrimState = null;
         }
 
         function executeAutoTrimCanvas() {
-            const modalEl = document.getElementById('autoTrimConfirmModal');
-            if (modalEl) {
-                const modal = bootstrap.Modal.getInstance(modalEl);
-                if (modal) modal.hide();
-            }
-
-            clearResizeHighlights();
-            if (!pendingAutoTrimState) return;
+            const stateToApply = pendingAutoTrimState;
+            closeAutoTrimPopover();
+            if (!stateToApply) return;
 
             pushHistory();
             clearSelection();
             clearCutHighlights();
-            restoreCanvasState(pendingAutoTrimState);
-            pendingAutoTrimState = null;
+            restoreCanvasState(stateToApply);
         }
 
         // ===== 3. Stamp Mode (Mode Kuas / Stempel Ikon) =====
@@ -3169,6 +3596,7 @@
                 }
             });
             updateHistoryButtons();
+            updateSelectionToolbarState();
             scheduleAutoSave();
         }
 
@@ -3486,9 +3914,9 @@
         }
 
         /**
-         * Pengontrol Modal Struktur Kanvas (UI Toolbar)
+         * Pengontrol Popover Struktur Kanvas (UI Toolbar)
          */
-        function openStructureModal() {
+        function refreshStructurePopoverInfo() {
             const activeCoord = getActiveSelectionRowCol();
             contextTargetCoord = { r: activeCoord.r, c: activeCoord.c };
 
@@ -3505,21 +3933,63 @@
             if (colBadgeEl) {
                 colBadgeEl.textContent = `${currentCols} Kolom`;
             }
+        }
 
-            const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('structureModal'));
-            modal.show();
+        function toggleStructurePopover(e) {
+            if (e) e.stopPropagation();
+            if (isStructurePopoverOpen) {
+                closeStructurePopover();
+            } else {
+                openStructurePopover();
+            }
+        }
+
+        function openStructurePopover() {
+            closeAutoTrimPopover();
+            closeLayerPopover();
+
+            const popover = document.getElementById('structurePopover');
+            const btn = document.getElementById('structureBtn');
+            if (!popover || !btn) return;
+
+            refreshStructurePopoverInfo();
+            isStructurePopoverOpen = true;
+            btn.classList.add('is-active');
+            btn.setAttribute('aria-expanded', 'true');
+            popover.classList.add('is-open');
+            positionToolbarPopover('structurePopover', 'structureBtn');
+        }
+
+        function closeStructurePopover() {
+            const popover = document.getElementById('structurePopover');
+            const btn = document.getElementById('structureBtn');
+            isStructurePopoverOpen = false;
+            if (popover) popover.classList.remove('is-open');
+            if (btn) {
+                btn.classList.remove('is-active');
+                btn.setAttribute('aria-expanded', 'false');
+            }
         }
 
         function executeStructureAction(action) {
-            const modal = bootstrap.Modal.getInstance(document.getElementById('structureModal'));
-            if (modal) modal.hide();
+            refreshStructurePopoverInfo();
+            closeStructurePopover();
             handleCtxAction(action);
         }
 
-        // Tutup context menu saat klik sembarang di luar
+        // Tutup context menu & semua popover toolbar saat klik sembarang di luar
         window.addEventListener('click', (e) => {
             if (!e.target.closest('#canvasContextMenu')) {
                 hideCanvasContextMenu();
+            }
+            if (isLayerPopoverOpen && !e.target.closest('#layerStackPopover') && !e.target.closest('#layerInspectorBtn')) {
+                closeLayerPopover();
+            }
+            if (isStructurePopoverOpen && !e.target.closest('#structurePopover') && !e.target.closest('#structureBtn')) {
+                closeStructurePopover();
+            }
+            if (isAutoTrimPopoverOpen && !e.target.closest('#autoTrimPopover') && !e.target.closest('#autoTrimBtn')) {
+                closeAutoTrimPopover();
             }
         });
         window.addEventListener('contextmenu', (e) => {
@@ -3555,16 +4025,23 @@
                 if (cell) cell.classList.remove('is-selected');
             });
             selectedCellCoords.clear();
+            updateSelectionToolbarState();
         }
 
         function selectCell(r, c, add = false) {
             if (!add) {
-                clearSelection();
+                selectedCellCoords.forEach(key => {
+                    const [sr, sc] = key.split(',').map(Number);
+                    const sCell = getCellEl(sr, sc);
+                    if (sCell) sCell.classList.remove('is-selected');
+                });
+                selectedCellCoords.clear();
             }
             const key = getCellKey(r, c);
             selectedCellCoords.add(key);
             const cell = getCellEl(r, c);
             if (cell) cell.classList.add('is-selected');
+            updateSelectionToolbarState();
         }
 
         function deselectCell(r, c) {
@@ -3572,6 +4049,7 @@
             selectedCellCoords.delete(key);
             const cell = getCellEl(r, c);
             if (cell) cell.classList.remove('is-selected');
+            updateSelectionToolbarState();
         }
 
         function isCellSelected(r, c) {
@@ -3581,6 +4059,240 @@
         function updateCellDraggable(cell) {
             const hasIcons = cell.querySelectorAll('.dropped-icon').length > 0;
             cell.draggable = hasIcons;
+            updateSelectionToolbarState();
+        }
+
+        // ===== Kontrol Toolbar Seleksi & Inspektur Tumpukan Layer (!~) =====
+        let isLayerPopoverOpen = false;
+
+        function getSingleSelectedCellCoord() {
+            if (selectedCellCoords.size !== 1) return null;
+            const key = selectedCellCoords.values().next().value;
+            const [r, c] = key.split(',').map(Number);
+            return { r, c };
+        }
+
+        function updateSelectionToolbarState() {
+            const copyBtn = document.getElementById('copySelBtn');
+            const pasteBtn = document.getElementById('pasteSelBtn');
+            const deleteBtn = document.getElementById('deleteSelBtn');
+            const layerBtn = document.getElementById('layerInspectorBtn');
+            const layerBadge = document.getElementById('layerCountBadge');
+
+            let selectedHasIcons = false;
+            selectedCellCoords.forEach(key => {
+                const [r, c] = key.split(',').map(Number);
+                const cell = getCellEl(r, c);
+                if (cell && cell.querySelectorAll('.dropped-icon').length > 0) {
+                    selectedHasIcons = true;
+                }
+            });
+
+            if (copyBtn) copyBtn.disabled = !selectedHasIcons;
+            if (deleteBtn) deleteBtn.disabled = !selectedHasIcons;
+            if (pasteBtn) {
+                const hasClipboard = Boolean(clipboardData && clipboardData.cells && clipboardData.cells.length > 0);
+                pasteBtn.disabled = !hasClipboard;
+            }
+
+            const singleCoord = getSingleSelectedCellCoord();
+            let singleIcons = [];
+            if (singleCoord) {
+                const cell = getCellEl(singleCoord.r, singleCoord.c);
+                singleIcons = getCellIcons(cell);
+            }
+
+            const canInspect = Boolean(singleCoord && singleIcons.length > 0);
+            if (layerBtn) {
+                layerBtn.disabled = !canInspect;
+            }
+            if (layerBadge) {
+                if (canInspect) {
+                    layerBadge.textContent = String(singleIcons.length);
+                    layerBadge.classList.remove('d-none');
+                } else {
+                    layerBadge.classList.add('d-none');
+                }
+            }
+
+            if (isLayerPopoverOpen) {
+                if (!canInspect) {
+                    closeLayerPopover();
+                } else {
+                    renderLayerPopoverContent();
+                }
+            }
+            if (isStructurePopoverOpen) {
+                refreshStructurePopoverInfo();
+            }
+        }
+
+        function toggleLayerPopover(e) {
+            if (e) e.stopPropagation();
+            if (isLayerPopoverOpen) {
+                closeLayerPopover();
+            } else {
+                openLayerPopover();
+            }
+        }
+
+        function openLayerPopover() {
+            closeStructurePopover();
+            closeAutoTrimPopover();
+
+            const singleCoord = getSingleSelectedCellCoord();
+            if (!singleCoord) return;
+            const cell = getCellEl(singleCoord.r, singleCoord.c);
+            const icons = getCellIcons(cell);
+            if (icons.length === 0) return;
+
+            const popover = document.getElementById('layerStackPopover');
+            const btn = document.getElementById('layerInspectorBtn');
+            if (!popover || !btn) return;
+
+            isLayerPopoverOpen = true;
+            btn.classList.add('is-active');
+            btn.setAttribute('aria-expanded', 'true');
+            renderLayerPopoverContent();
+
+            popover.classList.add('is-open');
+            positionLayerPopover();
+        }
+
+        function positionLayerPopover() {
+            const popover = document.getElementById('layerStackPopover');
+            const btn = document.getElementById('layerInspectorBtn');
+            if (!popover || !btn || !isLayerPopoverOpen) return;
+
+            const btnRect = btn.getBoundingClientRect();
+            const popRect = popover.getBoundingClientRect();
+            const margin = 10;
+
+            let left = btnRect.left + (btnRect.width / 2) - (popRect.width / 2);
+            if (left < margin) left = margin;
+            if (left + popRect.width > window.innerWidth - margin) {
+                left = window.innerWidth - popRect.width - margin;
+            }
+
+            let top = btnRect.bottom + 8;
+            if (top + popRect.height > window.innerHeight - margin) {
+                top = Math.max(margin, btnRect.top - popRect.height - 8);
+            }
+
+            popover.style.left = `${Math.round(left)}px`;
+            popover.style.top = `${Math.round(top)}px`;
+        }
+
+        function closeLayerPopover() {
+            const popover = document.getElementById('layerStackPopover');
+            const btn = document.getElementById('layerInspectorBtn');
+            isLayerPopoverOpen = false;
+            if (popover) popover.classList.remove('is-open');
+            if (btn) {
+                btn.classList.remove('is-active');
+                btn.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        function renderLayerPopoverContent() {
+            const singleCoord = getSingleSelectedCellCoord();
+            const listEl = document.getElementById('layerPopoverList');
+            const coordEl = document.getElementById('layerPopoverCoord');
+            if (!singleCoord || !listEl) return;
+
+            if (coordEl) {
+                coordEl.textContent = `B${singleCoord.r + 1}, K${singleCoord.c + 1}`;
+            }
+
+            const cell = getCellEl(singleCoord.r, singleCoord.c);
+            const icons = getCellIcons(cell);
+            listEl.innerHTML = '';
+
+            // Tampilkan dari layer paling atas (indeks terakhir) ke layer paling bawah (indeks 0)
+            for (let i = icons.length - 1; i >= 0; i--) {
+                const iconName = icons[i];
+                const imgUrl = getBSiconUrl(iconName);
+                const isTop = i === icons.length - 1;
+                const isBottom = i === 0;
+
+                const posLabel = icons.length === 1
+                    ? 'Layer tunggal'
+                    : (isTop ? `Layer ${i + 1} (Paling Depan)` : (isBottom ? `Layer 1 (Dasar)` : `Layer ${i + 1}`));
+
+                const row = document.createElement('div');
+                row.className = 'layer-item-row';
+                row.innerHTML = `
+                    <div class="layer-item-thumb">
+                        <img src="${imgUrl}" alt="${iconName}">
+                    </div>
+                    <div class="layer-item-info">
+                        <div class="layer-item-code" title="${iconName}">${iconName}</div>
+                        <div class="layer-item-pos">${posLabel}</div>
+                    </div>
+                    <div class="layer-item-actions">
+                        <button type="button" class="layer-act-btn" title="Naikkan ke depan (↑)"
+                            aria-label="Naikkan layer" ${isTop ? 'disabled' : ''}
+                            onclick="moveCellLayer(${i}, 1)">
+                            <i class="fa-solid fa-arrow-up"></i>
+                        </button>
+                        <button type="button" class="layer-act-btn" title="Turunkan ke belakang (↓)"
+                            aria-label="Turunkan layer" ${isBottom ? 'disabled' : ''}
+                            onclick="moveCellLayer(${i}, -1)">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </button>
+                        <button type="button" class="layer-act-btn danger" title="Hapus layer ini"
+                            aria-label="Hapus layer" onclick="removeCellLayer(${i})">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                `;
+                listEl.appendChild(row);
+            }
+        }
+
+        function applyCellLayerIcons(cell, newIcons) {
+            if (!cell) return;
+            cell.innerHTML = '';
+            newIcons.forEach(name => addIconToCell(cell, name));
+            updateCellDraggable(cell);
+        }
+
+        function moveCellLayer(index, delta) {
+            const singleCoord = getSingleSelectedCellCoord();
+            if (!singleCoord) return;
+            const cell = getCellEl(singleCoord.r, singleCoord.c);
+            const icons = getCellIcons(cell);
+            const targetIndex = index + delta;
+            if (index < 0 || index >= icons.length || targetIndex < 0 || targetIndex >= icons.length) return;
+
+            pushHistory();
+            const temp = icons[index];
+            icons[index] = icons[targetIndex];
+            icons[targetIndex] = temp;
+            applyCellLayerIcons(cell, icons);
+        }
+
+        function removeCellLayer(index) {
+            const singleCoord = getSingleSelectedCellCoord();
+            if (!singleCoord) return;
+            const cell = getCellEl(singleCoord.r, singleCoord.c);
+            const icons = getCellIcons(cell);
+            if (index < 0 || index >= icons.length) return;
+
+            pushHistory();
+            icons.splice(index, 1);
+            applyCellLayerIcons(cell, icons);
+        }
+
+        function clearInspectedCellLayers() {
+            const singleCoord = getSingleSelectedCellCoord();
+            if (!singleCoord) return;
+            const cell = getCellEl(singleCoord.r, singleCoord.c);
+            if (!cell || getCellIcons(cell).length === 0) return;
+
+            pushHistory();
+            applyCellLayerIcons(cell, []);
+            closeLayerPopover();
         }
 
         function clearCutHighlights() {
@@ -3674,6 +4386,13 @@
                 // Klik sel kosong atau canvas background -> bersihkan seleksi dan mulai Marquee Selection
                 if (!e.ctrlKey && !e.shiftKey && !e.metaKey) {
                     clearSelection();
+                }
+
+                // Pilih sel kosong yang diklik sebagai titik awal target tempel (Paste)
+                if (targetCell) {
+                    const r = parseInt(targetCell.dataset.row);
+                    const c = parseInt(targetCell.dataset.col);
+                    selectCell(r, c, true);
                 }
 
                 isMarqueeSelecting = true;
@@ -3778,6 +4497,7 @@
                 cells: cellsData
             };
             clearCutHighlights();
+            updateSelectionToolbarState();
         }
 
         function cutSelection() {
@@ -3872,6 +4592,7 @@
                 });
             }
             clearCutHighlights();
+            updateSelectionToolbarState();
         }
 
         let isTrashZoneActive = false;
@@ -4164,6 +4885,16 @@
             // Logika tumpukan transparan (!~). Elemen baru selalu ditumpuk di atas elemen sebelumnya.
             cell.appendChild(droppedEl);
             updateCellDraggable(cell);
+        }
+
+        function openShortcutsModal() {
+            closeLayerPopover();
+            closeStructurePopover();
+            closeAutoTrimPopover();
+            const modalEl = document.getElementById('shortcutsModal');
+            if (!modalEl) return;
+            const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
+            modal.show();
         }
 
         function clearCanvas() {
@@ -5130,14 +5861,6 @@
                 });
             }
 
-            const autoTrimModalEl = document.getElementById('autoTrimConfirmModal');
-            if (autoTrimModalEl) {
-                autoTrimModalEl.addEventListener('hidden.bs.modal', () => {
-                    clearResizeHighlights();
-                    pendingAutoTrimState = null;
-                });
-            }
-
             if (window.innerWidth < 768) {
                 document.getElementById('sidebar').classList.add('collapsed');
                 // Tampilkan dialog pilihan Buat Baru atau Impor saat pertama kali landing di versi mobile
@@ -5197,10 +5920,19 @@
             } else if (e.key === 'Delete' || e.key === 'Backspace') {
                 e.preventDefault();
                 deleteSelection();
+            } else if (e.key === '?' || (e.key === '/' && e.shiftKey)) {
+                e.preventDefault();
+                openShortcutsModal();
             } else if (e.key === 'Escape') {
-                clearSelection();
-                clearCutHighlights();
-                if (isStampMode) toggleStampMode(false);
+                if (isLayerPopoverOpen || isStructurePopoverOpen || isAutoTrimPopoverOpen) {
+                    closeLayerPopover();
+                    closeStructurePopover();
+                    closeAutoTrimPopover();
+                } else {
+                    clearSelection();
+                    clearCutHighlights();
+                    if (isStampMode) toggleStampMode(false);
+                }
             }
         });
 
@@ -5211,6 +5943,9 @@
             } else {
                 sidebar.classList.add('collapsed');
             }
+            if (isLayerPopoverOpen) positionLayerPopover();
+            if (isStructurePopoverOpen) positionToolbarPopover('structurePopover', 'structureBtn');
+            if (isAutoTrimPopoverOpen) positionToolbarPopover('autoTrimPopover', 'autoTrimBtn');
         });
     </script>
 
