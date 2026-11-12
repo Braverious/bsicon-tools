@@ -1158,6 +1158,186 @@
             background-color: rgba(255, 255, 255, 0.25);
             color: #ffffff;
         }
+
+        /* ===== Perbaikan UI Desktop ===== */
+
+        /* Sidebar tertutup tidak bisa difokus keyboard */
+        .sidebar.collapsed {
+            visibility: hidden;
+            transition: transform 0.3s ease, margin-left 0.3s ease, visibility 0s linear 0.3s;
+        }
+
+        /* Header: tautan & kredit di kanan */
+        .header-links {
+            font-size: 0.82rem;
+        }
+
+        .header-links a {
+            color: #cbd5e1;
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+
+        .header-links a:hover,
+        .header-links a:focus-visible {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .header-credit {
+            color: #94a3b8;
+        }
+
+        /* Banner tips ramping, tinggi tetap agar tidak "melompat" */
+        .tips-banner-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            height: 30px;
+            padding: 0 12px;
+            background-color: #fffbeb;
+            border-bottom: 1px solid #fde68a;
+            color: #78350f;
+            font-size: 0.8rem;
+            position: relative;
+        }
+
+        .tips-banner-container .tips-fading-text {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: calc(100% - 64px);
+        }
+
+        .tips-close-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: #a16207;
+            width: 22px;
+            height: 22px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .tips-close-btn:hover {
+            background: rgba(0, 0, 0, 0.06);
+        }
+
+        /* Toolbar: tombol berlabel, Impor sekunder, pemisah aksi destruktif */
+        .dock-btn.zoom-level {
+            width: auto;
+            min-width: 48px;
+            padding: 0 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .dock-divider-lg {
+            height: 26px;
+            margin: 0 6px;
+        }
+
+        .dock-btn:focus-visible,
+        .dock-pill-btn:focus-visible,
+        .icon-item:focus-visible {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+
+        /* Zona sampah: pojok kanan bawah agar tidak menutupi kanvas */
+        .canvas-trash-zone {
+            top: auto;
+            bottom: 28px;
+            transform: scale(0.75);
+        }
+
+        .canvas-trash-zone.is-visible {
+            transform: scale(1);
+        }
+
+        .canvas-trash-zone.drag-hover {
+            transform: scale(1.15);
+        }
+
+        @keyframes trashChomp {
+            0% {
+                transform: scale(1.15);
+            }
+
+            35% {
+                transform: scale(0.85);
+            }
+
+            70% {
+                transform: scale(1.2);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .trash-label {
+            font-size: 0.68rem;
+        }
+
+        /* Tipografi & kontras */
+        .icon-item {
+            font-size: 0.72rem;
+        }
+
+        .icon-item:hover {
+            background-color: #e7f1ff;
+            border-color: #0d6efd;
+            box-shadow: 0 2px 6px rgba(13, 110, 253, 0.2);
+        }
+
+        .prefix-btn {
+            font-size: 0.78rem;
+            padding: 6px 8px;
+        }
+
+        .prefix-tag {
+            font-size: 0.7rem;
+        }
+
+        .icon-grid-divider {
+            font-size: 0.74rem;
+        }
+
+        /* Modal teks: tinggi mengikuti viewport */
+        #exportTextarea,
+        #importTextarea {
+            min-height: 40vh;
+            resize: vertical;
+        }
+
+        .canvas-wrapper {
+            scroll-behavior: auto;
+        }
+
+        /* Desktop/tablet sempit: toolbar membungkus ke baris kedua, tidak terpotong */
+        @media (min-width: 768px) {
+            .canvas-toolbar {
+                flex-wrap: wrap;
+                overflow: visible;
+                gap: 8px 12px;
+            }
+
+            .toolbar-actions {
+                flex-wrap: wrap;
+                flex-shrink: 1;
+                gap: 8px;
+            }
+        }
+
     </style>
 </head>
 
@@ -1180,13 +1360,21 @@
     -->
 
     <header class="app-header d-flex justify-content-start align-items-center">
-        <button class="btn btn-dark btn-sm me-2 border-secondary" onclick="toggleSidebar()">
+        <button class="btn btn-dark btn-sm me-2 border-secondary" onclick="toggleSidebar()" id="sidebarToggleBtn"
+            aria-label="Buka/tutup panel ikon" aria-controls="sidebar" title="Buka/tutup panel ikon">
             <i class="fa-solid fa-bars"></i>
         </button>
         <div class="kai-sign">
             <h1 class="kai-sign-title"><i class="fa-solid fa-train-tram"></i> Spoorwiki Tools</h1>
             <p class="kai-sign-elev">v 5.0+</p>
         </div>
+        <nav class="header-links ms-auto d-none d-md-flex align-items-center gap-3" aria-label="Tautan">
+            <a href="https://commons.wikimedia.org/wiki/Category:Icons_for_railway_descriptions" target="_blank"
+                rel="noopener noreferrer"><i class="fa-solid fa-book-open"></i> Katalog BSicon</a>
+            <span class="header-credit">Dev by Braverious</span>
+            <a href="https://id.wikipedia.org/wiki/Pembicaraan_Pengguna:Braverious" target="_blank"
+                rel="noopener noreferrer"><i class="fa-solid fa-comments"></i> Bicara</a>
+        </nav>
     </header>
 
     <div class="main-container">
@@ -1284,10 +1472,11 @@
                 </div>
             </div>
 
-            <div class="p-2 bg-white border-bottom text-center text-muted tips-banner-container"
-                style="font-size: 0.75rem; min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 4px;">
-                <strong>Tips:</strong>
+            <div class="tips-banner-container" id="tipsBanner">
+                <i class="fa-solid fa-lightbulb text-warning"></i>
                 <span id="dynamicTipText" class="tips-fading-text">Klik dua kali pada sel untuk menghapus.</span>
+                <button type="button" class="tips-close-btn" aria-label="Sembunyikan tips" title="Sembunyikan tips"
+                    onclick="document.getElementById('tipsBanner').remove()"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
             <div class="canvas-toolbar">
@@ -1309,6 +1498,18 @@
                         title="Jumlah Baris" aria-label="Jumlah Baris">
                 </div>
 
+                <!-- Zoom Kanvas -->
+                <div class="toolbar-dock-group" role="group" aria-label="Zoom kanvas">
+                    <button class="dock-btn" type="button" onclick="zoomCanvas(-1)" title="Perkecil (Ctrl + scroll)"
+                        aria-label="Perkecil"><i class="fa-solid fa-magnifying-glass-minus"></i></button>
+                    <button class="dock-btn zoom-level" type="button" id="zoomLevelBtn" onclick="zoomCanvas(0)"
+                        title="Reset ke 100%">100%</button>
+                    <button class="dock-btn" type="button" onclick="zoomCanvas(1)" title="Perbesar (Ctrl + scroll)"
+                        aria-label="Perbesar"><i class="fa-solid fa-magnifying-glass-plus"></i></button>
+                    <button class="dock-btn" type="button" onclick="zoomCanvas('fit')" title="Sesuaikan dengan layar"
+                        aria-label="Sesuaikan dengan layar"><i class="fa-solid fa-expand"></i></button>
+                </div>
+
                 <div class="toolbar-actions">
                     <!-- Group 1: Undo & Redo -->
                     <div class="toolbar-dock-group">
@@ -1322,20 +1523,12 @@
                         </button>
                     </div>
 
-                    <!-- Group 2: Modifikasi Kanvas (Struktur & Kosongkan) -->
+                    <!-- Group 2: Struktur, File & Proyek -->
                     <div class="toolbar-dock-group">
                         <button class="dock-btn primary-action" type="button" onclick="openStructureModal()"
                             title="Sisip / Hapus Baris & Kolom" aria-label="Kelola Struktur">
                             <i class="fa-solid fa-table-cells-large"></i>
                         </button>
-                        <button class="dock-btn danger-action" onclick="clearCanvas()"
-                            title="Kosongkan Semua Sel Kanvas" aria-label="Kosongkan Kanvas">
-                            <i class="fa-solid fa-trash-can"></i>
-                        </button>
-                    </div>
-
-                    <!-- Group 3: File, Proyek & Input -->
-                    <div class="toolbar-dock-group">
                         <button class="dock-btn accent-action" type="button" id="projectModalBtn"
                             onclick="openProjectModal()" title="Manajemen Berkas Proyek (.spoor)" aria-label="Proyek">
                             <i class="fa-solid fa-folder-open"></i>
@@ -1347,15 +1540,10 @@
                             title="Simpan kanvas rute sebagai gambar PNG" aria-label="Simpan PNG">
                             <i class="fa-solid fa-image"></i>
                         </button>
-
-                        <button class="dock-btn d-none d-md-inline-flex" onclick="openCustomIconModal()"
-                            title="Cari & Muat Ikon Manual" aria-label="Input Ikon Kustom">
-                            <i class="fa-solid fa-shapes"></i>
-                        </button>
                     </div>
 
-                    <!-- Tombol Utama: Impor & Ekspor Sintaks Wikipedia -->
-                    <button class="dock-pill-btn pill-highlight d-none d-md-inline-flex" onclick="openImportModal()"
+<!-- Impor (sekunder) & Ekspor (aksi utama) -->
+                    <button class="dock-pill-btn d-none d-md-inline-flex" onclick="openImportModal()"
                         title="Impor bagan rute dari sintaks Wikipedia / BSicon" aria-label="Impor Sintaks">
                         <i class="fa-solid fa-file-import"></i><span>Impor</span>
                     </button>
@@ -1363,6 +1551,15 @@
                         title="Hasilkan sintaks templat {{routemap}} Wikipedia">
                         <i class="fa-solid fa-code"></i><span>Ekspor</span>
                     </button>
+
+                    <!-- Aksi destruktif dipisah jauh dari aksi lain -->
+                    <span class="dock-divider dock-divider-lg" aria-hidden="true"></span>
+                    <div class="toolbar-dock-group">
+                        <button class="dock-btn danger-action" onclick="clearCanvas()"
+                            title="Kosongkan Semua Sel Kanvas" aria-label="Kosongkan Kanvas">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1377,7 +1574,7 @@
                 </div>
             </div>
 
-            <div class="p-2 bg-white border-top text-center text-muted" style="font-size: 0.75rem;">
+            <div class="p-2 bg-white border-top text-center text-muted d-md-none" style="font-size: 0.75rem;">
                 Dev by Braverious | <a href="https://id.wikipedia.org/wiki/Pembicaraan_Pengguna:Braverious"
                     target="_blank" rel="noopener noreferrer"
                     class="text-secondary text-decoration-underline">Bicara</a>
@@ -1386,7 +1583,7 @@
     </div>
 
     <div class="modal fade" id="exportModal" tabindex="-1" aria-labelledby="exportModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exportModalLabel"><i class="fa-solid fa-code"></i> Hasil Ekspor Wikitext
@@ -1460,7 +1657,7 @@
     </div>
 
     <div class="modal fade" id="importModal" tabindex="-1" aria-labelledby="importModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="importModalLabel"><i class="fa-solid fa-file-import"></i> Impor Sintaks
@@ -2469,7 +2666,52 @@
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('collapsed');
+            const btn = document.getElementById('sidebarToggleBtn');
+            if (btn) btn.setAttribute('aria-expanded', String(!sidebar.classList.contains('collapsed')));
         }
+
+        // ===== Zoom kanvas (mengubah --cell-size; ekspor PNG selalu 50px) =====
+        const BASE_CELL_SIZE = 50;
+        const ZOOM_STEPS = [20, 30, 40, 50, 60, 75, 100];
+        let currentCellSize = BASE_CELL_SIZE;
+
+        function applyCellSize(px) {
+            currentCellSize = Math.max(15, Math.min(120, Math.round(px)));
+            document.documentElement.style.setProperty('--cell-size', currentCellSize + 'px');
+            const lbl = document.getElementById('zoomLevelBtn');
+            if (lbl) lbl.textContent = Math.round(currentCellSize / BASE_CELL_SIZE * 100) + '%';
+        }
+
+        function zoomCanvas(action) {
+            if (action === 'fit') {
+                const wrap = document.getElementById('canvas-scroll-area');
+                const cols = parseInt(document.getElementById('gridCols').value) || 1;
+                const rows = parseInt(document.getElementById('gridRows').value) || 1;
+                const availW = wrap.clientWidth - 44;
+                const availH = wrap.clientHeight - 44;
+                applyCellSize(Math.min(availW / cols, availH / rows, 100));
+                return;
+            }
+            if (action === 0) { applyCellSize(BASE_CELL_SIZE); return; }
+            let idx;
+            if (action > 0) {
+                idx = ZOOM_STEPS.findIndex(s => s > currentCellSize);
+                applyCellSize(idx === -1 ? ZOOM_STEPS[ZOOM_STEPS.length - 1] : ZOOM_STEPS[idx]);
+            } else {
+                idx = ZOOM_STEPS.slice().reverse().findIndex(s => s < currentCellSize);
+                applyCellSize(idx === -1 ? ZOOM_STEPS[0] : ZOOM_STEPS.slice().reverse()[idx]);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const wrap = document.getElementById('canvas-scroll-area');
+            if (!wrap) return;
+            wrap.addEventListener('wheel', (e) => {
+                if (!e.ctrlKey) return;
+                e.preventDefault();
+                zoomCanvas(e.deltaY < 0 ? 1 : -1);
+            }, { passive: false });
+        });
 
         function searchIcons() {
             const input = document.getElementById('searchInput').value.trim().toLowerCase();
@@ -4154,6 +4396,7 @@
                 }
             }, 250);
 
+            let zoomBeforeExport;
             try {
                 if (typeof html2canvas !== 'function') {
                     throw new Error('Library html2canvas belum siap.');
@@ -4165,7 +4408,9 @@
                 clearSelection();
                 clearCutHighlights();
                 canvasEl.classList.add('no-grid');
-
+                // Ekspor selalu pada ukuran sel asli (abaikan zoom tampilan)
+                zoomBeforeExport = currentCellSize;
+                applyCellSize(BASE_CELL_SIZE);
                 // Render kanvas dengan skala 2x agar hasil PNG jernih dan tajam
                 // Menggunakan Promise.race bersama abort signal agar proses await langsung terputus jika dibatalkan
                 const html2canvasPromise = html2canvas(canvasEl, {
@@ -4232,7 +4477,7 @@
 
                 // Kembalikan border kanvas & sel
                 canvasEl.classList.remove('no-grid');
-
+                if (zoomBeforeExport !== undefined) applyCellSize(zoomBeforeExport);
                 // Kembalikan seleksi jika sebelumnya ada
                 if (hadSelection) {
                     savedSelected.forEach(key => {
